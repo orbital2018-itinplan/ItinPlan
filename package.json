@@ -1,0 +1,14 @@
+{
+  "name": "ItinPlan",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.0.0-beta.42",
+    "bootstrap": "^4.1.1",
+    "jquery": "^3.3.1",
+    "meteor-node-stubs": "^0.3.2",
+    "popper.js": "^1.14.3"
+  }
+}
