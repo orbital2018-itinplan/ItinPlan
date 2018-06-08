@@ -1,3 +1,11 @@
+// Custom.scss
+// Option A: Include all of Bootstrap
+
+$theme-colors: (
+  "purple": #6610f2,
+  "pink" : #ff00cb
+);
+
 
 $black:   #474B6D;
 $indigo:  #7475FF;
@@ -26,3 +34,11 @@ $btn-padding-x: 2em;
 $grid-gutter-width: 80px;
 
 $card-spacer-x: 0em;
+
+
+
+@import "pages/home";
+@import "components/navigation";
+@import "base/typography";
+
+@import "../node_modules/bootstrap/scss/bootstrap";
