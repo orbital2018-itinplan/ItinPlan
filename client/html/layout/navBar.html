@@ -1,60 +1,20 @@
-<template name="navBar-home">
-    <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-primary">
+<template name="navBar">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-primary">
         <a class="navbar-brand" href="/">
-            <img src="/image/logo.png" width="150" height="55" class="d-inline-block align-top" alt="ItinPlan">
+            <img src="/image/logo.png" id="ItinPlan" alt="ItinPlan">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ml-auto">
-                <a class="nav-item nav-link active" href="/">Home</a>
-                <a class="nav-item nav-link" href="/destination">Destination</a>
-                <a class="nav-item nav-link" href="/myTrip">My Trip</a>
+                <a class="nav-item nav-link" id="home" href="/">Home</a>
+                <a class="nav-item nav-link" id="destination" href="/destination">Destinations</a>
+                {{#if currentUser}}
+                    <a class="nav-item nav-link" id="mytrips" href="/myTrip">My Trips</a>
+                {{/if}}
             </div>
-            <button class="btn btn-outline-secondary">Login</button>
-        </div>
-    </nav>
-</template>
-
-<template name="navBar-destination">
-    <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-primary">
-        <a class="navbar-brand" href="/">
-            <img src="/image/logo.png" width="150" height="55" class="d-inline-block align-top" alt="ItinPlan">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="/">Home</a>
-                <a class="nav-item nav-link active"  href="/destination">Destination</a>
-                <a class="nav-item nav-link" href="/myTrip">My Trip</a>
-                <form class="form-inline">
-                    <button class="btn btn-sm btn-outline-secondary btn-block nav-item" type="button">Login</button>
-                </form>
-            </div>
-        </div>
-    </nav>
-</template>
-
-<template name="navBar-myTrip">
-    <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-primary">
-        <a class="navbar-brand" href="/">
-            <img src="/image/logo.png" width="150" height="55" class="d-inline-block align-top" alt="ItinPlan">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="/">Home</a>
-                <a class="nav-item nav-link"  href="/destination">Destination</a>
-                <a class="nav-item nav-link active" href="/myTrip">My Trip</a>
-                <form class="form-inline">
-                    <button class="btn btn-sm btn-outline-secondary btn-block nav-item" type="button">Login</button>
-                </form>
-            </div>
+            {{> loginNav}}
         </div>
     </nav>
 </template>

@@ -24,3 +24,5 @@ cfs:standard-packages       #Photo uploading to mongoDB
 cfs:gridfs                  #Photo uploading to mongoDB
 underscore
 fourseven:scss
+useraccounts:unstyled
+accounts-password
