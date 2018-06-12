@@ -6,7 +6,6 @@ $theme-colors: (
   "pink" : #ff00cb
 );
 
-
 $black:   #474B6D;
 $indigo:  #7475FF;
 $white:   #fff;
@@ -35,10 +34,16 @@ $grid-gutter-width: 80px;
 
 $card-spacer-x: 0em;
 
+@import "../node_modules/bootstrap/scss/bootstrap";
 
-
-@import "pages/home";
+//navbar and footer css
 @import "components/navigation";
+@import "components/footer";
+@import "components/accounts";
+
+//various pages
+@import "pages/home";
 @import "base/typography";
 
-@import "../node_modules/bootstrap/scss/bootstrap";
+
+

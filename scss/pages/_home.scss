@@ -1,8 +1,9 @@
-.hero {
+.jumbotron {
   
   //sizing
-  width: 100vw;
+  width: 100vm;
   height: 100vh;
+  margin: 0px;
 
   //use flexbox
   display: flex;
@@ -10,20 +11,34 @@
   align-items: center;
 
   //background
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.3)), url("/image/bg.jpg");
+  background-image: linear-gradient(rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0.25)), url("/image/bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  
+
+  &.loginback{
+    background-image: linear-gradient(rgba(255, 255, 255, 0.6),rgba(255, 255, 255, 0.6)), url("/image/bg.jpg");
+  }
 }
 
 .plan{
   text-transform: uppercase;
   padding-top: 1em;
-  font-weight: 1500;
+  font-weight: 1500;  
+}
+
+#plan-btn{
+    border: 1px solid #555555;
 }
 
 .about {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.hot {
   margin-top: 40px;
   margin-bottom: 40px;
 }
@@ -41,3 +56,4 @@
 .card-text {
   margin-top: -0.5em;
 }
+

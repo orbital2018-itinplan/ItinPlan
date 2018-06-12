@@ -1,0 +1,45 @@
+<template name="account">
+    <section class="jumbotron loginback jumbotron-fluid">
+        {{> ensureSignedIn template="accountTemplate" auth="loginTemplate"}}
+    </section>
+</template>
+
+<template name="loginTemplate">
+    <div class="d-flex justify-content-center">
+    	<div class="container rounded bg-dark pt-3 pb-3">
+        	{{> atForm}}
+        </div>
+    </div>
+</template>
+
+<template name="accountTemplate">
+    <div class="d-flex justify-content-center">
+    	<div class="container rounded bg-dark pt-3 pb-3">
+
+        	<div class="input-group mb-3">
+			 <div class="input-group-prepend">
+			    <span class="input-group-text" id="basic-addon1">@</span>
+			  </div>
+			  <input type="text" id="emailBox" class="form-control" placeholder="Username" aria-label="Username"  aria-describedby="basic-addon1" readonly>
+			</div>
+
+        </div>
+    </div>
+</template>
+
+<template name="loginNav">
+    {{#if currentUser}}
+        <div class="btn-group nav-item">
+		  <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    {{username}}
+		  </button>
+		  <div class="dropdown-menu">
+		    <a class="dropdown-item controlPanel" href="/account">Control Panel</a>
+		    <div class="dropdown-divider"></div>
+		    <a class="dropdown-item logout" href="#">Logout</a>
+		  </div>
+		</div>
+    {{else}}
+    	<a class="btn btn-outline-secondary nav-item" type="btn" href="/account">Login</a>
+    {{/if}}
+</template>
