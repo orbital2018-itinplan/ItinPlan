@@ -57,15 +57,19 @@
             <a class="text-success" href="/destination">View More</a>
         </div>
 
-        <div class="card-deck">
-            {{#each country}}
-                <div class="card bg-primary text-white text-center p-3">
-                    <blockquote class="blockquote mb-0">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.</p>
-                    </blockquote>
+        <div class="card-deck hot-deck text-center">
+            {{#each countries}}
+                <div class="card bg-dark text-white hot-card">
+                    <img class="card-img hot-img" src="https://maps.googleapis.com/maps/api/place/photo?maxheight=260&photoreference={{photo_reference}}&key=AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo" alt="{{country_name}}">
+                    <div class="card-img-overlay">
+                        <h5 class="card-title">{{country_name}}</h5>
+                    </div>
                 </div>
+
             {{/each}}
         </div>
+
+
     </section>
 </template>
 
