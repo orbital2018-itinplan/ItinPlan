@@ -10,7 +10,7 @@ Template.planner.helpers({
 	//get trip from this method and set to local variable
 	getTrip() {
 		console.log(this);
-  		this = Trips.find( { _id: "sfasdfa" } );
+  		//this = Trips.find( { _id: "sfasdfa" } );
   		console.log(this);
   		return Trips.find( { _id: "sfasdfa" } );
   	},
