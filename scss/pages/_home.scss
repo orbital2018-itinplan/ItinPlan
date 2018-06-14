@@ -21,6 +21,10 @@
   &.loginback{
     background-image: linear-gradient(rgba(255, 255, 255, 0.6),rgba(255, 255, 255, 0.6)), url("/image/bg.jpg");
   }
+  
+  &.planner{
+    background-image: none;
+  }
 }
 
 .plan{
@@ -48,11 +52,11 @@
   heigh: 75%;
 }
 
-.card-img-top {
+.card-img-top .home {
   margin-top: 1em;
   margin-bottom: 1em; 
 }
 
-.card-text {
+.card-text .home {
   margin-top: -0.5em;
 }
