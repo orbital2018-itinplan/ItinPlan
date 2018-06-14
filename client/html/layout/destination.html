@@ -1,0 +1,21 @@
+<template name="destination">
+    <section class="destination">
+        <div class="text-center">
+            <h4 class="title text-secondary">Destination</h4>
+        </div>
+
+        <div class="card-columns text-center justify-content-center destination-deck">
+            {{#each countries}}
+                <div class="card bg-dark text-white destination-card mt-4">
+                    <img class="card-img destination-img"
+                         src="https://maps.googleapis.com/maps/api/place/photo?maxheight=260&photoreference={{photo_reference}}&key=AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo"
+                         alt="{{country_name}}">
+                    <div class="card-img-overlay">
+                        <h5 class="card-title">{{country_name}}</h5>
+                    </div>
+                </div>
+
+            {{/each}}
+        </div>
+    </section>
+</template>

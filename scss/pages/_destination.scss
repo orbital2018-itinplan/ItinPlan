@@ -1,0 +1,29 @@
+@media (min-width: 34em) {
+  .card-columns {
+    -webkit-column-count: 4;
+    -moz-column-count: 4;
+    column-count: 4;
+    -webkit-column-gap: 3rem;
+    -moz-column-gap: 3rem;
+    column-gap: 3rem;
+  }
+}
+
+.destination {
+  margin-top: 110px;
+  margin-bottom: 1.5em;
+  text-transform: uppercase;
+}
+
+.destination-deck{
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+.destination-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.destination-img {
+  opacity: 0.8;
+}

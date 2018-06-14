@@ -1,86 +1,72 @@
-import { Meteor } from 'meteor/meteor';
-import { HTTP } from 'meteor/http';
-import { Country } from '../lib/models/country.js';
+import {Meteor} from 'meteor/meteor';
+import {HTTP} from 'meteor/http';
+import {Country} from '../lib/models/country.js';
 
 const initialise = function () {
     console.log("-------INITIALISING STARTED--------");
 
-    Country.find({}, {sort: {country_name: 1}}).forEach(function (obj){
-        const country = (obj.country_name).toString();
-        console.log("UPDATING COUNTRY: " + country);
-        try {
-            console.log("RETRIEVING DATA FROM API");
-            //variables
-            const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
-            const url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + country + "&key=" + APIkey + "";
 
-            const result = HTTP.get(url, {});
-            //console.log(result.data.results[0]);
+    if (Country.find().count() === 0) {
+        //Insert sample data as collection is empty
+        var arr = [{"country": "Australia"}, {"country": "China"},
+            {"country": "France"}, {"country": "Germany"},
+            {"country": "Indonesia"}, {"country": "Italy"},
+            {"country": "Japan"}, {"country": "Mexico"},
+            {"country": "South Korea"}, {"country": "Taiwan"},
+            {"country": "Thailand"}, {"country": "Vietnam"}];
+        const keys = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
 
+        console.log("-------INSERTING INTO DATABASE-----------");
+        for (var i = 0; i < arr.length; i++) {
+            const where = arr[i].country;
+            console.log(where);
+            const url2 = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + where + "&key=" + keys + "";
+            const result = HTTP.get(url2, {});
             //DATA to be stored in mongoDB
             const place = result.data.results[0].name;
-            //const place = "london";
             //console.log("LOCATION NAME STORED: " + place);
             const photoReference = result.data.results[0].photos[0].photo_reference;
-            // const url2 = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+photoReference+"&key=" + APIkey + "";
-            // const getPhotoResult = HTTP.get(url2, {});
-            //const photoReference = "CHANGES";
             //console.log("PHOTO STORED:" + photoReference);
             console.log("----------------------------");
 
-            //Country.insert({country_name: place, photo_reference: photoReference});
-
-            try {
-                //console.log("------UPDATE DATABASE--------");
-                //console.log("Name: " + place);
-                //console.log("Reference: " + photoReference);
-                Country.update({country_name: place}, {$set: {photo_reference: photoReference}});
-            } catch (error) {
-                console.log("ERROR :" + error);
-            }
-
-        } catch (err) {
-            console.log("RETRIEVE ERROR :" + err);
+            Country.insert({country_name: place, photo_reference: photoReference});
         }
-    });
+    } else {
+        //Update country collection
+        Country.find({}, {sort: {country_name: 1}}).forEach(function (obj) {
+            const country = (obj.country_name).toString();
+            console.log("UPDATING COUNTRY: " + country);
+            try {
+                console.log("RETRIEVING DATA FROM API");
+                //variables
+                const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
+                const url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + country + "&key=" + APIkey + "";
 
-    // try {
-    //     const country = "Australia"
-    //     console.log("RETRIEVING DATA FROM API");
-    //     //variables
-    //     const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
-    //     const url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + country + "&key=" + APIkey + "";
-    //
-    //     const result = HTTP.get(url, {});
-    //     //console.log(result.data.results[0]);
-    //
-    //     //DATA to be stored in mongoDB
-    //     const place = result.data.results[0].name;
-    //     //const place = "london";
-    //     //console.log("LOCATION NAME STORED: " + place);
-    //     const photoReference = result.data.results[0].photos[0].photo_reference;
-    //     const url2 = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="+photoReference+"&key=" + APIkey + "";
-    //     const getPhotoResult = HTTP.get(url2, {});
-    //     console.log(getPhotoResult);
-    //     //const photoReference = "CHANGES";
-    //     //console.log("PHOTO STORED:" + photoReference);
-    //     console.log("----------------------------");
-    //
-    //     //Country.insert({country_name: place, photo_reference: photoReference});
-    //
-    //     try {
-    //         //console.log("------UPDATE DATABASE--------");
-    //         //console.log("Name: " + place);
-    //         //console.log("Reference: " + photoReference);
-    //         Country.update({country_name: place}, {$set: {photo_reference: photoReference}});
-    //     } catch (error) {
-    //         console.log("ERROR :" + error);
-    //     }
-    //
-    // } catch (err) {
-    //     console.log("RETRIEVE ERROR :" + err);
-    // }
+                const result = HTTP.get(url, {});
+                //console.log(result.data.results[0]);
 
+                //DATA to be stored in mongoDB
+                const place = result.data.results[0].name;
+                //console.log("LOCATION NAME STORED: " + place);
+                const photoReference = result.data.results[0].photos[0].photo_reference;
+                //console.log("PHOTO STORED:" + photoReference);
+                console.log("----------------------------");
+
+
+                try {
+                    //console.log("------UPDATE DATABASE--------");
+                    //console.log("Name: " + place);
+                    //console.log("Reference: " + photoReference);
+                    Country.update({country_name: place}, {$set: {photo_reference: photoReference}});
+                } catch (error) {
+                    console.log("ERROR :" + error);
+                }
+
+            } catch (err) {
+                console.log("RETRIEVE ERROR :" + err);
+            }
+        });
+    }
 };
 
 Meteor.startup(() => {
@@ -88,7 +74,7 @@ Meteor.startup(() => {
     initialise();
     Meteor.setInterval(initialise, 300000);
 
-    Meteor.publish('getCountry', function() {
+    Meteor.publish('getCountry', function () {
         return Country.find({});
     });
 });
