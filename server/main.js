@@ -69,6 +69,8 @@ const initialise = function () {
     }
 };
 
+import '../lib/api/database.js';
+
 Meteor.startup(() => {
 
     initialise();
