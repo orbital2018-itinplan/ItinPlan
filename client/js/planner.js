@@ -33,8 +33,6 @@ Template.planner.helpers({
 
   	},
 
-  	
-
   	trip() {
   		//Trips.findOne( {});
   		var found = Trips.find( { _id: "sfasdfa" } );
