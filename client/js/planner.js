@@ -103,6 +103,15 @@ Template.dayTemplate.helpers({
 
 });
 
+Template.dayTemplate.events({
+	'click .btn-dayAddLoc' (event) {
+		//add a blank location.
+		this.trip.get().dayArray[this.dayIndex].push("NAME OF LOCATION");
+		this.trip.set(this.trip.get());
+	}
+});
+
+
 Template.locationTemplate.helpers({
 	//set this index to ind+1
 	getLocNum: function(index) {
@@ -120,13 +129,12 @@ Template.locationTemplate.events({
 	'click .btn-deleteLoc' (event) {
 		console.log(this.dayIndex + " " + this.locIndex);
 		//remove from object.
-
-		console.log(this.trip.get().dayArray[this.dayIndex]);
 		this.trip.get().dayArray[this.dayIndex].splice(this.locIndex, 1);
 		this.trip.set(this.trip.get());
-		console.log(this.trip.get().dayArray[this.dayIndex]);
-		console.log(this.trip);
-		console.log(this.dayIndex + " " + this.locIndex);
+	},
+
+	'click .btn-selectLoc' (event) {
+		//open a javascript modal thing
 
 	}
 });
