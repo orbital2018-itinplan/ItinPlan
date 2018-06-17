@@ -1,10 +1,14 @@
 import {Meteor} from 'meteor/meteor';
 import {HTTP} from 'meteor/http';
-import {Country} from '../lib/models/country.js';
+
+//get db stuff
+import {Country} from '../lib/models/db';
+import {Trips} from '../lib/models/db';
+import {Location} from '../lib/models/db';
+
 
 const initialise = function () {
     console.log("-------INITIALISING STARTED--------");
-
 
     if (Country.find().count() === 0) {
         //Insert sample data as collection is empty
@@ -31,7 +35,8 @@ const initialise = function () {
 
             Country.insert({country_name: place, photo_reference: photoReference});
         }
-    } else {
+
+    } /*else {    ===============//comment out so dun keep using api ============================
         //Update country collection
         Country.find({}, {sort: {country_name: 1}}).forEach(function (obj) {
             const country = (obj.country_name).toString();
@@ -66,17 +71,24 @@ const initialise = function () {
                 console.log("RETRIEVE ERROR :" + err);
             }
         });
-    }
+    }*/
 };
-
-import '../lib/api/database.js';
 
 Meteor.startup(() => {
 
     initialise();
-    Meteor.setInterval(initialise, 300000);
+    //Meteor.setInterval(initialise, 300000);
 
     Meteor.publish('getCountry', function () {
         return Country.find({});
+    });
+
+    // This code only runs on the server
+    Meteor.publish('trips', function() {
+        return Trips.find({});
+    });
+
+    Meteor.publish('location', function() {
+        return Location.find({});
     });
 });
