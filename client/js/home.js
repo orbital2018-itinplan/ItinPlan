@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Country } from '../../lib/models/country';
+import { Country } from '../../lib/models/db';
 
 
 

@@ -1,0 +1,33 @@
+.container-fluid.planner {
+    min-height: 100vh;
+    padding-top: 100px;
+}
+
+
+.row {
+    display: inline-flex;
+    flex-wrap: nowrap;
+}
+
+.card-img-top.planner {
+    width: auto;
+    height: auto;
+}
+
+.btn-danger {
+    height: auto;
+    width: auto;
+}
+
+.btn-selectLoc {
+    padding: 5px;
+}
+
+.btn-deleteLoc {
+    padding: 5px;
+}
+
+.exitBtn {
+    width: 10px;
+    height: 10px;
+}
