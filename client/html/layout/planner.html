@@ -16,6 +16,28 @@
 				{{/if}}
 			</div>
 		{{/if}}
+
+		<!--modal for opening location-->
+		<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <h5 class="modal-title" id="exampleModalLabel">Select Location:</h5>
+				  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+				<div class="modal-body">
+				  <form>
+					  <input type="text" class="form-control" id="recipient-name">
+				  </form>
+				</div>
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-secondary btn-saveLoc" data-dismiss="modal">Save</button>
+				</div>
+			  </div>
+			</div>
+		  </div>
 </template>
 
 <template name="dayTemplate">
@@ -41,7 +63,7 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 				
-				<button class="btn btn-success btn-selectLoc float-right m-1">Select Location</button>
+				<button class="btn btn-success btn-selectLoc float-right m-1" data-toggle="modal" data-target="#locationModal" data-location={{location}}>Select Location</button>
 			</div>
 	</div>
 </template>

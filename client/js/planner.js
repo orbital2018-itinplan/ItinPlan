@@ -93,6 +93,20 @@ Template.planner.helpers({
 	}
 });
 
+Template.planner.events({
+
+	'click .btn-saveLoc' (event) {
+		var modal = $('#locationModal')
+		row = modal.data("row");
+		col = modal.data("col");
+		//console.log(modal.find('.modal-body input').val());
+		Template.instance().trip.get().dayArray[row][col] = modal.find('.modal-body input').val();
+		Template.instance().trip.set(Template.instance().trip.get());
+		//close(save) a javascript modal thing
+		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
+	}
+});
+
 Template.dayTemplate.helpers({
 	
 	getDayNum: function(ind) {
@@ -111,7 +125,6 @@ Template.dayTemplate.events({
 	}
 });
 
-
 Template.locationTemplate.helpers({
 	//set this index to ind+1
 	getLocNum: function(index) {
@@ -123,6 +136,7 @@ Template.locationTemplate.helpers({
 		console.log(this);
 		return this;
 	},
+	
 });
 
 Template.locationTemplate.events({
@@ -134,7 +148,21 @@ Template.locationTemplate.events({
 	},
 
 	'click .btn-selectLoc' (event) {
+		dayIndex = this.dayIndex;
+		locIndex = this.locIndex;
 		//open a javascript modal thing
-
+		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
+		$('#locationModal').one('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget); // Button that triggered the modal
+			var location = button.data('location'); // Extract info from data-* attributes
+			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			var modal = $(this);
+			modal.find('.modal-body input').val(location);
+			//set row and column for later setting data
+			modal.data("row", dayIndex);
+			modal.data("col", locIndex);
+		})
 	}
 });
+
