@@ -1,21 +1,28 @@
 <template name="planner">
 
 		<!--contain the trip planner itself-->
-		{{#if Template.subscriptionsReady}}
 			<div class="container-fluid planner">
 				<!--{{createTrip "Mexico"}}-->
 				<!-- add stuff like days and start date etc
 				<label>{{tripCountry}}</label>
 				-->
+				<div class="row align-items-center p-3">
+					<button class="btn btn-success">poop</button>
+					{{#if checkLoginAndData}}
+						<button class="btn btn-success btn-saveTrip">Save</button>
+					{{/if}}
+				</div>
+				<div class="w-100"></div>
+				
+
 				{{#if haveTrip}}
 					{{# each day in tripDays}}
 						{{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
 					{{/each}}
 				{{else}}
-					{{getTrip}} <!--from database/or create? maybe idk-->
+					<p>wait</p> <!--from database/or create? maybe idk-->
 				{{/if}}
 			</div>
-		{{/if}}
 
 		<!--modal for opening location-->
 		<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
@@ -37,7 +44,7 @@
 				</div>
 			  </div>
 			</div>
-		  </div>
+		</div>
 </template>
 
 <template name="dayTemplate">
@@ -54,7 +61,7 @@
 
 <template name="locationTemplate">
 	<div class="card border-primary m-1" style="width: 12rem;">
-			<img class="card-img-top planner m-1 border border-dark" src="..." alt="img">
+			<img class="card-img-top planner m-1 border border-dark">
 			<div class="card-body">
 				<h6 class="card-title">{{location}} {{getLocNum locIndex}}</h6>
 				<p class="card-text">Yolo.</p>
