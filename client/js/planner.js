@@ -11,7 +11,8 @@ Template.planner.onCreated(function() {
 	//change this to session variable later. (tested session variable, abit iffy)
 	this.trip = new ReactiveVar();
 	var trip = this.trip;
-	
+	var newID = new ReactiveVar();
+
 	//eg /?_id=new&country=mexico, _id = new, country = mexico
 	if(FlowRouter.getQueryParam('_id') == "new")
 	{
@@ -36,6 +37,11 @@ Template.planner.onCreated(function() {
 		//current existing trip being edited
 		//Session.set('trip', JSON.parse(localStorage.getItem('trip')));
 		trip.set(JSON.parse(localStorage.getItem('trip')));
+		if(Meteor.userId())
+		{
+			trip.get().owner = Meteor.userId();
+			trip.set(trip.get());
+		}
 	}
 	else
 	{
@@ -88,7 +94,6 @@ Template.planner.helpers({
 	
 	//get trip will have gotten the trip, so return the trip array
 	tripDays() {
-		console.log(Template.instance().trip.get());
 		return Template.instance().trip.get().dayArray;
 		//Session.get('trip').dayArray;
 	},
@@ -100,6 +105,11 @@ Template.planner.helpers({
 
 	tripStartDate: function() {
 		return Template.instance().trip.get().startDate;
+		//Session.get('trip').startDate;
+	},
+
+	tripId: function() {
+		return Template.instance().trip.get()._id;
 		//Session.get('trip').startDate;
 	},
 
@@ -151,19 +161,33 @@ Template.planner.events({
 	},
 
 	'click .btn-saveTrip' (event) {
-
 		//if there is existing, update
 		//else add new entry
 		var trip = Template.instance().trip.get();
+		var tripReact = Template.instance().trip;
 		var queryTrip = Trips.findOne( { _id: Template.instance().trip.get()._id } );
 		if(queryTrip == undefined)
 		{
 			//create new
-			Meteor.call('trips.add', trip);
+			Meteor.call('trips.add', trip, function(error, result) {
+				tripReact.get()._id = result;
+				tripReact.set(tripReact.get());
+				console.log(tripReact.get());
+				console.log(result);
+			});
+			//set to currently saving UNTIL trip id is gotten from server
+			tripReact.get()._id = "Currently Saving";
+			tripReact.set(tripReact.get());
 		}
 		else
 		{
 			//update existing
+			Meteor.call('trips.update', trip, function(error, result) {
+				//set session state to complete.
+				console.log(result);
+			});
+			//can set session.state to loading if want
+			console.log("UPDATING");
 		}
 	}
 });
@@ -179,7 +203,7 @@ Template.dayTemplate.helpers({
 Template.dayTemplate.events({
 	'click .btn-dayAddLoc' (event) {
 		//add a blank location.
-		this.trip.get().dayArray[this.dayIndex].push("Name");
+		this.trip.get().dayArray[this.dayIndex].push("poopdiscoop");
 		this.trip.set(this.trip.get());
 	}
 });

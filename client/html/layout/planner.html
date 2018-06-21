@@ -7,7 +7,7 @@
 				<label>{{tripCountry}}</label>
 				-->
 				<div class="row align-items-center p-3">
-					<button class="btn btn-success">poop</button>
+					<button class="btn btn-success">{{tripId}}</button>
 					{{#if checkLoginAndData}}
 						<button class="btn btn-success btn-saveTrip">Save</button>
 					{{/if}}
@@ -26,7 +26,7 @@
 
 		<!--modal for opening location-->
 		<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
-			<div class="modal-dialog" role="document">
+			<div class="modal-dialog modal-dialog-centered" role="document">
 			  <div class="modal-content">
 				<div class="modal-header">
 				  <h5 class="modal-title" id="exampleModalLabel">Select Location:</h5>
