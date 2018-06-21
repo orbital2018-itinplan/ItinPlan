@@ -11,7 +11,6 @@ Template.planner.onCreated(function() {
 	//change this to session variable later. (tested session variable, abit iffy)
 	this.trip = new ReactiveVar();
 	var trip = this.trip;
-	var newID = new ReactiveVar();
 
 	//eg /?_id=new&country=mexico, _id = new, country = mexico
 	if(FlowRouter.getQueryParam('_id') == "new")
@@ -68,13 +67,6 @@ Template.planner.onCreated(function() {
 
 });
 
-Template.planner.onDestroyed(function (){
-
-	//save as local storage
-	localStorage.setItem('trip', JSON.stringify(this.trip.get()));
-
-});
-
 Template.planner.helpers({
 
 	//check trip
@@ -95,22 +87,21 @@ Template.planner.helpers({
 	//get trip will have gotten the trip, so return the trip array
 	tripDays() {
 		return Template.instance().trip.get().dayArray;
-		//Session.get('trip').dayArray;
 	},
 
 	tripCountry: function() {
 		return Template.instance().trip.get().country;
-		//Session.get('trip').country;
 	},
 
 	tripStartDate: function() {
 		return Template.instance().trip.get().startDate;
-		//Session.get('trip').startDate;
 	},
 
 	tripId: function() {
+		//to return nullvalue
+		if(Template.instance().trip.get() == undefined)
+			return "";
 		return Template.instance().trip.get()._id;
-		//Session.get('trip').startDate;
 	},
 
 	/*
@@ -144,6 +135,11 @@ Template.planner.helpers({
 	reactiveTrip: function() {
 		//pass on reactive trip to children templates
 		return Template.instance().trip;
+	},
+
+	localStorageTrip: function() {
+		localStorage.setItem('trip', JSON.stringify(Template.instance().trip.get()));
+		console.log("Trip saved");
 	}
 });
 
@@ -188,7 +184,17 @@ Template.planner.events({
 			});
 			//can set session.state to loading if want
 			console.log("UPDATING");
-		}
+		}		
+	},
+
+	'click .btn-addDay' (event) {
+		//add a new day to the dayArray.
+
+		var trip = Template.instance().trip;
+		trip.get().dayArray.push( [] );
+		trip.set(trip.get());
+		
+		console.log("Added new day");
 	}
 });
 
@@ -205,6 +211,12 @@ Template.dayTemplate.events({
 		//add a blank location.
 		this.trip.get().dayArray[this.dayIndex].push("poopdiscoop");
 		this.trip.set(this.trip.get());
+	},
+
+	'click .btn-removeDay' (event) {
+		//remove day
+		this.trip.get().dayArray.splice(this.dayIndex, 1);
+		this.trip.set(this.trip.get());
 	}
 });
 
@@ -219,7 +231,6 @@ Template.locationTemplate.helpers({
 		console.log(this);
 		return this;
 	},
-	
 });
 
 Template.locationTemplate.events({

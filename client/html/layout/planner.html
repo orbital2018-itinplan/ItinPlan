@@ -6,6 +6,8 @@
 				<!-- add stuff like days and start date etc
 				<label>{{tripCountry}}</label>
 				-->
+
+				<!--this is the control panel-->
 				<div class="row align-items-center p-3">
 					<button class="btn btn-success">{{tripId}}</button>
 					{{#if checkLoginAndData}}
@@ -16,15 +18,25 @@
 				
 
 				{{#if haveTrip}}
+
+				<!--keep trip stored in local storage constantly-->
+					{{localStorageTrip}}
+
 					{{# each day in tripDays}}
 						{{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
 					{{/each}}
+
+					<!-- for the new day button -->
+					<div class="row align-items-center p-3">
+						<div class="btn btn-danger btn-addDay">Add Day</div>
+					</div>
+					<div class="w-100"></div>
 				{{else}}
 					<p>wait</p> <!--from database/or create? maybe idk-->
 				{{/if}}
 			</div>
 
-		<!--modal for opening location-->
+		<!--modal for opening location @yuanrong javascript must be in planner template-->
 		<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
 			  <div class="modal-content">
@@ -50,7 +62,13 @@
 <template name="dayTemplate">
 	<div class="row align-items-center p-3">
 		<!--for each day, there is a day button and locations within the day template.-->
-		<div class="btn btn-danger day-button mr-4">Day {{getDayNum dayIndex}}</div>
+		<div class="card border-primary m-1 mr-4 text-center" style="width: 8rem;">
+			<div class="card-body">
+				<p class="card-text mt-2">Day {{getDayNum dayIndex}}</p>
+				<div class="btn btn-danger btn-removeDay mb-2">Delete</div>
+			</div>
+		</div>
+
 		{{# each location in day}}
 			{{> locationTemplate dayIndex=dayIndex locIndex=@index location=location trip=trip}}
 		{{/each}}
