@@ -145,7 +145,7 @@ Template.planner.helpers({
 
 Template.planner.events({
 
-	'click .btn-saveLoc' (event) {
+	'click/touchstart .btn-saveLoc' (event) {
 		var modal = $('#locationModal')
 		row = modal.data("row");
 		col = modal.data("col");
@@ -156,7 +156,7 @@ Template.planner.events({
 		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
 	},
 
-	'click .btn-saveTrip' (event) {
+	'click/touchstart .btn-saveTrip' (event) {
 		//if there is existing, update
 		//else add new entry
 		var trip = Template.instance().trip.get();
@@ -187,7 +187,7 @@ Template.planner.events({
 		}		
 	},
 
-	'click .btn-addDay' (event) {
+	'click/touchstart .btn-addDay' (event) {
 		//add a new day to the dayArray.
 
 		var trip = Template.instance().trip;
@@ -207,13 +207,13 @@ Template.dayTemplate.helpers({
 });
 
 Template.dayTemplate.events({
-	'click .btn-dayAddLoc' (event) {
+	'click/touchstart .btn-dayAddLoc' (event) {
 		//add a blank location.
 		this.trip.get().dayArray[this.dayIndex].push("poopdiscoop");
 		this.trip.set(this.trip.get());
 	},
 
-	'click .btn-removeDay' (event) {
+	'click/touchstart .btn-dayRemoveDay' (event) {
 		//remove day
 		this.trip.get().dayArray.splice(this.dayIndex, 1);
 		this.trip.set(this.trip.get());
@@ -234,13 +234,13 @@ Template.locationTemplate.helpers({
 });
 
 Template.locationTemplate.events({
-	'click .btn-deleteLoc' (event) {
+	'click/touchstart .btn-deleteLoc' (event) {
 		//remove from object.
 		this.trip.get().dayArray[this.dayIndex].splice(this.locIndex, 1);
 		this.trip.set(this.trip.get());
 	},
 
-	'click .btn-selectLoc' (event) {
+	'click/touchstart .btn-selectLoc' (event) {
 		dayIndex = this.dayIndex;
 		locIndex = this.locIndex;
 		//open a javascript modal thing

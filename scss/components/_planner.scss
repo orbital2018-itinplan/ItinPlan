@@ -1,7 +1,15 @@
+.container-fluid.plannerControl {
+    padding-top: 100px;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    display: inline-grid;
+}
+
 .container-fluid.planner {
     min-height: 100vh;
-    padding-top: 100px;
+    display: inline-block;
     width: fit-content;
+    overflow-x: auto;
 }
 
 
@@ -26,8 +34,4 @@
 
 .btn-deleteLoc {
     padding: 5px;
-}
-
-.btn-saveTrip {
-    margin-left: 5px;
 }
