@@ -30,77 +30,84 @@ Template.planner.onCreated(function() {
 		};
 		//Session.set('trip', thistrip);
 		trip.set(newTrip);
+		
 	}
-	else if(FlowRouter.getQueryParam('_id') == undefined)
+	else 
 	{
-		//current existing trip being edited
-		//Session.set('trip', JSON.parse(localStorage.getItem('trip')));
-		trip.set(JSON.parse(localStorage.getItem('trip')));
-		if(Meteor.userId())
+		if(FlowRouter.getQueryParam('_id') == undefined)
 		{
-			trip.get().owner = Meteor.userId();
-			trip.set(trip.get());
-		}
-	}
-	else
-	{
-		//load a trip from db
-		this.autorun(function(autorunner) {
-			//not yet subscribed, return
-			if(! subscription.ready())
-			  return;
-			//else do this
-			else
+			//current existing trip being edited
+			//Session.set('trip', JSON.parse(localStorage.getItem('trip')));
+			trip.set(JSON.parse(localStorage.getItem('trip')));
+			if(Meteor.userId())
 			{
-				var queryTrip = Trips.findOne( { _id: FlowRouter.getQueryParam('_id') } );//.fetch()[0];
-				//console.log(trip);
-				//if exist = not undefined
-				if(queryTrip != undefined)
-					//Session.set('trip', queryTrip);
-					trip.set(queryTrip);
-				else
-					console.log("invalid");
-				autorunner.stop();
+				trip.get().owner = Meteor.userId();
+				trip.set(trip.get());
 			}
-		});
+		}
+		else
+		{
+			//load a trip from db
+			this.autorun(function(autorunner) {
+				//not yet subscribed, return
+				if(! subscription.ready())
+				return;
+				//else do this
+				else
+				{
+					var queryTrip = Trips.findOne( { _id: FlowRouter.getQueryParam('_id') } );//.fetch()[0];
+					//console.log(trip);
+					//if exist = not undefined
+					if(queryTrip != undefined)
+						trip.set(queryTrip);
+					else
+						console.log("invalid");
+					autorunner.stop();
+				}
+			});
+		}
 	}
 
 });
 
 Template.planner.helpers({
 
-	//check trip
+	//check trip, use this to get loading
 	haveTrip: function() {
 		var trip = Template.instance().trip.get();
 		if(trip == undefined)
 		{
-			//console.log("no trip yet");
 			return false;
 		}
 		else
 		{
-			//console.log("trip gotten");
 			return true;
 		}
 	},
 	
 	//get trip will have gotten the trip, so return the trip array
 	tripDays() {
+		if(Template.instance().trip.get() == undefined)
+			return "";
 		return Template.instance().trip.get().dayArray;
 	},
 
 	tripCountry: function() {
+		if(Template.instance().trip.get() == undefined)
+			return "";
 		return Template.instance().trip.get().country;
 	},
 
 	tripStartDate: function() {
+		if(Template.instance().trip.get() == undefined)
+			return "";
 		return Template.instance().trip.get().startDate;
 	},
 
 	tripId: function() {
 		//to return nullvalue
 		if(Template.instance().trip.get() == undefined)
-			return "";
+			return;
 		return Template.instance().trip.get()._id;
 	},
 
@@ -145,7 +152,7 @@ Template.planner.helpers({
 
 Template.planner.events({
 
-	'click .btn-saveLoc' (event) {
+	'click/touchstart .btn-saveLoc' (event) {
 		var modal = $('#locationModal')
 		row = modal.data("row");
 		col = modal.data("col");
@@ -156,7 +163,7 @@ Template.planner.events({
 		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
 	},
 
-	'click .btn-saveTrip' (event) {
+	'click/touchstart .btn-saveTrip' (event) {
 		//if there is existing, update
 		//else add new entry
 		var trip = Template.instance().trip.get();
@@ -187,7 +194,7 @@ Template.planner.events({
 		}		
 	},
 
-	'click .btn-addDay' (event) {
+	'click/touchstart .btn-addDay' (event) {
 		//add a new day to the dayArray.
 
 		var trip = Template.instance().trip;
@@ -207,13 +214,13 @@ Template.dayTemplate.helpers({
 });
 
 Template.dayTemplate.events({
-	'click .btn-dayAddLoc' (event) {
+	'click/touchstart .btn-dayAddLoc' (event) {
 		//add a blank location.
 		this.trip.get().dayArray[this.dayIndex].push("poopdiscoop");
 		this.trip.set(this.trip.get());
 	},
 
-	'click .btn-removeDay' (event) {
+	'click/touchstart .btn-dayRemoveDay' (event) {
 		//remove day
 		this.trip.get().dayArray.splice(this.dayIndex, 1);
 		this.trip.set(this.trip.get());
@@ -234,13 +241,13 @@ Template.locationTemplate.helpers({
 });
 
 Template.locationTemplate.events({
-	'click .btn-deleteLoc' (event) {
+	'click/touchstart .btn-deleteLoc' (event) {
 		//remove from object.
 		this.trip.get().dayArray[this.dayIndex].splice(this.locIndex, 1);
 		this.trip.set(this.trip.get());
 	},
 
-	'click .btn-selectLoc' (event) {
+	'click/touchstart .btn-selectLoc' (event) {
 		dayIndex = this.dayIndex;
 		locIndex = this.locIndex;
 		//open a javascript modal thing
