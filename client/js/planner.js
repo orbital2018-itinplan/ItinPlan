@@ -30,77 +30,84 @@ Template.planner.onCreated(function() {
 		};
 		//Session.set('trip', thistrip);
 		trip.set(newTrip);
+		
 	}
-	else if(FlowRouter.getQueryParam('_id') == undefined)
+	else 
 	{
-		//current existing trip being edited
-		//Session.set('trip', JSON.parse(localStorage.getItem('trip')));
-		trip.set(JSON.parse(localStorage.getItem('trip')));
-		if(Meteor.userId())
+		if(FlowRouter.getQueryParam('_id') == undefined)
 		{
-			trip.get().owner = Meteor.userId();
-			trip.set(trip.get());
-		}
-	}
-	else
-	{
-		//load a trip from db
-		this.autorun(function(autorunner) {
-			//not yet subscribed, return
-			if(! subscription.ready())
-			  return;
-			//else do this
-			else
+			//current existing trip being edited
+			//Session.set('trip', JSON.parse(localStorage.getItem('trip')));
+			trip.set(JSON.parse(localStorage.getItem('trip')));
+			if(Meteor.userId())
 			{
-				var queryTrip = Trips.findOne( { _id: FlowRouter.getQueryParam('_id') } );//.fetch()[0];
-				//console.log(trip);
-				//if exist = not undefined
-				if(queryTrip != undefined)
-					//Session.set('trip', queryTrip);
-					trip.set(queryTrip);
-				else
-					console.log("invalid");
-				autorunner.stop();
+				trip.get().owner = Meteor.userId();
+				trip.set(trip.get());
 			}
-		});
+		}
+		else
+		{
+			//load a trip from db
+			this.autorun(function(autorunner) {
+				//not yet subscribed, return
+				if(! subscription.ready())
+				return;
+				//else do this
+				else
+				{
+					var queryTrip = Trips.findOne( { _id: FlowRouter.getQueryParam('_id') } );//.fetch()[0];
+					//console.log(trip);
+					//if exist = not undefined
+					if(queryTrip != undefined)
+						trip.set(queryTrip);
+					else
+						console.log("invalid");
+					autorunner.stop();
+				}
+			});
+		}
 	}
 
 });
 
 Template.planner.helpers({
 
-	//check trip
+	//check trip, use this to get loading
 	haveTrip: function() {
 		var trip = Template.instance().trip.get();
 		if(trip == undefined)
 		{
-			//console.log("no trip yet");
 			return false;
 		}
 		else
 		{
-			//console.log("trip gotten");
 			return true;
 		}
 	},
 	
 	//get trip will have gotten the trip, so return the trip array
 	tripDays() {
+		if(Template.instance().trip.get() == undefined)
+			return "";
 		return Template.instance().trip.get().dayArray;
 	},
 
 	tripCountry: function() {
+		if(Template.instance().trip.get() == undefined)
+			return "";
 		return Template.instance().trip.get().country;
 	},
 
 	tripStartDate: function() {
+		if(Template.instance().trip.get() == undefined)
+			return "";
 		return Template.instance().trip.get().startDate;
 	},
 
 	tripId: function() {
 		//to return nullvalue
 		if(Template.instance().trip.get() == undefined)
-			return "";
+			return;
 		return Template.instance().trip.get()._id;
 	},
 
