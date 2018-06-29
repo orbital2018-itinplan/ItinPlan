@@ -1,16 +1,20 @@
 <template name="planner">
+
+	{{#if haveTrip}}
 	<div class="container-fluid plannerControl">
 
 		<!-- Alert -->
-		<div class="alert alert-success alert-dismissible fade show" role="alert" id="newTripAlert">
-			<h4 class="alert-heading">Welcome to your new trip itinerary!</h4>
-			<p>Hi there! Start planning your future vacation.</p>
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			<hr>
-			<p class="mb-0">Some advice here etc.</p>
-		</div>
+		{{#if isNewlyCreated}}
+			<div class="alert alert-success alert-dismissible fade show" role="alert" id="newTripAlert">
+				<h4 class="alert-heading">Welcome to your new trip itinerary!</h4>
+				<p>Hi there! Start planning your future vacation.</p>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				<hr>
+				<p class="mb-0">Some advice here etc.</p>
+			</div>
+		{{/if}}
 
 		<!-- Trip Name -->
 		<h2 class="text-center">My Trip</h2>
@@ -19,132 +23,51 @@
 		<div class="row p-3">
 			<div class="col">
 				<div class="card">
-
 					<div class="card-body m-3">
 						<!-- For members, allow save -->
 						{{#if checkLoginAndData}}
 							<button class="btn btn-success btn-saveTrip float-right">Save Trip</button>
 						{{/if}}
 						<!-- Trip statistics -->
-						<h5 class="card-title">ID: {{tripId}}</h5>
+						<h5 class="card-title">Country of interest: {{tripCountry}}</h5>
 						<h5 class="card-title">Start Date: {{tripStartDate}}</h5>
 						<h5 class="card-title">Days: {{tripDays.length}}</h5>
 						<hr>
-						<button class="btn btn-primary btn-openSettings" data-toggle="modal" data-target="#settingsModal">Edit settings</button>
-					</div>
-
+						<button class="btn btn-primary btn-openSettings float-right" data-toggle="modal" data-target="#settingsModal">Edit settings</button>
+					</div> 
 				</div>
 			</div>
 		</div>
 		<div class="w-100"></div>
-
 	</div>
 
-	<!--contain the trip planner itself-->
-	{{#if haveTrip}}
-		<div class="container-fluid planner">
-			<!--{{createTrip "Mexico"}}-->
-			<!-- add stuff like days and start date etc
-			<label>{{tripCountry}}</label>
-			-->
+	<!--ensure trip stored in local storage constantly-->
+	{{localStorageTrip}}
 
-			<!--this is the control panel-->
-			
-			<!--keep trip stored in local storage constantly-->
-				{{localStorageTrip}}
+	<!-- trip planner itself -->
+	<div class="container-fluid planner">
 
-				{{# each day in tripDays}}
-					{{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
-				{{/each}}
+		<!--for each day in tripdays, create a daytemplate-->
+		{{# each day in tripDays}}
+			{{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
+		{{/each}}
 
-				<!-- for the new day button -->
-				<div class="row align-items-center p-3">
-					<div class="btn btn-danger btn-addDay">Add Day</div>
-				</div>
-				<div class="w-100"></div>
-			
+		<!-- new day button -->
+		<div class="row align-items-center p-3">
+			<div class="btn btn-danger btn-addDay">Add Day</div>
 		</div>
+		<div class="w-100"></div>
+
+	</div>
 	{{else}}
-		<div class="container d-flex justify-content-center">
+		<!--loading spinner thingy-->
+		<div class="container d-flex justify-content-center pt-5 mt-5">
 			<div id="html-spinner"></div>
 		</div>
 	{{/if}}
 
 	<!--this is for the control panel editing stuff-->
-	<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
-			<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">My Trip settings:</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<div class="container pr-1 pl-1">
-					<form>
-						<!--add form controls here-->
-						<!-- from https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date -->
-						<div class="form-row p-1">
-							<label for="dayNumbers" class="col-3 col-form-label">Start Date:</label>
-							<div class="col-3">
-								<input type="number" class="form-control" id="dateDay" placeholder="Day" min=1 max=365>
-							</div>
-							<div class="col-4">
-								<select class="form-control" id="dateMonth" placeholder="Month">
-									<option selected>January</option>
-									<option>February</option>
-									<option>March</option>
-									<option>April</option>
-									<option>May</option>
-									<option>June</option>
-									<option>July</option>
-									<option>August</option>
-									<option>September</option>
-									<option>October</option>
-									<option>November</option>
-									<option>December</option>
-								</select>
-							</div>
-							<div class="col-2">
-								<select class="form-control" id="dateYear" placeholder="Year">
-									<option selected>2018</option>
-									<option>2018</option>
-									<option>2018</option>
-									<option>2018</option>
-									<option>2018</option>
-									<option>2018</option>
-									<option>2018</option>
-									<option>2018</option>
-									<option>2018</option>
-									<option>2018</option>
-									<option>2018</option>
-									<option>2018</option>
-								</select>
-							</div>
-							
-						</div>
-
-						<div class="form-row p-1">
-							<label for="dayNumbers" class="col col-form-label">Number of days:</label>
-							<div class="col-2">
-								<input type="number" class="form-control" id="dayNumbers" placeholder="# of days" min="1" max="365">
-							</div>
-						</div>
-
-						
-
-						
-
-					</form>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary btn-saveSettings" data-dismiss="modal">Save</button>
-			</div>
-			</div>
-		</div>
-	</div>
+	{{> settingsModalTemplate trip=reactiveTrip countryDropDown=reactiveCountryList}}
 	
 	<!--modal for opening location @yuanrong javascript must be in planner template-->
 	<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
@@ -167,9 +90,81 @@
 			</div>
 		</div>
 	</div>
-	
 </template>
 
+<!--setting template-->
+<template name="settingsModalTemplate">
+	<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">My Trip settings:</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="container pr-1 pl-1">
+					<form>
+
+						<div class="form-row p-1">
+							<div class="form-group col">
+								<label for="country">Country:</label>
+								<select class="form-control" id="country">
+									<option>Custom</option>
+									{{#each country in countryDropDown}}
+										<option>{{country}}</option>
+									{{/each}}
+								</select>
+							</div>
+						</div>
+
+						<div class="form-row p-1 align-items-end">
+							<div class="form-group col">
+								<label for="dateDay">Start Date:</label>
+								<select class="form-control" id="dateDay" placeholder="Day">
+									{{#each day in daysDropDown}}
+										<option>{{day}}</option>
+									{{/each}}
+								</select>
+							</div>
+
+							<div class="form-group col">
+								<select class="form-control" id="dateMonth" placeholder="Month">
+									{{#each month in monthsDropDown}}
+										<option>{{month}}</option>
+									{{/each}}
+								</select>
+							</div>
+
+							<div class="form-group col">
+								<select class="form-control" id="dateYear" placeholder="Year">
+									{{#each year in yearsDropDown}}
+										<option>{{year}}</option>
+									{{/each}}
+								</select>
+							</div>
+						</div>
+
+						<div class="form-row p-1">
+							<div class="col">
+								<label for="dayNumbers">Number of days:</label>
+								<input type="number" class="form-control" id="dayNumbers" placeholder="# of days" min="1" max="365">
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-saveSettings" data-dismiss="modal">Save</button>
+			</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<!-- template for each row -->
 <template name="dayTemplate">
 	<div class="row align-items-center p-3">
 		<!--for each day, there is a day button and locations within the day template.-->
@@ -188,6 +183,7 @@
 	<div class="w-100"></div>
 </template>
 
+<!-- template for each location -->
 <template name="locationTemplate">
 	<div class="card border-primary m-1" style="width: 12rem;">
 			<img class="card-img-top planner m-1 border border-dark">
