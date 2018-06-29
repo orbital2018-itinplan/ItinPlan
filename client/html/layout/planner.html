@@ -1,4 +1,6 @@
 <template name="planner">
+
+	{{#if haveTrip}}
 	<div class="container-fluid plannerControl">
 
 		<!-- Alert -->
@@ -39,33 +41,33 @@
 		<div class="w-100"></div>
 	</div>
 
-	<!--contain the trip planner itself-->
-	{{#if haveTrip}}
-		<!--ensure trip stored in local storage constantly-->
-		{{localStorageTrip}}
-		<div class="container-fluid planner">
+	<!--ensure trip stored in local storage constantly-->
+	{{localStorageTrip}}
 
-			<!--for each day in tripdays, create a daytemplate-->
-			{{# each day in tripDays}}
-				{{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
-			{{/each}}
+	<!-- trip planner itself -->
+	<div class="container-fluid planner">
 
-			<!-- new day button -->
-			<div class="row align-items-center p-3">
-				<div class="btn btn-danger btn-addDay">Add Day</div>
-			</div>
-			<div class="w-100"></div>
+		<!--for each day in tripdays, create a daytemplate-->
+		{{# each day in tripDays}}
+			{{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
+		{{/each}}
 
+		<!-- new day button -->
+		<div class="row align-items-center p-3">
+			<div class="btn btn-danger btn-addDay">Add Day</div>
 		</div>
+		<div class="w-100"></div>
+
+	</div>
 	{{else}}
 		<!--loading spinner thingy-->
-		<div class="container d-flex justify-content-center">
+		<div class="container d-flex justify-content-center pt-5 mt-5">
 			<div id="html-spinner"></div>
 		</div>
 	{{/if}}
 
 	<!--this is for the control panel editing stuff-->
-	{{> settingsModalTemplate trip=reactiveTrip}}
+	{{> settingsModalTemplate trip=reactiveTrip countryDropDown=reactiveCountryList}}
 	
 	<!--modal for opening location @yuanrong javascript must be in planner template-->
 	<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
@@ -108,11 +110,11 @@
 						<div class="form-row p-1">
 							<div class="form-group col">
 								<label for="country">Country:</label>
-								<select class="form-control" id="country" placeholder="Country">
-									{{#each country in countries}}
+								<select class="form-control" id="country">
+									<option>Custom</option>
+									{{#each country in countryDropDown}}
 										<option>{{country}}</option>
 									{{/each}}
-									<option>Custom</option>
 								</select>
 							</div>
 						</div>
@@ -121,7 +123,7 @@
 							<div class="form-group col">
 								<label for="dateDay">Start Date:</label>
 								<select class="form-control" id="dateDay" placeholder="Day">
-									{{#each day in days}}
+									{{#each day in daysDropDown}}
 										<option>{{day}}</option>
 									{{/each}}
 								</select>
@@ -129,7 +131,7 @@
 
 							<div class="form-group col">
 								<select class="form-control" id="dateMonth" placeholder="Month">
-									{{#each month in months}}
+									{{#each month in monthsDropDown}}
 										<option>{{month}}</option>
 									{{/each}}
 								</select>
@@ -137,7 +139,7 @@
 
 							<div class="form-group col">
 								<select class="form-control" id="dateYear" placeholder="Year">
-									{{#each year in years}}
+									{{#each year in yearsDropDown}}
 										<option>{{year}}</option>
 									{{/each}}
 								</select>

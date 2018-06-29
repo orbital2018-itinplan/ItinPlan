@@ -8,13 +8,49 @@ import { Country } from '../../lib/models/db';
 */
 
 Template.planner.onCreated(function() {
-	//subscriptions
-	var subscription = Meteor.subscribe('trips');
+	/* ======================================================
+					Subscriptions
+	====================================================== */
+	var tripSubscription = Meteor.subscribe('trips');
+	this.countrySubscription = Meteor.subscribe('getCountry');
+	var countrySubscription = this.countrySubscription;
+	/* ======================================================
+					Country List Initalization
+	====================================================== */	
+	this.countryDropDownList = new ReactiveVar();
+	var countryDropDownList = this.countryDropDownList;
+	//Get the list of countries first.
+	this.autorun(function(autorunner) {
+		//not yet subscribed, return
+		if(! countrySubscription.ready())
+			return;
+		//else do this
+		else
+		{	
+			//load all the countries from db, put them into the array
+			var countryObjectsFromDB = Country.find({}, {sort: {country_name: 1}} ).fetch();
+			//if exist = not undefined
+			if(countryObjectsFromDB != undefined)
+			{
+				var countryArray = [];
+				countryObjectsFromDB.forEach(function(entry) {
+					countryArray.push(entry.country_name);
+				});
+				countryDropDownList.set(countryArray);
+			}
+			else
+				console.log("invalid");
+			autorunner.stop();
+		}
+	});
 
+	/* ======================================================
+					Trip Initialization 
+	====================================================== */
 	//change this to session variable later. (tested session variable, abit iffy)
 	this.trip = new ReactiveVar();
 	var trip = this.trip;
-	//reactive variable (Should be session) for new trip, if true means its a new trip. else false;
+	//reactive variable (Should be session) for new trip, if true means its a newly created trip. else false;
 	this.newlyCreated = new ReactiveVar();
 	var newlyCreated = this.newlyCreated;
 	//eg "/?_id=new&country=mexico" -> _id = new, country = mexico
@@ -57,7 +93,7 @@ Template.planner.onCreated(function() {
 			//load a trip from db
 			this.autorun(function(autorunner) {
 				//not yet subscribed, return
-				if(! subscription.ready())
+				if(! tripSubscription.ready())
 					return;
 				//else do this
 				else
@@ -77,9 +113,19 @@ Template.planner.onCreated(function() {
 });
 
 Template.planner.onRendered(function() { 
-	if(Template.instance().newlyCreated.get()) {	
-		//show setting modal
-		$('#settingsModal').modal("show");
+	//if newly created, wait till data populated then show modal.
+	var countrySubscription = this.countrySubscription;
+	if(Template.instance().newlyCreated.get())
+	{
+		Tracker.autorun(function(autorunner){
+			if(!countrySubscription.ready())
+				return;
+			else
+			{
+				$('#settingsModal').modal("show");
+				autorunner.stop();
+			}
+		})
 	}
 });
 
@@ -120,10 +166,14 @@ Template.planner.helpers({
 		return Template.instance().trip.get()._id;
 	},
 
-	
 	//for displaying savetrip button
 	checkLoginAndData: function() {
 		return value = (Template.instance().subscriptionsReady() && Meteor.userId() != null) 
+	},
+
+	//pass on reactive countrylist to children templates
+	reactiveCountryList: function() {
+		return Template.instance().countryDropDownList;
 	},
 
 	//pass on reactive trip to children templates
@@ -207,35 +257,49 @@ Template.planner.events({
 //populate select
 Template.settingsModalTemplate.onCreated(function() {
 	//set these 2 for updating select options
-	this.days = new ReactiveVar();
-	this.months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-	this.years = new ReactiveVar();
+	this.daysDropDown = new ReactiveVar();
+	this.monthsDropDown = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	this.yearsDropDown = new ReactiveVar();
 	
-	this.countries = []; //get the country array from server maybe? must be a array of string
-
+	//populate year till today + 50
 	let yearCount = [];
 	let today = new Date();
 	for(var i = today.getFullYear(); i < (today.getFullYear() + 50); i++)
 		yearCount.push(i);
 
 	//initalise days and years
-	this.days.set([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]);
-	this.years.set(yearCount);
+	this.daysDropDown.set([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]);
+	this.yearsDropDown.set(yearCount);
+	//console.log(Template.instance().countryDropDown.get());
 });
 
 Template.settingsModalTemplate.helpers({
-	days: function() {
-		return Template.instance().days.get();
+	daysDropDown: function() {
+		return Template.instance().daysDropDown.get();
 	},
-	months: function() {
-		return Template.instance().months;
+	monthsDropDown: function() {
+		return Template.instance().monthsDropDown;
 	},
-	years: function() {
-		return Template.instance().years.get();
+	yearsDropDown: function() {
+		return Template.instance().yearsDropDown.get();
 	},
-	countries: function() {
-		return Template.instance().countries;
+	countryDropDown: function() {
+		return this.countryDropDown.get();
+	},
+	countryListIsPopulated: function() {
+		if(this.countryDropDown.get() != undefined)
+			return true;
+		else
+			return false;
 	}
+});
+
+Template.settingsModalTemplate.onRendered(function (){
+	console.log(Template.instance().find("#country").length);
+	console.log(Template.instance().find("#dateYear").length);
+
+	console.log(Template.instance().find("#dateDay").length);
+	//need to populate inside oncreated.
 });
 
 Template.settingsModalTemplate.events({
@@ -244,17 +308,41 @@ Template.settingsModalTemplate.events({
 		//update date settings inside the modal
 		var date = new Date(this.trip.get().startDate);
 		Template.instance().find("#dateYear").value = date.getFullYear();
-		Template.instance().find("#dateMonth").value = Template.instance().months[date.getMonth()];
+		Template.instance().find("#dateMonth").value = Template.instance().monthsDropDown[date.getMonth()];
 		Template.instance().find("#dateDay").value = date.getDate();
 		Template.instance().find("#dayNumbers").value = this.trip.get().dayArray.length;
-		Template.instance().find("#country").value = this.trip.get().country;
+		var countryDropDown = this.countryDropDown;
+		var countryHTMLElement = Template.instance().find("#country");
+		var trip = this.trip;
+		console.log(countryHTMLElement.length);
+
+		if(countryDropDown.get() == undefined) 
+		{
+			//if havent populate
+			//meaning there are no entries, we need to wait for the data to load, then set the selected country.
+			Tracker.autorun(function(autorunner) {
+				if(countryDropDown.get() == undefined)
+					return;
+				else
+				{
+					console.log(countryDropDown.get()[5] === trip.get().country);
+					console.log(countryHTMLElement.length + " equals " + trip.get().country);
+					countryHTMLElement.selectedIndex = "2";//"Italy";//trip.get().country;
+					console.log(countryHTMLElement.value + " equals " + trip.get().country);
+					autorunner.stop();
+				}
+			});
+			console.log(countryHTMLElement.length);
+		}
+		else
+			Template.instance().find("#country").value = this.trip.get().country;
 	},
 
 	//change date month and year -> check for 30/31 days and leapyear
 	'change #dateMonth' (event) {
 		//when date is changed, change the number of days in the day element
 		//used this page => https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date
-		var dayOptions = Template.instance().days.get();
+		var dayOptions = Template.instance().daysDropDown.get();
 		var month = event.target.value;
 		if(month ==='January' || month === 'March' || month === 'May' || month === 'July' || month === 'August' || month === 'October' || month === 'December') {
 			while(dayOptions.length < 31)			{
@@ -285,12 +373,12 @@ Template.settingsModalTemplate.events({
 					dayOptions.splice(dayOptions.length-1);
 			}
 		}
-		Template.instance().days.set(Template.instance().days.get());
+		Template.instance().daysDropDown.set(Template.instance().daysDropDown.get());
 	},
 
 	'change #dateYear' (event) {
 		var month = Template.instance().find("#dateMonth").value;
-		var dayOptions = Template.instance().days.get();
+		var dayOptions = Template.instance().daysDropDown.get();
 		if(month === "February")
 		{
 			//check for leapyear
@@ -307,12 +395,12 @@ Template.settingsModalTemplate.events({
 					dayOptions.splice(dayOptions.length-1);			
 			}
 		}
-		Template.instance().days.set(Template.instance().days.get());
+		Template.instance().daysDropDown.set(Template.instance().daysDropDown.get());
 	},
 
 	'click/touchstart .btn-saveSettings' (event) {
 		//to do validation, remove data-dismiss of the button
-		var newStartDate = new Date(Template.instance().find("#dateYear").value, Template.instance().months.indexOf(Template.instance().find("#dateMonth").value), Template.instance().find("#dateDay").value, 0, 0, 0, 0);
+		var newStartDate = new Date(Template.instance().find("#dateYear").value, Template.instance().monthsDropDown.indexOf(Template.instance().find("#dateMonth").value), Template.instance().find("#dateDay").value, 0, 0, 0, 0);
 		this.trip.get().startDate = newStartDate;
 		//set the number of days to the trip.
 		if(this.trip.get().dayArray.length < Template.instance().find("#dayNumbers").value)
