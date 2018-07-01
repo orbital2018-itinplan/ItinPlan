@@ -5,4 +5,10 @@ import 'bootstrap';
 
 import '../html/main.html';
 
+Meteor.startup(function() {
+    const APIKey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
+    //load GoogleMaps
+    GoogleMaps.load({key: APIKey});
+});
+
 //account config

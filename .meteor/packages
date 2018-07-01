@@ -20,10 +20,12 @@ shell-server@0.3.1            # Server-side component of the `meteor shell` comm
 kadira:flow-router              # Package for routing
 kadira:blaze-layout             # Package for routing
 
-cfs:standard-packages       #Photo uploading to mongoDB
-cfs:gridfs                  #Photo uploading to mongoDB
+dburles:google-maps             # Google Map API
+deanius:promise                 # Promise for client side
+simple:reactive-method
+
 underscore@1.0.10
 fourseven:scss
 useraccounts:unstyled
 accounts-password@1.5.1
-session@1.1.7
+session

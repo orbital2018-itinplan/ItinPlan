@@ -31,12 +31,15 @@ const initialise = function () {
             //console.log("LOCATION NAME STORED: " + place);
             const photoReference = result.data.results[0].photos[0].photo_reference;
             //console.log("PHOTO STORED:" + photoReference);
+            const lat = result.data.results[0].geometry.location.lat;
+            //console.log("Lat Stored: " + lat);
+            const lng = result.data.results[0].geometry.location.lng;
             console.log("----------------------------");
 
-            Country.insert({country_name: place, photo_reference: photoReference});
+            Country.insert({country_name: place, photo_reference: photoReference, lat: lat, lng: lng});
         }
 
-    } /*else {    ===============//comment out so dun keep using api ============================
+    } /* else {    ===============//comment out so dun keep using api ============================
         //Update country collection
         Country.find({}, {sort: {country_name: 1}}).forEach(function (obj) {
             const country = (obj.country_name).toString();
@@ -55,6 +58,9 @@ const initialise = function () {
                 //console.log("LOCATION NAME STORED: " + place);
                 const photoReference = result.data.results[0].photos[0].photo_reference;
                 //console.log("PHOTO STORED:" + photoReference);
+                const lat = result.data.results[0].geometry.location.lat;
+                //console.log("Lat Stored: " + lat);
+                const lng = result.data.results[0].geometry.location.lng;
                 console.log("----------------------------");
 
 
@@ -62,7 +68,7 @@ const initialise = function () {
                     //console.log("------UPDATE DATABASE--------");
                     //console.log("Name: " + place);
                     //console.log("Reference: " + photoReference);
-                    Country.update({country_name: place}, {$set: {photo_reference: photoReference}});
+                    Country.update({country_name: place}, {$set: {photo_reference: photoReference, lat: lat, lng: lng}});
                 } catch (error) {
                     console.log("ERROR :" + error);
                 }
@@ -78,6 +84,27 @@ Meteor.startup(() => {
 
     initialise();
     //Meteor.setInterval(initialise, 300000);
+
+    Meteor.methods({
+        'getLatLng': function(searchLoc){
+
+            const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
+            const url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + searchLoc + "&key=" + APIkey + "";
+
+            const result = HTTP.get(url, {});
+            //console.log(result.data.results[0]);
+            return result;
+        },
+
+        'getLocName': function(placeId){
+            const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
+            const url = "https://maps.googleapis.com/maps/api/place/details/json?placeid="+placeId+"&key=" + APIkey + "";
+
+
+            const result = HTTP.get(url, {});
+            return result;
+        }
+    });
 
     Meteor.publish('getCountry', function () {
         return Country.find({});
