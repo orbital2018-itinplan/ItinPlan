@@ -161,7 +161,7 @@ Template.planner.helpers({
 	isNewlyCreated: function() {
 		//if newly created, wait till data populated then show modal.
 		return Template.instance().newlyCreated.get();
-	}
+	},
 
   locationMap: function () {
       const countryName = Template.instance().trip.get().country;
