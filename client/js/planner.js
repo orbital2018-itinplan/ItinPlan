@@ -12,37 +12,6 @@ Template.planner.onCreated(function() {
 					Subscriptions
 	====================================================== */
 	var tripSubscription = Meteor.subscribe('trips');
-	this.countrySubscription = Meteor.subscribe('getCountry');
-	var countrySubscription = this.countrySubscription;
-	/* ======================================================
-					Country List Initalization
-	====================================================== */	
-	this.countryDropDownList = new ReactiveVar();
-	var countryDropDownList = this.countryDropDownList;
-	//Get the list of countries first.
-	this.autorun(function(autorunner) {
-		//not yet subscribed, return
-		if(! countrySubscription.ready())
-			return;
-		//else do this
-		else
-		{	
-			//load all the countries from db, put them into the array
-			var countryObjectsFromDB = Country.find({}, {sort: {country_name: 1}} ).fetch();
-			//if exist = not undefined
-			if(countryObjectsFromDB != undefined)
-			{
-				var countryArray = [];
-				countryObjectsFromDB.forEach(function(entry) {
-					countryArray.push(entry.country_name);
-				});
-				countryDropDownList.set(countryArray);
-			}
-			else
-				console.log("invalid");
-			autorunner.stop();
-		}
-	});
 
 	/* ======================================================
 					Trip Initialization 
@@ -50,9 +19,11 @@ Template.planner.onCreated(function() {
 	//change this to session variable later. (tested session variable, abit iffy)
 	this.trip = new ReactiveVar();
 	var trip = this.trip;
+
 	//reactive variable (Should be session) for new trip, if true means its a newly created trip. else false;
 	this.newlyCreated = new ReactiveVar();
 	var newlyCreated = this.newlyCreated;
+
 	//eg "/?_id=new&country=mexico" -> _id = new, country = mexico
 	//for loading of trip etc.
 	//if new => create new trip with all undefined. owner = undefined
@@ -109,23 +80,12 @@ Template.planner.onCreated(function() {
 			});
 		}
 	}
-
 });
 
 Template.planner.onRendered(function() { 
-	//if newly created, wait till data populated then show modal.
-	var countrySubscription = this.countrySubscription;
 	if(Template.instance().newlyCreated.get())
 	{
-		Tracker.autorun(function(autorunner){
-			if(!countrySubscription.ready())
-				return;
-			else
-			{
-				$('#settingsModal').modal("show");
-				autorunner.stop();
-			}
-		})
+		$('#settingsModal').modal('show');
 	}
 });
 
@@ -171,14 +131,14 @@ Template.planner.helpers({
 		return value = (Template.instance().subscriptionsReady() && Meteor.userId() != null) 
 	},
 
-	//pass on reactive countrylist to children templates
-	reactiveCountryList: function() {
-		return Template.instance().countryDropDownList;
-	},
-
 	//pass on reactive trip to children templates
 	reactiveTrip: function() {
 		return Template.instance().trip;
+	},
+
+	//pass on reactive trip to children templates
+	reactiveNewlyCreated: function() {
+		return Template.instance().newlyCreated;
 	},
 
 	//save trip in localstorage
@@ -188,6 +148,7 @@ Template.planner.helpers({
 	},
 
 	isNewlyCreated: function() {
+		//if newly created, wait till data populated then show modal.
 		return Template.instance().newlyCreated.get();
 	}
 });
@@ -229,10 +190,10 @@ Template.planner.events({
 			//update existing
 			Meteor.call('trips.update', trip, function(error, result) {
 				//set session state to complete.
-				console.log(result);
+				alert("trip saved");
 			});
 			//can set session.state to loading if want
-			console.log("UPDATING");
+			console.log("Saving . . .");
 		}		
 	},
 
@@ -256,6 +217,38 @@ Template.planner.events({
 
 //populate select
 Template.settingsModalTemplate.onCreated(function() {
+	//subscription
+	this.countrySubscription = Meteor.subscribe('getCountry');
+	var countrySubscription = this.countrySubscription;
+	/* ======================================================
+					Country List Initalization
+	====================================================== */	
+	this.countryDropDown = new ReactiveVar();
+	var countryDropDown = this.countryDropDown;
+	//Get the list of countries first.
+	this.autorun(function(autorunner) {
+		//not yet subscribed, return
+		if(! countrySubscription.ready())
+			return;
+		//else do this
+		else
+		{	
+			//load all the countries from db, put them into the array
+			var countryObjectsFromDB = Country.find({}, {sort: {country_name: 1}} ).fetch();
+			//if exist = not undefined
+			if(countryObjectsFromDB != undefined)
+			{
+				var countryArray = [];
+				countryObjectsFromDB.forEach(function(entry) {
+					countryArray.push(entry.country_name);
+				});
+				countryDropDown.set(countryArray);
+			}
+			else
+				console.log("invalid");
+			autorunner.stop();
+		}
+	});
 	//set these 2 for updating select options
 	this.daysDropDown = new ReactiveVar();
 	this.monthsDropDown = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -273,6 +266,29 @@ Template.settingsModalTemplate.onCreated(function() {
 	//console.log(Template.instance().countryDropDown.get());
 });
 
+Template.settingsModalTemplate.onRendered(function() {
+	/*console.log(Template.instance().find("#country"));
+	console.log(Template.instance().countryDropDown);
+	console.log(Template.currentData());
+
+	var trip = Template.currentData().trip;
+	var countryDropDown = Template.instance().countryDropDown;
+	this.autorun(function(){
+		if(countryDropDown.get() == undefined || trip.get() == undefined)
+			return; //--->Line1
+		else
+		{
+			Tracker.afterFlush(function(){
+				console.log(countryDropDown);
+				Template.currentData().find("#country").value = trip.get().country;
+				console.log(Template.instance().find("#country").value);
+				console.log(Template.instance().find("#country").length);
+			});
+		}
+	});
+	*/
+});
+
 Template.settingsModalTemplate.helpers({
 	daysDropDown: function() {
 		return Template.instance().daysDropDown.get();
@@ -284,22 +300,12 @@ Template.settingsModalTemplate.helpers({
 		return Template.instance().yearsDropDown.get();
 	},
 	countryDropDown: function() {
-		return this.countryDropDown.get();
+		return Template.instance().countryDropDown.get();
 	},
-	countryListIsPopulated: function() {
-		if(this.countryDropDown.get() != undefined)
-			return true;
-		else
-			return false;
+	setSelected: function() {
+		//just to ensure the starting value of the modal is the correct one, cant be done in show.bs.modal
+		country.value = this.trip.get().country;
 	}
-});
-
-Template.settingsModalTemplate.onRendered(function (){
-	console.log(Template.instance().find("#country").length);
-	console.log(Template.instance().find("#dateYear").length);
-
-	console.log(Template.instance().find("#dateDay").length);
-	//need to populate inside oncreated.
 });
 
 Template.settingsModalTemplate.events({
@@ -311,31 +317,6 @@ Template.settingsModalTemplate.events({
 		Template.instance().find("#dateMonth").value = Template.instance().monthsDropDown[date.getMonth()];
 		Template.instance().find("#dateDay").value = date.getDate();
 		Template.instance().find("#dayNumbers").value = this.trip.get().dayArray.length;
-		var countryDropDown = this.countryDropDown;
-		var countryHTMLElement = Template.instance().find("#country");
-		var trip = this.trip;
-		console.log(countryHTMLElement.length);
-
-		if(countryDropDown.get() == undefined) 
-		{
-			//if havent populate
-			//meaning there are no entries, we need to wait for the data to load, then set the selected country.
-			Tracker.autorun(function(autorunner) {
-				if(countryDropDown.get() == undefined)
-					return;
-				else
-				{
-					console.log(countryDropDown.get()[5] === trip.get().country);
-					console.log(countryHTMLElement.length + " equals " + trip.get().country);
-					countryHTMLElement.selectedIndex = "2";//"Italy";//trip.get().country;
-					console.log(countryHTMLElement.value + " equals " + trip.get().country);
-					autorunner.stop();
-				}
-			});
-			console.log(countryHTMLElement.length);
-		}
-		else
-			Template.instance().find("#country").value = this.trip.get().country;
 	},
 
 	//change date month and year -> check for 30/31 days and leapyear

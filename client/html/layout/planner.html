@@ -67,8 +67,8 @@
 	{{/if}}
 
 	<!--this is for the control panel editing stuff-->
-	{{> settingsModalTemplate trip=reactiveTrip countryDropDown=reactiveCountryList}}
-	
+	{{> settingsModalTemplate trip=reactiveTrip}}
+
 	<!--modal for opening location @yuanrong javascript must be in planner template-->
 	<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -111,9 +111,11 @@
 							<div class="form-group col">
 								<label for="country">Country:</label>
 								<select class="form-control" id="country">
-									<option>Custom</option>
+									<option value="Custom">Custom</option>
 									{{#each country in countryDropDown}}
-										<option>{{country}}</option>
+										<option value={{country}} >{{country}}</option>
+										<!-- ensures the select option is the trip option -->
+										{{setSelected}}
 									{{/each}}
 								</select>
 							</div>
