@@ -1,100 +1,172 @@
 <template name="planner">
 
-		<div class="container-fluid plannerControl">
-			
-			<div class="alert alert-success alert-dismissible fade show" role="alert">
-					<h4 class="alert-heading">Well done!</h4>
-					<p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					<hr>
-					<p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+	{{#if haveTrip}}
+	<div class="container-fluid plannerControl">
+
+		<!-- Alert -->
+		{{#if isNewlyCreated}}
+			<div class="alert alert-success alert-dismissible fade show" role="alert" id="newTripAlert">
+				<h4 class="alert-heading">Welcome to your new trip itinerary!</h4>
+				<p>Hi there! Start planning your future vacation.</p>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				<hr>
+				<p class="mb-0">Some advice here etc.</p>
 			</div>
-			
-			<h2 class="text-center">My Trip</h2>
+		{{/if}}
 
-			
+		<!-- Trip Name -->
+		<h2 class="text-center">My Trip</h2>
 
-			<div class="row p-3">
-				<div class="col">
+		<!-- Control Panel for trip -->
+		<div class="row p-3">
+			<div class="col">
 				<div class="card">
-						
-						<div class="card-body m-3">
-
-							{{#if checkLoginAndData}}
-								<button class="btn btn-success btn-saveTrip float-right">Save Trip</button>
-							{{/if}}
-
-							<h5 class="card-title">Start Date: {{tripStartDate}}</h5>
-							<h5 class="card-title">Days: {{tripDays.count}}</h5>
-							<hr>
-							<a href="#" class="btn btn-primary">Go somewhere</a>
-						</div>
-
-						
+					<div class="card-body m-3">
+						<!-- For members, allow save -->
+						{{#if checkLoginAndData}}
+							<button class="btn btn-success btn-saveTrip float-right">Save Trip</button>
+						{{/if}}
+						<!-- Trip statistics -->
+						<h5 class="card-title">Country of interest: {{tripCountry}}</h5>
+						<h5 class="card-title">Start Date: {{tripStartDate}}</h5>
+						<h5 class="card-title">Days: {{tripDays.length}}</h5>
+						<hr>
+						<button class="btn btn-primary btn-openSettings float-right" data-toggle="modal" data-target="#settingsModal">Edit settings</button>
+					</div> 
 				</div>
-				</div>
-
-				
-				
-			</div>
-			<div class="w-100"></div>
-		</div>
-
-		<!--contain the trip planner itself-->
-			<div class="container-fluid planner">
-				<!--{{createTrip "Mexico"}}-->
-				<!-- add stuff like days and start date etc
-				<label>{{tripCountry}}</label>
-				-->
-
-				<!--this is the control panel-->
-				
-				
-
-				{{#if haveTrip}}
-
-				<!--keep trip stored in local storage constantly-->
-					{{localStorageTrip}}
-
-					{{# each day in tripDays}}
-						{{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
-					{{/each}}
-
-					<!-- for the new day button -->
-					<div class="row align-items-center p-3">
-						<div class="btn btn-danger btn-addDay">Add Day</div>
-					</div>
-					<div class="w-100"></div>
-				{{else}}
-					<p>wait</p> <!--from database/or create? maybe idk-->
-				{{/if}}
-			</div>
-
-		<!--modal for opening location @yuanrong javascript must be in planner template-->
-		<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-			  <div class="modal-content">
-				<div class="modal-header">
-				  <h5 class="modal-title" id="exampleModalLabel">Select Location:</h5>
-				  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				  </button>
-				</div>
-				<div class="modal-body">
-				  <form>
-					  <input type="text" class="form-control" id="recipient-name">
-				  </form>
-				</div>
-				<div class="modal-footer">
-				  <button type="button" class="btn btn-secondary btn-saveLoc" data-dismiss="modal">Save</button>
-				</div>
-			  </div>
 			</div>
 		</div>
+		<div class="w-100"></div>
+	</div>
+
+	<!--ensure trip stored in local storage constantly-->
+	{{localStorageTrip}}
+
+	<!-- trip planner itself -->
+	<div class="container-fluid planner">
+
+		<!--for each day in tripdays, create a daytemplate-->
+		{{# each day in tripDays}}
+			{{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
+		{{/each}}
+
+		<!-- new day button -->
+		<div class="row align-items-center p-3">
+			<div class="btn btn-danger btn-addDay">Add Day</div>
+		</div>
+		<div class="w-100"></div>
+
+	</div>
+	{{else}}
+		<!--loading spinner thingy-->
+		<div class="container d-flex justify-content-center pt-5 mt-5">
+			<div id="html-spinner"></div>
+		</div>
+	{{/if}}
+
+	<!--this is for the control panel editing stuff-->
+	{{> settingsModalTemplate trip=reactiveTrip}}
+
+	<!--modal for opening location @yuanrong javascript must be in planner template-->
+	<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Select Location:</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<input type="text" class="form-control" id="recipient-name">
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-saveLoc" data-dismiss="modal">Save</button>
+			</div>
+			</div>
+		</div>
+	</div>
 </template>
 
+<!--setting template-->
+<template name="settingsModalTemplate">
+	<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">My Trip settings:</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="container pr-1 pl-1">
+					<form>
+
+						<div class="form-row p-1">
+							<div class="form-group col">
+								<label for="country">Country:</label>
+								<select class="form-control" id="country">
+									<option value="Custom">Custom</option>
+									{{#each country in countryDropDown}}
+										<option value={{country}} >{{country}}</option>
+										<!-- ensures the select option is the trip option -->
+										{{setSelected}}
+									{{/each}}
+								</select>
+							</div>
+						</div>
+
+						<div class="form-row p-1 align-items-end">
+							<div class="form-group col">
+								<label for="dateDay">Start Date:</label>
+								<select class="form-control" id="dateDay" placeholder="Day">
+									{{#each day in daysDropDown}}
+										<option>{{day}}</option>
+									{{/each}}
+								</select>
+							</div>
+
+							<div class="form-group col">
+								<select class="form-control" id="dateMonth" placeholder="Month">
+									{{#each month in monthsDropDown}}
+										<option>{{month}}</option>
+									{{/each}}
+								</select>
+							</div>
+
+							<div class="form-group col">
+								<select class="form-control" id="dateYear" placeholder="Year">
+									{{#each year in yearsDropDown}}
+										<option>{{year}}</option>
+									{{/each}}
+								</select>
+							</div>
+						</div>
+
+						<div class="form-row p-1">
+							<div class="col">
+								<label for="dayNumbers">Number of days:</label>
+								<input type="number" class="form-control" id="dayNumbers" placeholder="# of days" min="1" max="365">
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-saveSettings" data-dismiss="modal">Save</button>
+			</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<!-- template for each row -->
 <template name="dayTemplate">
 	<div class="row align-items-center p-3">
 		<!--for each day, there is a day button and locations within the day template.-->
@@ -113,6 +185,7 @@
 	<div class="w-100"></div>
 </template>
 
+<!-- template for each location -->
 <template name="locationTemplate">
 	<div class="card border-primary m-1" style="width: 12rem;">
 			<img class="card-img-top planner m-1 border border-dark">
