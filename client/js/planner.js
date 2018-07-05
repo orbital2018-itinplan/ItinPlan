@@ -224,7 +224,6 @@ Template.planner.events({
 		GoogleMaps.maps.locMap.instance.setCenter({lat: locLat, lng: loclng});
 		GoogleMaps.maps.locMap.instance.setZoom(15);
 
-
 		Session.set('placeId', result.data.results[0].place_id);
 
 	},
