@@ -11,14 +11,15 @@ import {Session} from 'meteor/session'
 
 Template.planner.onCreated(function() {
 
-  // We can use the `ready` callback to interact with the map API once the map is ready.
-  GoogleMaps.ready('locMap', function (map) {
-      // Add a marker to the map once it's ready
-      // var marker = new google.maps.Marker({
-      //     position: map.options.center,
-      //     map: map.instance
-      // });
-  });
+	// We can use the `ready` callback to interact with the map API once the map is ready.
+	GoogleMaps.ready('locMap', function (map) {
+		// Add a marker to the map once it's ready
+		// var marker = new google.maps.Marker({
+		//     position: map.options.center,
+		//     map: map.instance
+		// });
+	});
+
 	/* ======================================================
 					Subscriptions
 	====================================================== */
@@ -38,13 +39,13 @@ Template.planner.onCreated(function() {
 	//eg "/?_id=new&country=mexico" -> _id = new, country = mexico
 	//for loading of trip etc.
 	//if new => create new trip with all undefined. owner = undefined
-	if(FlowRouter.getQueryParam('_id') == "new")
+	if(FlowRouter.getQueryParam('_id') == "new" || localStorage.getItem('trip') == null)
 	{
-		//new trip
 		newlyCreated.set(true);
 		let countryEntered = FlowRouter.getQueryParam('country');
 		if(countryEntered == undefined)
 			countryEntered = "Custom";
+		//to set a new trip
 		var today = new Date();
 		let newTrip = {
 			owner: Meteor.userId(),
@@ -85,7 +86,19 @@ Template.planner.onCreated(function() {
 					if(queryTrip != undefined)
 						trip.set(queryTrip);
 					else
-						console.log("invalid");
+					{
+						newlyCreated.set(true);
+						var today = new Date();
+						let newTrip = {
+							owner: Meteor.userId(),
+							country: "Custom",
+							startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate(),0,0,0,0),
+							dayArray: [
+								[],
+							],
+						};
+						trip.set(newTrip);
+					}
 					autorunner.stop();
 				}
 			});
@@ -182,39 +195,39 @@ Template.planner.helpers({
 
 Template.planner.events({
 
-async 'click/touchstart .btn-saveLoc'(event) {
-    var modal = $('#locationModal')
-    row = modal.data("row");
-    col = modal.data("col");
-    //console.log(modal.find('.modal-body input').val());
-    console.log(Session.get('placeId'));
+	async 'click/touchstart .btn-saveLoc'(event) {
+		var modal = $('#locationModal')
+		row = modal.data("row");
+		col = modal.data("col");
+		//console.log(modal.find('.modal-body input').val());
+		console.log(Session.get('placeId'));
 
 
-    //console.log(Template.instance().trip.get());
-    Template.instance().trip.get().dayArray[row][col] = Session.get('placeId');
-    Template.instance().trip.set(Template.instance().trip.get());
-    //close(save) a javascript modal thing
-    //gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
-},
+		//console.log(Template.instance().trip.get());
+		Template.instance().trip.get().dayArray[row][col] = Session.get('placeId');
+		Template.instance().trip.set(Template.instance().trip.get());
+		//close(save) a javascript modal thing
+		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
+	},
 
-async 'click/touchstart .btn-searchLoc'(event) {
-    var modal = $('#locationModal')
-    const searchLoc = modal.find('.modal-body input').val();
-    //console.log(searchLoc);
+	async 'click/touchstart .btn-searchLoc'(event) {
+		var modal = $('#locationModal')
+		const searchLoc = modal.find('.modal-body input').val();
+		//console.log(searchLoc);
 
-    var result = await Meteor.callPromise('getLatLng', searchLoc);
-    var locLat = result.data.results[0].geometry.location.lat;
-    var loclng = result.data.results[0].geometry.location.lng;
-    //console.log("Second Try: "+ result.data.results[0].geometry.location.lat);
+		var result = await Meteor.callPromise('getLatLng', searchLoc);
+		var locLat = result.data.results[0].geometry.location.lat;
+		var loclng = result.data.results[0].geometry.location.lng;
+		//console.log("Second Try: "+ result.data.results[0].geometry.location.lat);
 
-    //update google map
-    GoogleMaps.maps.locMap.instance.setCenter({lat: locLat, lng: loclng});
-    GoogleMaps.maps.locMap.instance.setZoom(15);
+		//update google map
+		GoogleMaps.maps.locMap.instance.setCenter({lat: locLat, lng: loclng});
+		GoogleMaps.maps.locMap.instance.setZoom(15);
 
 
-    Session.set('placeId', result.data.results[0].place_id);
+		Session.set('placeId', result.data.results[0].place_id);
 
-},
+	},
 
 	//save trip in database (only if user is registered)
 	'click/touchstart .btn-saveTrip' (event) {
@@ -252,6 +265,12 @@ async 'click/touchstart .btn-searchLoc'(event) {
 		var trip = Template.instance().trip;
 		trip.get().dayArray.push( [] );
 		trip.set(trip.get());
+	},
+
+	'click/touchstart .btn-deleteLocalStorage' (event) {
+		console.log(localStorage.getItem('trip'));
+		localStorage.clear();
+		console.log(localStorage.getItem('trip'));
 	}
 });
 
@@ -316,26 +335,6 @@ Template.settingsModalTemplate.onCreated(function() {
 });
 
 Template.settingsModalTemplate.onRendered(function() {
-	/*console.log(Template.instance().find("#country"));
-	console.log(Template.instance().countryDropDown);
-	console.log(Template.currentData());
-
-	var trip = Template.currentData().trip;
-	var countryDropDown = Template.instance().countryDropDown;
-	this.autorun(function(){
-		if(countryDropDown.get() == undefined || trip.get() == undefined)
-			return; //--->Line1
-		else
-		{
-			Tracker.afterFlush(function(){
-				console.log(countryDropDown);
-				Template.currentData().find("#country").value = trip.get().country;
-				console.log(Template.instance().find("#country").value);
-				console.log(Template.instance().find("#country").length);
-			});
-		}
-	});
-	*/
 });
 
 Template.settingsModalTemplate.helpers({
@@ -485,10 +484,10 @@ Template.locationTemplate.helpers({
 		return this;
 	},
 
-  getLocName(placeId) {
-      var result = ReactiveMethod.call('getLocName', placeId);
-      return result.data.result.name;
-  },
+	getLocName() {
+		var result = ReactiveMethod.call('getLocName', this.location);
+		return result.data.result.name;
+	},
 });
 
 Template.locationTemplate.events({
