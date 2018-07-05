@@ -34,6 +34,7 @@
 						<h5 class="card-title">Days: {{tripDays.length}}</h5>
 						<hr>
 						<button class="btn btn-primary btn-openSettings float-right" data-toggle="modal" data-target="#settingsModal">Edit settings</button>
+						<button class="btn btn-info btn-deleteLocalStorage">Create a new itinerary</button>
 					</div>
 				</div>
 			</div>
@@ -108,70 +109,71 @@
 	<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">My Trip settings:</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<div class="container pr-1 pl-1">
-					<form>
-
-						<div class="form-row p-1">
-							<div class="form-group col">
-								<label for="country">Country:</label>
-								<select class="form-control" id="country">
-									<option value="Custom">Custom</option>
-									{{#each country in countryDropDown}}
-										<option value={{country}} >{{country}}</option>
-										<!-- ensures the select option is the trip option -->
-										{{setSelected}}
-									{{/each}}
-								</select>
-							</div>
-						</div>
-
-						<div class="form-row p-1 align-items-end">
-							<div class="form-group col">
-								<label for="dateDay">Start Date:</label>
-								<select class="form-control" id="dateDay" placeholder="Day">
-									{{#each day in daysDropDown}}
-										<option>{{day}}</option>
-									{{/each}}
-								</select>
-							</div>
-
-							<div class="form-group col">
-								<select class="form-control" id="dateMonth" placeholder="Month">
-									{{#each month in monthsDropDown}}
-										<option>{{month}}</option>
-									{{/each}}
-								</select>
-							</div>
-
-							<div class="form-group col">
-								<select class="form-control" id="dateYear" placeholder="Year">
-									{{#each year in yearsDropDown}}
-										<option>{{year}}</option>
-									{{/each}}
-								</select>
-							</div>
-						</div>
-
-						<div class="form-row p-1">
-							<div class="col">
-								<label for="dayNumbers">Number of days:</label>
-								<input type="number" class="form-control" id="dayNumbers" placeholder="# of days" min="1" max="365">
-							</div>
-						</div>
-
-					</form>
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">My Trip settings:</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
 				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary btn-saveSettings" data-dismiss="modal">Save</button>
-			</div>
+				<div class="modal-body">
+					<div class="container pr-1 pl-1">
+						<form>
+
+							<div class="form-row p-1">
+								<div class="form-group col">
+									<label for="country">Country:</label>
+									<select class="form-control" id="country">
+										<option value="Custom">Custom</option>
+										{{#each country in countryDropDown}}
+											<option value={{country}} >{{country}}</option>
+											<!-- ensures the select option is the trip option -->
+											{{setSelected}}
+										{{/each}}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-row p-1 align-items-end">
+								<div class="form-group col">
+									<label for="dateDay">Start Date:</label>
+									<select class="form-control" id="dateDay" placeholder="Day">
+										{{#each day in daysDropDown}}
+											<option>{{day}}</option>
+										{{/each}}
+									</select>
+								</div>
+
+								<div class="form-group col">
+									<select class="form-control" id="dateMonth" placeholder="Month">
+										{{#each month in monthsDropDown}}
+											<option>{{month}}</option>
+										{{/each}}
+									</select>
+								</div>
+
+								<div class="form-group col">
+									<select class="form-control" id="dateYear" placeholder="Year">
+										{{#each year in yearsDropDown}}
+											<option>{{year}}</option>
+										{{/each}}
+									</select>
+								</div>
+							</div>
+
+							<div class="form-row p-1">
+								<div class="col">
+									<label for="dayNumbers">Number of days:</label>
+									<input type="number" class="form-control" id="dayNumbers" placeholder="# of days" min="1" max="365">
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary btn-saveSettings" data-dismiss="modal">Save</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -201,7 +203,7 @@
     <div class="card border-primary m-1" style="width: 12rem;">
         <img class="card-img-top planner m-1 border border-dark">
         <div class="card-body">
-            <h6 class="card-title">{{getLocName location}}</h6>
+            <h6 class="card-title">{{getLocName}}</h6>
             <p class="card-text"></p>
 
             <button class="btn btn-danger btn-deleteLoc float-left m-1">
