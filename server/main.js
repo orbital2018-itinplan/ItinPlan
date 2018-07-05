@@ -39,7 +39,7 @@ const initialise = function () {
             Country.insert({country_name: place, photo_reference: photoReference, lat: lat, lng: lng});
         }
 
-    } /* else {    ===============//comment out so dun keep using api ============================
+    }  /*else {    //===============//comment out so dun keep using api ============================
         //Update country collection
         Country.find({}, {sort: {country_name: 1}}).forEach(function (obj) {
             const country = (obj.country_name).toString();
