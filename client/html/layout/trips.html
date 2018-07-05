@@ -1,4 +1,14 @@
-<template name="tripsPage">
-
-    <h2> asdasdoaksdokakd</h2>
+<template name="myTrips">
+    <div class="container-fluid bodyWithPaddingTop">
+        <h1 class="text-center">My saved trips</h1>
+        <div class="row p-3">  
+            <div class="col">
+                <div class="list-group">
+                    {{#each trip in tripList}}
+                        <button type="button" class="list-group-item list-group-item-action">{{trip._id}}</button>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
