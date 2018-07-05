@@ -34,7 +34,7 @@
 						<h5 class="card-title">Days: {{tripDays.length}}</h5>
 						<hr>
 						<button class="btn btn-primary btn-openSettings float-right" data-toggle="modal" data-target="#settingsModal">Edit settings</button>
-					</div> 
+					</div>
 				</div>
 			</div>
 		</div>
@@ -67,8 +67,8 @@
 	{{/if}}
 
 	<!--this is for the control panel editing stuff-->
-	{{> settingsModalTemplate trip=reactiveTrip countryDropDown=reactiveCountryList}}
-	
+	{{> settingsModalTemplate trip=reactiveTrip}}
+
 	<!--modal for opening location @yuanrong javascript must be in planner template-->
 	<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
@@ -79,11 +79,22 @@
 				<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body">
-				<form>
-					<input type="text" class="form-control" id="recipient-name">
-				</form>
-			</div>
+      <div class="modal-body">
+          <form>
+              <div class="form-row align-items-center">
+                  <div class="col-auto">
+                      <input type="text" class="form-control" id="recipient-name">
+                  </div>
+                  <div class="col-auto">
+                      <button type="button" class="btn btn-secondary btn-searchLoc">Search</button>
+                  </div>
+              </div>
+
+          </form>
+          <div class="map-container">
+              {{> googleMap name="locMap" options=locationMap}}
+          </div>
+      </div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary btn-saveLoc" data-dismiss="modal">Save</button>
 			</div>
@@ -111,9 +122,11 @@
 							<div class="form-group col">
 								<label for="country">Country:</label>
 								<select class="form-control" id="country">
-									<option>Custom</option>
+									<option value="Custom">Custom</option>
 									{{#each country in countryDropDown}}
-										<option>{{country}}</option>
+										<option value={{country}} >{{country}}</option>
+										<!-- ensures the select option is the trip option -->
+										{{setSelected}}
 									{{/each}}
 								</select>
 							</div>
@@ -166,38 +179,38 @@
 
 <!-- template for each row -->
 <template name="dayTemplate">
-	<div class="row align-items-center p-3">
-		<!--for each day, there is a day button and locations within the day template.-->
-		<div class="card border-primary m-1 mr-4 text-center" style="width: 8rem;">
-			<div class="card-body">
-				<p class="card-text mt-2">Day {{getDayNum dayIndex}}</p>
-				<div class="btn btn-danger btn-dayRemoveDay mb-2">Delete</div>
-			</div>
-		</div>
+    <div class="row align-items-center p-3">
+        <!--for each day, there is a day button and locations within the day template.-->
+        <div class="card border-primary m-1 mr-4 text-center" style="width: 8rem;">
+            <div class="card-body">
+                <p class="card-text mt-2">Day {{getDayNum dayIndex}}</p>
+                <div class="btn btn-danger btn-dayRemoveDay mb-2">Delete</div>
+            </div>
+        </div>
 
-		{{# each location in day}}
-			{{> locationTemplate dayIndex=dayIndex locIndex=@index location=location trip=trip}}
-		{{/each}}
-		<div class="btn btn-danger btn-dayAddLoc ml-4">Add Location</div>
-	</div>
-	<div class="w-100"></div>
+        {{# each location in day}}
+            {{> locationTemplate dayIndex=dayIndex locIndex=@index location=location trip=trip}}
+        {{/each}}
+        <div class="btn btn-danger btn-dayAddLoc ml-4">Add Location</div>
+    </div>
+    <div class="w-100"></div>
 </template>
 
 <!-- template for each location -->
 <template name="locationTemplate">
-	<div class="card border-primary m-1" style="width: 12rem;">
-			<img class="card-img-top planner m-1 border border-dark">
-			<div class="card-body">
-				<h6 class="card-title">{{location}} {{getLocNum locIndex}}</h6>
-				<p class="card-text">Yolo.</p>
-	
-				<button class="btn btn-danger btn-deleteLoc float-left m-1">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				
-				<button class="btn btn-success btn-selectLoc float-right m-1" data-toggle="modal" data-target="#locationModal" data-location={{location}}>Select Location</button>
-			</div>
-	</div>
+    <div class="card border-primary m-1" style="width: 12rem;">
+        <img class="card-img-top planner m-1 border border-dark">
+        <div class="card-body">
+            <h6 class="card-title">{{getLocName location}}</h6>
+            <p class="card-text"></p>
+
+            <button class="btn btn-danger btn-deleteLoc float-left m-1">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <button class="btn btn-success btn-selectLoc float-right m-1" data-toggle="modal"
+                    data-target="#locationModal" data-location={{location}}>Select Location
+            </button>
+        </div>
+    </div>
 </template>
-
-
