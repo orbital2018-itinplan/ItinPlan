@@ -25,15 +25,16 @@
 				<div class="card">
 					<div class="card-body m-3">
 						<!-- For members, allow save -->
-						{{#if checkLoginAndData}}
-							<button class="btn btn-success btn-saveTrip float-right">Save Trip</button>
-						{{/if}}
+						<button class="btn btn-primary btn-openSettings float-right" data-toggle="modal" data-target="#settingsModal">Edit settings</button>
 						<!-- Trip statistics -->
+						<h5 class="card-title">Trip name: {{tripName}}</h5>
 						<h5 class="card-title">Country of interest: {{tripCountry}}</h5>
 						<h5 class="card-title">Start Date: {{tripStartDate}}</h5>
 						<h5 class="card-title">Days: {{tripDays.length}}</h5>
 						<hr>
-						<button class="btn btn-primary btn-openSettings float-right" data-toggle="modal" data-target="#settingsModal">Edit settings</button>
+						{{#if checkLoginAndData}}
+							<button class="btn btn-success btn-saveTrip float-right">Save Trip</button>
+						{{/if}}
 						<button class="btn btn-info btn-deleteLocalStorage">Create a new itinerary</button>
 					</div>
 				</div>
@@ -118,7 +119,13 @@
 				<div class="modal-body">
 					<div class="container pr-1 pl-1">
 						<form>
-
+							<div class="form-row p-1">
+								<div class="form-group col">
+										<label for="country">Trip name:</label>
+										<input class="form-control" id="tripName">
+								</div>
+							</div>
+							
 							<div class="form-row p-1">
 								<div class="form-group col">
 									<label for="country">Country:</label>

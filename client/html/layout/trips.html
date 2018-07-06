@@ -5,7 +5,16 @@
             <div class="col">
                 <div class="list-group">
                     {{#each trip in tripList}}
-                        <button type="button" class="list-group-item list-group-item-action">{{trip._id}}</button>
+                        <button type="button" class="list-group-item list-group-item-action" data-toggle="collapse" data-target="#{{trip._id}}">{{trip.tripName}}</button>
+                        <div class="card collapse" id={{trip._id}}>
+                            <div class="container m-1">
+                                <h5>Trip name: {{trip.tripName}}</h5>
+                                <h5>Country of interest: {{trip.country}}</h5>
+                                <h5>Start Date: {{translateStartDate trip.startDate}}</h5>
+                                {{test}}
+                                <h5>Days: {{trip.dayArray.length}}</h5>
+                            </div>
+                        </div>
                     {{/each}}
                 </div>
             </div>

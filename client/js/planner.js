@@ -49,6 +49,7 @@ Template.planner.onCreated(function() {
 		var today = new Date();
 		let newTrip = {
 			owner: Meteor.userId(),
+			tripName: "New Trip",
 			country: countryEntered,
 			startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate(),0,0,0,0),
 			dayArray: [
@@ -133,6 +134,11 @@ Template.planner.helpers({
 		if(Template.instance().trip.get() == undefined)
 			return "";
 		return Template.instance().trip.get().dayArray;
+	},
+	tripName: function() {
+		if(Template.instance().trip.get() == undefined)
+			return "";
+		return Template.instance().trip.get().tripName;
 	},
 	tripCountry: function() {
 		if(Template.instance().trip.get() == undefined)
@@ -359,6 +365,7 @@ Template.settingsModalTemplate.events({
 
 	'show.bs.modal #settingsModal' (event) {
 		//update date settings inside the modal
+		Template.instance().find("#tripName").value = this.trip.get().tripName;
 		var date = new Date(this.trip.get().startDate);
 		Template.instance().find("#dateYear").value = date.getFullYear();
 		Template.instance().find("#dateMonth").value = Template.instance().monthsDropDown[date.getMonth()];
@@ -441,6 +448,10 @@ Template.settingsModalTemplate.events({
 		}
 		//set country of interest
 		this.trip.get().country = Template.instance().find("#country").value;
+		//set tripname
+		this.trip.get().tripName = Template.instance().find("#tripName").value;
+
+		//set to update
 		this.trip.set(this.trip.get());
 	}
 });
