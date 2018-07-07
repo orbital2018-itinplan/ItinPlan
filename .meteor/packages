@@ -22,6 +22,8 @@ kadira:blaze-layout             # Package for routing
 
 dburles:google-maps             # Google Map API
 deanius:promise                 # Promise for client side
+fortawesome:fontawesome         # icon
+
 simple:reactive-method
 
 underscore@1.0.10
