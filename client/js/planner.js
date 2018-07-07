@@ -182,7 +182,7 @@ Template.planner.helpers({
 		return Template.instance().newlyCreated.get();
 	},
 
-  locationMap: function () {
+  	locationMap: function () {
       const countryName = Template.instance().trip.get().country;
       console.log(countryName);
 
@@ -196,12 +196,12 @@ Template.planner.helpers({
               zoom: 6
           };
       }
-  }
+  	}
 });
 
 Template.planner.events({
 
-	async 'click/touchstart .btn-saveLoc'(event) {
+	async 'click .btn-saveLoc'(event) {
 		var modal = $('#locationModal')
 		row = modal.data("row");
 		col = modal.data("col");
@@ -216,7 +216,7 @@ Template.planner.events({
 		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
 	},
 
-	async 'click/touchstart .btn-searchLoc'(event) {
+	async 'click .btn-searchLoc'(event) {
 		var modal = $('#locationModal')
 		const searchLoc = modal.find('.modal-body input').val();
 		//console.log(searchLoc);
@@ -235,7 +235,7 @@ Template.planner.events({
 	},
 
 	//save trip in database (only if user is registered)
-	'click/touchstart .btn-saveTrip' (event) {
+	'click .btn-saveTrip' (event) {
 		//if there is existing, update
 		//else add new entry
 		var trip = Template.instance().trip.get();
@@ -247,6 +247,7 @@ Template.planner.events({
 			Meteor.call('trips.add', trip, function(error, result) {
 				tripReact.get()._id = result;
 				tripReact.set(tripReact.get());
+				alert("trip saved");
 			});
 			//set to currently saving UNTIL trip id is gotten from server
 			tripReact.get()._id = "Currently Saving";
@@ -260,23 +261,17 @@ Template.planner.events({
 				alert("trip saved");
 			});
 			//can set session.state to loading if want
-			console.log("Saving . . .");
 		}
+		console.log("Saving . . .");
 	},
 
 	//add new day to dayarray
-	'click/touchstart .btn-addDay' (event) {
+	'click .btn-addDay' (event) {
 		//add a new day to the dayArray.
 		var trip = Template.instance().trip;
 		trip.get().dayArray.push( [] );
 		trip.set(trip.get());
 	},
-
-	'click/touchstart .btn-deleteLocalStorage' (event) {
-		console.log(localStorage.getItem('trip'));
-		localStorage.clear();
-		console.log(localStorage.getItem('trip'));
-	}
 });
 
 /*
@@ -336,10 +331,12 @@ Template.settingsModalTemplate.onCreated(function() {
 	//initalise days and years
 	this.daysDropDown.set([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]);
 	this.yearsDropDown.set(yearCount);
-	//console.log(Template.instance().countryDropDown.get());
-});
 
-Template.settingsModalTemplate.onRendered(function() {
+	//initialise validation for trip name and trip days
+	this.tripNameValidation = new ReactiveVar();
+	var tripNameValidation = this.tripNameValidation;
+	this.countryDropDown = new ReactiveVar();
+	var countryDropDown = this.countryDropDown;
 });
 
 Template.settingsModalTemplate.helpers({
@@ -433,27 +430,69 @@ Template.settingsModalTemplate.events({
 		Template.instance().daysDropDown.set(Template.instance().daysDropDown.get());
 	},
 
-	'click/touchstart .btn-saveSettings' (event) {
-		//to do validation, remove data-dismiss of the button
-		var newStartDate = new Date(Template.instance().find("#dateYear").value, Template.instance().monthsDropDown.indexOf(Template.instance().find("#dateMonth").value), Template.instance().find("#dateDay").value, 0, 0, 0, 0);
-		this.trip.get().startDate = newStartDate;
-		//set the number of days to the trip.
-		if(this.trip.get().dayArray.length < Template.instance().find("#dayNumbers").value)
-			while(this.trip.get().dayArray.length < Template.instance().find("#dayNumbers").value)
-				this.trip.get().dayArray.push([]);
-		else if(this.trip.get().dayArray.length > Template.instance().find("#dayNumbers").value)
+	//validation for trip name - must not be empty
+	'change #tripName' (event) {
+		if(event.target.value == "")
 		{
-			let daysToDecrease = this.trip.get().dayArray.length - Template.instance().find("#dayNumbers").value;
-			this.trip.get().dayArray.splice(Template.instance().find("#dayNumbers").value, daysToDecrease);
+			if(!event.target.classList.contains("is-invalid"))
+				event.target.classList.add("is-invalid");
 		}
-		//set country of interest
-		this.trip.get().country = Template.instance().find("#country").value;
-		//set tripname
-		this.trip.get().tripName = Template.instance().find("#tripName").value;
+		else
+		{
+			if(event.target.classList.contains("is-invalid"))
+				event.target.classList.remove("is-invalid");
+		}
+	},
 
-		//set to update
-		this.trip.set(this.trip.get());
+	//validation for day numbers
+	'change #dayNumbers' (event) {
+		if(event.target.value > 365 || event.target.value < 0)
+		{
+			if(!event.target.classList.contains("is-invalid"))
+				event.target.classList.add("is-invalid");
+		}
+		else
+		{
+			if(event.target.classList.contains("is-invalid"))
+				event.target.classList.remove("is-invalid");
+		}
+	},
+
+	'click .btn-saveSettings'(event) {
+		//to do validation, remove data-dismiss of the button
+		let invalidTripName = Template.instance().find("#tripName").classList.contains("is-invalid");
+		let invalidDayNumbers = Template.instance().find("#dayNumbers").classList.contains("is-invalid");
+		if(invalidTripName || invalidDayNumbers)
+		{
+			alert("Please check your entries!");
+		}
+		else
+		{
+			//fuck outta here
+			var newStartDate = new Date(Template.instance().find("#dateYear").value, Template.instance().monthsDropDown.indexOf(Template.instance().find("#dateMonth").value), Template.instance().find("#dateDay").value, 0, 0, 0, 0);
+			this.trip.get().startDate = newStartDate;
+			//set the number of days to the trip.
+			if(this.trip.get().dayArray.length < Template.instance().find("#dayNumbers").value)
+				while(this.trip.get().dayArray.length < Template.instance().find("#dayNumbers").value)
+					this.trip.get().dayArray.push([]);
+			else if(this.trip.get().dayArray.length > Template.instance().find("#dayNumbers").value)
+			{
+				let daysToDecrease = this.trip.get().dayArray.length - Template.instance().find("#dayNumbers").value;
+				this.trip.get().dayArray.splice(Template.instance().find("#dayNumbers").value, daysToDecrease);
+			}
+			//set country of interest
+			this.trip.get().country = Template.instance().find("#country").value;
+			//set tripname
+			this.trip.get().tripName = Template.instance().find("#tripName").value;
+
+			//set to update
+			this.trip.set(this.trip.get());
+
+			//close modal here
+			$("#settingsModal").modal('hide');
+		}
 	}
+
 });
 
 /*
@@ -469,12 +508,12 @@ Template.dayTemplate.helpers({
 
 Template.dayTemplate.events({
 	//add a blank location.
-	'click/touchstart .btn-dayAddLoc' (event) {
+	'click .btn-dayAddLoc' (event) {
 		this.trip.get().dayArray[this.dayIndex].push("New Location");
 		this.trip.set(this.trip.get());
 	},
 	//remove day
-	'click/touchstart .btn-dayRemoveDay' (event) {
+	'click .btn-dayRemoveDay' (event) {
 		this.trip.get().dayArray.splice(this.dayIndex, 1);
 		this.trip.set(this.trip.get());
 	}
@@ -502,12 +541,12 @@ Template.locationTemplate.helpers({
 
 Template.locationTemplate.events({
 	//remove this location from trip.
-	'click/touchstart .btn-deleteLoc' (event) {
+	'click .btn-deleteLoc' (event) {
 		this.trip.get().dayArray[this.dayIndex].splice(this.locIndex, 1);
 		this.trip.set(this.trip.get());
 	},
 	//open the location modal
-	'click/touchstart .btn-selectLoc' (event) {
+	'click .btn-selectLoc' (event) {
 		dayIndex = this.dayIndex;
 		locIndex = this.locIndex;
 		//open a javascript modal thing

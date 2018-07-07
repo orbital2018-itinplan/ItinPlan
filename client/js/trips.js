@@ -6,13 +6,35 @@ Template.myTrips.onCreated(function() {
 
 Template.myTrips.helpers({
     tripList: function() {
-        return Trips.find({});
+        return Trips.find({}, {sort: {tripName: 1}});
     },
-    translateStartDate: function(startDate) {
-		return new Date(startDate).toLocaleDateString('en-GB', {  day: 'numeric', month: 'long', year: 'numeric' });
+    startDate: function() {
+		return new Date(this.startDate).toLocaleDateString('en-GB', {  day: 'numeric', month: 'long', year: 'numeric' });
     },
-    test: function() {
-        console.log(Template.dayArray);
-        //need to get the current data?
+});
+
+Template.myTrips.events({
+    //go to /planner/?_id="ID".
+	'click #btn-Planner' (event) {
+        FlowRouter.go('/planner/?_id=' + this._id);
+    },
+    
+    //to open the delete confirmation modal.
+	'click #btn-Delete' (event) {
+        var trip = this;
+        $('#confirmationModal').one('show.bs.modal', function (event) {
+            var modal = $(this);
+            modal.data("trip", trip);
+        });
+	},
+
+    //to delete. ((should have confirmation whether want to delete.))
+	'click #btn-ConfirmDelete' (event) {
+        var trip = $("#confirmationModal").data("trip");
+        //console.log(event.target.data("trip"));
+        Meteor.call('trips.remove', trip, function(error, result) {
+            alert("trip deleted");
+        });
+        console.log("Deleting . . .");
 	},
 });

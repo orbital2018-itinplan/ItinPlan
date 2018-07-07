@@ -35,7 +35,6 @@
 						{{#if checkLoginAndData}}
 							<button class="btn btn-success btn-saveTrip float-right">Save Trip</button>
 						{{/if}}
-						<button class="btn btn-info btn-deleteLocalStorage">Create a new itinerary</button>
 					</div>
 				</div>
 			</div>
@@ -73,10 +72,10 @@
 
 	<!--modal for opening location @yuanrong javascript must be in planner template-->
 	<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
 			<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Select Location:</h5>
+				<h5 class="modal-title">Select Location:</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 				</button>
@@ -121,8 +120,11 @@
 						<form>
 							<div class="form-row p-1">
 								<div class="form-group col">
-										<label for="country">Trip name:</label>
-										<input class="form-control" id="tripName">
+									<label for="country">Trip name:</label>
+									<input class="form-control" id="tripName"/>
+									<div class="invalid-feedback">
+										Invalid trip name.
+									</div>
 								</div>
 							</div>
 							
@@ -170,7 +172,10 @@
 							<div class="form-row p-1">
 								<div class="col">
 									<label for="dayNumbers">Number of days:</label>
-									<input type="number" class="form-control" id="dayNumbers" placeholder="# of days" min="1" max="365">
+									<input type="number" class="form-control" id="dayNumbers" min="1" max="365"/>
+									<div class="invalid-feedback">
+										Too many days. Please keep it below 365 :)
+									</div>
 								</div>
 							</div>
 
@@ -179,7 +184,8 @@
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary btn-saveSettings" data-dismiss="modal">Save</button>
+					
+					<button type="button" class="btn btn-secondary btn-saveSettings">Save</button>
 				</div>
 			</div>
 		</div>
