@@ -7,6 +7,11 @@
             <div class="container text-center plan">
                 <a class="btn btn-success" id="plan-btn" href="/planner/?_id=new">Plan New Trip</a>
             </div>
+            {{#if haveLocalTrip}}
+                <div class="container text-center">
+                    <h7 style="color:wheat;">Or resume planning an <a style="color:lightskyblue;" href="/planner">older trip</a>...</h7>
+                </div>
+            {{/if}}
         </div>
     </section>
 

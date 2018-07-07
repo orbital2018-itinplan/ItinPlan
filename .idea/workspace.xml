@@ -2,12 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff9e25d5-d0bd-4181-a3f0-0661086208f8" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/meteor_packages_auto_import_browser.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/meteor_packages_auto_import_browser.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/packages" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/packages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/versions" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/versions" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/html/layout/invalid.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/html/layout/trips.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/js/navBar.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/js/trips.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/html/layout/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/html/layout/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/html/layout/navBar.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/html/layout/navBar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/html/layout/planner.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/html/layout/planner.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/js/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/js/planner.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/planner.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/db.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/routing/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/routing/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scss/base/_typography.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/base/_typography.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scss/components/_navigation.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/components/_navigation.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scss/components/_planner.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/components/_planner.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scss/pages/_home.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/pages/_home.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -66,8 +76,8 @@
       <file leaf-file-name="planner.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/js/planner.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="106" column="26" selection-start-line="106" selection-start-column="26" selection-end-line="106" selection-end-column="26" />
+            <state relative-caret-position="570">
+              <caret line="120" column="26" selection-start-line="120" selection-start-column="26" selection-end-line="120" selection-end-column="26" />
               <folding>
                 <element signature="e#0#47#0" expanded="true" />
               </folding>
@@ -78,8 +88,8 @@
       <file leaf-file-name="_planner.scss" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scss/components/_planner.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="139" column="21" selection-start-line="139" selection-start-column="21" selection-end-line="139" selection-end-column="21" />
+            <state relative-caret-position="242">
+              <caret line="140" column="21" selection-start-line="140" selection-start-column="21" selection-end-line="140" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -335,12 +345,12 @@
       <workItem from="1528807687022" duration="22170000" />
       <workItem from="1529682553935" duration="28506000" />
       <workItem from="1530374226838" duration="8144000" />
-      <workItem from="1530441193505" duration="18253000" />
+      <workItem from="1530441193505" duration="18966000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="93915000" />
+    <option name="totallyTimeSpent" value="94628000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="797" extended-state="6" />
@@ -353,7 +363,7 @@
       <window_info id="npm" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32969698" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.49964765" visible="true" weight="0.45760235" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.49964765" visible="true" weight="0.25" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -577,8 +587,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/js/planner.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="106" column="26" selection-start-line="106" selection-start-column="26" selection-end-line="106" selection-end-column="26" />
+        <state relative-caret-position="570">
+          <caret line="120" column="26" selection-start-line="120" selection-start-column="26" selection-end-line="120" selection-end-column="26" />
           <folding>
             <element signature="e#0#47#0" expanded="true" />
           </folding>
@@ -611,8 +621,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scss/components/_planner.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="139" column="21" selection-start-line="139" selection-start-column="21" selection-end-line="139" selection-end-column="21" />
+        <state relative-caret-position="242">
+          <caret line="140" column="21" selection-start-line="140" selection-start-column="21" selection-end-line="140" selection-end-column="21" />
         </state>
       </provider>
     </entry>
