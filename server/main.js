@@ -39,7 +39,7 @@ const initialise = function () {
             Country.insert({country_name: place, photo_reference: photoReference, lat: lat, lng: lng});
         }
 
-    } /* else {    ===============//comment out so dun keep using api ============================
+    }  /*else {    //===============//comment out so dun keep using api ============================
         //Update country collection
         Country.find({}, {sort: {country_name: 1}}).forEach(function (obj) {
             const country = (obj.country_name).toString();
@@ -77,7 +77,7 @@ const initialise = function () {
                 console.log("RETRIEVE ERROR :" + err);
             }
         });
-    }*/
+    }//*/
 };
 
 Meteor.startup(() => {
@@ -113,7 +113,7 @@ Meteor.startup(() => {
     // This code only runs on the server
     Meteor.publish('trips', function() {
         return Trips.find({
-            //owner: this.userId <-- use only when nid to filter by user
+            owner: this.userId //<-- use only when nid to filter by user
         });
     });
 

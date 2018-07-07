@@ -1,17 +1,17 @@
 <template name="navBar">
-    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-primary">
+    <nav class="navbar fixed-top navbar-expand-xl navbar-light bg-primary">
         <a class="navbar-brand" href="/">
             <img src="/image/logo.png" id="ItinPlan" alt="ItinPlan">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuNavigation" aria-controls="menuNavigation" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="collapse navbar-collapse" id="menuNavigation">
             <div class="navbar-nav ml-auto">
                 <a class="nav-item nav-link" id="home" href="/">Home</a>
                 <a class="nav-item nav-link" id="destination" href="/destination">Destinations</a>
                 {{#if currentUser}}
-                    <a class="nav-item nav-link" id="mytrips" href="/myTrip">My Trips</a>
+                    <a class="nav-item nav-link" id="mytrips" href="/myTrips">My Trips</a>
                 {{/if}}
             </div>
             {{> loginNav}}

@@ -11,14 +11,15 @@ import {Session} from 'meteor/session'
 
 Template.planner.onCreated(function() {
 
-  // We can use the `ready` callback to interact with the map API once the map is ready.
-  GoogleMaps.ready('locMap', function (map) {
-      // Add a marker to the map once it's ready
-      // var marker = new google.maps.Marker({
-      //     position: map.options.center,
-      //     map: map.instance
-      // });
-  });
+	// We can use the `ready` callback to interact with the map API once the map is ready.
+	GoogleMaps.ready('locMap', function (map) {
+		// Add a marker to the map once it's ready
+		// var marker = new google.maps.Marker({
+		//     position: map.options.center,
+		//     map: map.instance
+		// });
+	});
+
 	/* ======================================================
 					Subscriptions
 	====================================================== */
@@ -38,16 +39,17 @@ Template.planner.onCreated(function() {
 	//eg "/?_id=new&country=mexico" -> _id = new, country = mexico
 	//for loading of trip etc.
 	//if new => create new trip with all undefined. owner = undefined
-	if(FlowRouter.getQueryParam('_id') == "new")
+	if(FlowRouter.getQueryParam('_id') == "new" || localStorage.getItem('trip') == null)
 	{
-		//new trip
 		newlyCreated.set(true);
 		let countryEntered = FlowRouter.getQueryParam('country');
 		if(countryEntered == undefined)
 			countryEntered = "Custom";
+		//to set a new trip
 		var today = new Date();
 		let newTrip = {
 			owner: Meteor.userId(),
+			tripName: "New Trip",
 			country: countryEntered,
 			startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate(),0,0,0,0),
 			dayArray: [
@@ -85,7 +87,19 @@ Template.planner.onCreated(function() {
 					if(queryTrip != undefined)
 						trip.set(queryTrip);
 					else
-						console.log("invalid");
+					{
+						newlyCreated.set(true);
+						var today = new Date();
+						let newTrip = {
+							owner: Meteor.userId(),
+							country: "Custom",
+							startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate(),0,0,0,0),
+							dayArray: [
+								[],
+							],
+						};
+						trip.set(newTrip);
+					}
 					autorunner.stop();
 				}
 			});
@@ -120,6 +134,11 @@ Template.planner.helpers({
 		if(Template.instance().trip.get() == undefined)
 			return "";
 		return Template.instance().trip.get().dayArray;
+	},
+	tripName: function() {
+		if(Template.instance().trip.get() == undefined)
+			return "";
+		return Template.instance().trip.get().tripName;
 	},
 	tripCountry: function() {
 		if(Template.instance().trip.get() == undefined)
@@ -163,7 +182,7 @@ Template.planner.helpers({
 		return Template.instance().newlyCreated.get();
 	},
 
-  locationMap: function () {
+  	locationMap: function () {
       const countryName = Template.instance().trip.get().country;
       console.log(countryName);
 
@@ -177,47 +196,46 @@ Template.planner.helpers({
               zoom: 6
           };
       }
-  }
+  	}
 });
 
 Template.planner.events({
 
-async 'click/touchstart .btn-saveLoc'(event) {
-    var modal = $('#locationModal')
-    row = modal.data("row");
-    col = modal.data("col");
-    //console.log(modal.find('.modal-body input').val());
-    console.log(Session.get('placeId'));
+	async 'click .btn-saveLoc'(event) {
+		var modal = $('#locationModal')
+		row = modal.data("row");
+		col = modal.data("col");
+		//console.log(modal.find('.modal-body input').val());
+		console.log(Session.get('placeId'));
 
 
-    //console.log(Template.instance().trip.get());
-    Template.instance().trip.get().dayArray[row][col] = Session.get('placeId');
-    Template.instance().trip.set(Template.instance().trip.get());
-    //close(save) a javascript modal thing
-    //gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
-},
+		//console.log(Template.instance().trip.get());
+		Template.instance().trip.get().dayArray[row][col] = Session.get('placeId');
+		Template.instance().trip.set(Template.instance().trip.get());
+		//close(save) a javascript modal thing
+		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
+	},
 
-async 'click/touchstart .btn-searchLoc'(event) {
-    var modal = $('#locationModal')
-    const searchLoc = modal.find('.modal-body input').val();
-    //console.log(searchLoc);
+	async 'click .btn-searchLoc'(event) {
+		var modal = $('#locationModal')
+		const searchLoc = modal.find('.modal-body input').val();
+		//console.log(searchLoc);
 
-    var result = await Meteor.callPromise('getLatLng', searchLoc);
-    var locLat = result.data.results[0].geometry.location.lat;
-    var loclng = result.data.results[0].geometry.location.lng;
-    //console.log("Second Try: "+ result.data.results[0].geometry.location.lat);
+		var result = await Meteor.callPromise('getLatLng', searchLoc);
+		var locLat = result.data.results[0].geometry.location.lat;
+		var loclng = result.data.results[0].geometry.location.lng;
+		//console.log("Second Try: "+ result.data.results[0].geometry.location.lat);
 
-    //update google map
-    GoogleMaps.maps.locMap.instance.setCenter({lat: locLat, lng: loclng});
-    GoogleMaps.maps.locMap.instance.setZoom(15);
+		//update google map
+		GoogleMaps.maps.locMap.instance.setCenter({lat: locLat, lng: loclng});
+		GoogleMaps.maps.locMap.instance.setZoom(15);
 
+		Session.set('placeId', result.data.results[0].place_id);
 
-    Session.set('placeId', result.data.results[0].place_id);
-
-},
+	},
 
 	//save trip in database (only if user is registered)
-	'click/touchstart .btn-saveTrip' (event) {
+	'click .btn-saveTrip' (event) {
 		//if there is existing, update
 		//else add new entry
 		var trip = Template.instance().trip.get();
@@ -229,6 +247,7 @@ async 'click/touchstart .btn-searchLoc'(event) {
 			Meteor.call('trips.add', trip, function(error, result) {
 				tripReact.get()._id = result;
 				tripReact.set(tripReact.get());
+				alert("trip saved");
 			});
 			//set to currently saving UNTIL trip id is gotten from server
 			tripReact.get()._id = "Currently Saving";
@@ -242,17 +261,17 @@ async 'click/touchstart .btn-searchLoc'(event) {
 				alert("trip saved");
 			});
 			//can set session.state to loading if want
-			console.log("Saving . . .");
 		}
+		console.log("Saving . . .");
 	},
 
 	//add new day to dayarray
-	'click/touchstart .btn-addDay' (event) {
+	'click .btn-addDay' (event) {
 		//add a new day to the dayArray.
 		var trip = Template.instance().trip;
 		trip.get().dayArray.push( [] );
 		trip.set(trip.get());
-	}
+	},
 });
 
 /*
@@ -312,30 +331,12 @@ Template.settingsModalTemplate.onCreated(function() {
 	//initalise days and years
 	this.daysDropDown.set([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]);
 	this.yearsDropDown.set(yearCount);
-	//console.log(Template.instance().countryDropDown.get());
-});
 
-Template.settingsModalTemplate.onRendered(function() {
-	/*console.log(Template.instance().find("#country"));
-	console.log(Template.instance().countryDropDown);
-	console.log(Template.currentData());
-
-	var trip = Template.currentData().trip;
-	var countryDropDown = Template.instance().countryDropDown;
-	this.autorun(function(){
-		if(countryDropDown.get() == undefined || trip.get() == undefined)
-			return; //--->Line1
-		else
-		{
-			Tracker.afterFlush(function(){
-				console.log(countryDropDown);
-				Template.currentData().find("#country").value = trip.get().country;
-				console.log(Template.instance().find("#country").value);
-				console.log(Template.instance().find("#country").length);
-			});
-		}
-	});
-	*/
+	//initialise validation for trip name and trip days
+	this.tripNameValidation = new ReactiveVar();
+	var tripNameValidation = this.tripNameValidation;
+	this.countryDropDown = new ReactiveVar();
+	var countryDropDown = this.countryDropDown;
 });
 
 Template.settingsModalTemplate.helpers({
@@ -361,6 +362,7 @@ Template.settingsModalTemplate.events({
 
 	'show.bs.modal #settingsModal' (event) {
 		//update date settings inside the modal
+		Template.instance().find("#tripName").value = this.trip.get().tripName;
 		var date = new Date(this.trip.get().startDate);
 		Template.instance().find("#dateYear").value = date.getFullYear();
 		Template.instance().find("#dateMonth").value = Template.instance().monthsDropDown[date.getMonth()];
@@ -428,23 +430,69 @@ Template.settingsModalTemplate.events({
 		Template.instance().daysDropDown.set(Template.instance().daysDropDown.get());
 	},
 
-	'click/touchstart .btn-saveSettings' (event) {
-		//to do validation, remove data-dismiss of the button
-		var newStartDate = new Date(Template.instance().find("#dateYear").value, Template.instance().monthsDropDown.indexOf(Template.instance().find("#dateMonth").value), Template.instance().find("#dateDay").value, 0, 0, 0, 0);
-		this.trip.get().startDate = newStartDate;
-		//set the number of days to the trip.
-		if(this.trip.get().dayArray.length < Template.instance().find("#dayNumbers").value)
-			while(this.trip.get().dayArray.length < Template.instance().find("#dayNumbers").value)
-				this.trip.get().dayArray.push([]);
-		else if(this.trip.get().dayArray.length > Template.instance().find("#dayNumbers").value)
+	//validation for trip name - must not be empty
+	'change #tripName' (event) {
+		if(event.target.value == "")
 		{
-			let daysToDecrease = this.trip.get().dayArray.length - Template.instance().find("#dayNumbers").value;
-			this.trip.get().dayArray.splice(Template.instance().find("#dayNumbers").value, daysToDecrease);
+			if(!event.target.classList.contains("is-invalid"))
+				event.target.classList.add("is-invalid");
 		}
-		//set country of interest
-		this.trip.get().country = Template.instance().find("#country").value;
-		this.trip.set(this.trip.get());
+		else
+		{
+			if(event.target.classList.contains("is-invalid"))
+				event.target.classList.remove("is-invalid");
+		}
+	},
+
+	//validation for day numbers
+	'change #dayNumbers' (event) {
+		if(event.target.value > 365 || event.target.value < 0)
+		{
+			if(!event.target.classList.contains("is-invalid"))
+				event.target.classList.add("is-invalid");
+		}
+		else
+		{
+			if(event.target.classList.contains("is-invalid"))
+				event.target.classList.remove("is-invalid");
+		}
+	},
+
+	'click .btn-saveSettings'(event) {
+		//to do validation, remove data-dismiss of the button
+		let invalidTripName = Template.instance().find("#tripName").classList.contains("is-invalid");
+		let invalidDayNumbers = Template.instance().find("#dayNumbers").classList.contains("is-invalid");
+		if(invalidTripName || invalidDayNumbers)
+		{
+			alert("Please check your entries!");
+		}
+		else
+		{
+			//fuck outta here
+			var newStartDate = new Date(Template.instance().find("#dateYear").value, Template.instance().monthsDropDown.indexOf(Template.instance().find("#dateMonth").value), Template.instance().find("#dateDay").value, 0, 0, 0, 0);
+			this.trip.get().startDate = newStartDate;
+			//set the number of days to the trip.
+			if(this.trip.get().dayArray.length < Template.instance().find("#dayNumbers").value)
+				while(this.trip.get().dayArray.length < Template.instance().find("#dayNumbers").value)
+					this.trip.get().dayArray.push([]);
+			else if(this.trip.get().dayArray.length > Template.instance().find("#dayNumbers").value)
+			{
+				let daysToDecrease = this.trip.get().dayArray.length - Template.instance().find("#dayNumbers").value;
+				this.trip.get().dayArray.splice(Template.instance().find("#dayNumbers").value, daysToDecrease);
+			}
+			//set country of interest
+			this.trip.get().country = Template.instance().find("#country").value;
+			//set tripname
+			this.trip.get().tripName = Template.instance().find("#tripName").value;
+
+			//set to update
+			this.trip.set(this.trip.get());
+
+			//close modal here
+			$("#settingsModal").modal('hide');
+		}
 	}
+
 });
 
 /*
@@ -460,12 +508,12 @@ Template.dayTemplate.helpers({
 
 Template.dayTemplate.events({
 	//add a blank location.
-	'click/touchstart .btn-dayAddLoc' (event) {
+	'click .btn-dayAddLoc' (event) {
 		this.trip.get().dayArray[this.dayIndex].push("New Location");
 		this.trip.set(this.trip.get());
 	},
 	//remove day
-	'click/touchstart .btn-dayRemoveDay' (event) {
+	'click .btn-dayRemoveDay' (event) {
 		this.trip.get().dayArray.splice(this.dayIndex, 1);
 		this.trip.set(this.trip.get());
 	}
@@ -485,20 +533,20 @@ Template.locationTemplate.helpers({
 		return this;
 	},
 
-  getLocName(placeId) {
-      var result = ReactiveMethod.call('getLocName', placeId);
-      return result.data.result.name;
-  },
+	getLocName() {
+		var result = ReactiveMethod.call('getLocName', this.location);
+		return result.data.result.name;
+	},
 });
 
 Template.locationTemplate.events({
 	//remove this location from trip.
-	'click/touchstart .btn-deleteLoc' (event) {
+	'click .btn-deleteLoc' (event) {
 		this.trip.get().dayArray[this.dayIndex].splice(this.locIndex, 1);
 		this.trip.set(this.trip.get());
 	},
 	//open the location modal
-	'click/touchstart .btn-selectLoc' (event) {
+	'click .btn-selectLoc' (event) {
 		dayIndex = this.dayIndex;
 		locIndex = this.locIndex;
 		//open a javascript modal thing
