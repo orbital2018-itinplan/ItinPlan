@@ -247,7 +247,8 @@ Template.planner.events({
 			Meteor.call('trips.add', trip, function(error, result) {
 				tripReact.get()._id = result;
 				tripReact.set(tripReact.get());
-				alert("trip saved");
+				//alert("Trip Saved");
+                $('#saveTrip').modal("show");
 			});
 			//set to currently saving UNTIL trip id is gotten from server
 			tripReact.get()._id = "Currently Saving";
@@ -258,7 +259,8 @@ Template.planner.events({
 			//update existing
 			Meteor.call('trips.update', trip, function(error, result) {
 				//set session state to complete.
-				alert("trip saved");
+				//alert("Trip Saved");
+                $('#saveTrip').modal("show");
 			});
 			//can set session.state to loading if want
 		}

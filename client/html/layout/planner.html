@@ -1,30 +1,28 @@
 <template name="planner">
 
+    <!--Control Panel-->
     {{#if haveTrip}}
-        <div class="container-fluid plannerControl">
-
-
-
+        <div class="container-fluid plannerControl ">
 
             <!-- Control Panel for trip -->
 
-            <div class="card text-white text-center justify-content-center bg-transparent planner-controller border-0">
+            <div class="card text-white text-center justify-content-center bg-transparent planner-controller border-0 ">
                 <div class="card-header planner-header bg-transparent border-0">
                     <h1>{{tripDays.length}} Days in {{tripCountry}}</h1>
                 </div>
                 <div class="card-body border-0">
-                        <div class="row align-items-center">
-                            <div class="col-auto">
-                                <h5>From {{tripStartDate}}</h5>
-                            </div>
-                            <div class="col-1 planner-controller-btn mr-3">
-                                <button class="btn btn-openSetting btn-outline-secondary border-0" data-toggle="modal"
-                                        data-target="#settingsModal">
-                                    <i class="fa mr-1 fa-cogs"></i> Edit settings
-                                </button>
-
-                            </div>
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <h5>From {{tripStartDate}}</h5>
                         </div>
+                        <div class="col-sm-1 planner-controller-btn">
+                            <button class="btn btn-openSetting btn-outline-secondary border-0" data-toggle="modal"
+                                    data-target="#settingsModal">
+                                <i class="fa mr-1 fa-cogs"></i> Edit settings
+                            </button>
+
+                        </div>
+                    </div>
                 </div>
 
 
@@ -39,7 +37,28 @@
                 </div>
             {{/if}}
 
-            <div class="w-100"></div>
+            <!--- Modal for saving trip -->
+            <div class="modal fade" id="saveTrip" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm" role="document">
+                    <!--Content-->
+                    <div class="modal-content text-center">
+                        <!--Body-->
+                        <div class="modal-body">
+
+                            <i class="fa fa-check-circle fa-4x"></i>
+                            <p class="tripSaved">Trip Saved</p>
+                        </div>
+                        <!--Footer-->
+                        <div class="modal-footer flex-center">
+                            <button class="btn btn-success" data-dismiss="modal">
+                                Ok
+                            </button>
+                        </div>
+                    </div>
+                    <!--/.Content-->
+                </div>
+            </div>
+
 
         </div>
 
@@ -48,15 +67,19 @@
 
         <!-- Alert -->
         {{#if isNewlyCreated}}
-            <div class="container-fluid alert alert-success alert-dismissible fade show" role="alert" id="newTripAlert">
-                <h4 class="alert-heading">Welcome to your New trip itinerary!</h4>
-                <p>Hi there! Start planning your future vacation.</p>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <hr>
-        				<p class="mb-0">* Non registered users are unable to save their trips on the server! *</p>
+            <div class="container-fluid p-3">
+                <div class="container-fluid alert alert-success alert-dismissible fade show" role="alert"
+                     id="newTripAlert">
+                    <h4 class="alert-heading">Welcome to your New trip itinerary!</h4>
+                    <p>Hi there! Start planning your future vacation.</p>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <hr>
+                    <p class="mb-0">* Non registered users are unable to save their trips on the server! *</p>
+                </div>
             </div>
+
         {{/if}}
 
 
@@ -65,15 +88,18 @@
 
         <!-- trip planner itself -->
         <div class="container-fluid planner">
+            <div class="container-fluid ">
+                <h3 class="page-title">Timeline</h3>
+                {{# each day in tripDays}}
+                    {{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
+                {{/each}}
 
-            <!--for each day in tripdays, create a daytemplate-->
-            {{# each day in tripDays}}
-                {{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
-            {{/each}}
+            </div>
+
 
             <!-- new day button -->
-            <div class="row align-items-center p-3">
-                <div class="btn btn-danger btn-addDay">Add Day</div>
+            <div class="row p-4">
+                <div class="btn btn-danger btn-addDay ml-5">Add Day</div>
             </div>
             <div class="w-100"></div>
 
@@ -88,6 +114,7 @@
     <!--this is for the control panel editing stuff-->
     {{> settingsModalTemplate trip=reactiveTrip}}
 
+    <!-- Local Modal-->
     <!--modal for opening location @yuanrong javascript must be in planner template-->
     <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display"
          aria-hidden="true">
@@ -121,134 +148,190 @@
             </div>
         </div>
     </div>
+
 </template>
 
-<!--setting template-->
+<!--setting template for modal-->
 <template name="settingsModalTemplate">
-	<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">My Trip settings:</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="container pr-1 pl-1">
-						<form>
-							<div class="form-row p-1">
-								<div class="form-group col">
-									<label for="country">Trip name:</label>
-									<input class="form-control" id="tripName"/>
-									<div class="invalid-feedback">
-										Invalid trip name.
-									</div>
-								</div>
-							</div>
+    <div class="modal fade rounded" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="modal display"
+         aria-hidden="true">
+        <!-- Modal : settingsModal -->
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <!-- Header-->
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="exampleModalLabel">My Trip Settings:</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Body -->
+                <div class="modal-body">
+                    <div class="container pr-1 pl-1">
+                        <form>
+                            <div class="form-row p-1">
+                                <div class="form-group col">
+                                    <label for="country">Trip name:</label>
+                                    <input class="form-control" id="tripName"/>
+                                    <div class="invalid-feedback">
+                                        Invalid trip name.
+                                    </div>
+                                </div>
+                            </div>
 
-							<div class="form-row p-1">
-								<div class="form-group col">
-									<label for="country">Country:</label>
-									<select class="form-control" id="country">
-										<option value="Custom">Custom</option>
-										{{#each country in countryDropDown}}
-											<option value={{country}} >{{country}}</option>
-											<!-- ensures the select option is the trip option -->
-											{{setSelected}}
-										{{/each}}
-									</select>
-								</div>
-							</div>
+                            <div class="form-row p-1">
+                                <div class="form-group col">
+                                    <label for="country">Country:</label>
+                                    <select class="form-control" id="country">
+                                        <option value="Custom">Custom</option>
+                                        {{#each country in countryDropDown}}
+                                            <option value={{country}}>{{country}}</option>
+                                            <!-- ensures the select option is the trip option -->
+                                            {{setSelected}}
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
 
-							<div class="form-row p-1 align-items-end">
-								<div class="form-group col">
-									<label for="dateDay">Start Date:</label>
-									<select class="form-control" id="dateDay" placeholder="Day">
-										{{#each day in daysDropDown}}
-											<option>{{day}}</option>
-										{{/each}}
-									</select>
-								</div>
+                            <div class="form-row p-1 align-items-end">
+                                <div class="form-group col">
+                                    <label for="dateDay">Start Date:</label>
+                                    <select class="form-control" id="dateDay" placeholder="Day">
+                                        {{#each day in daysDropDown}}
+                                            <option>{{day}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
 
-								<div class="form-group col">
-									<select class="form-control" id="dateMonth" placeholder="Month">
-										{{#each month in monthsDropDown}}
-											<option>{{month}}</option>
-										{{/each}}
-									</select>
-								</div>
+                                <div class="form-group col">
+                                    <select class="form-control" id="dateMonth" placeholder="Month">
+                                        {{#each month in monthsDropDown}}
+                                            <option>{{month}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
 
-								<div class="form-group col">
-									<select class="form-control" id="dateYear" placeholder="Year">
-										{{#each year in yearsDropDown}}
-											<option>{{year}}</option>
-										{{/each}}
-									</select>
-								</div>
-							</div>
+                                <div class="form-group col">
+                                    <select class="form-control" id="dateYear" placeholder="Year">
+                                        {{#each year in yearsDropDown}}
+                                            <option>{{year}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
 
-							<div class="form-row p-1">
-								<div class="col">
-									<label for="dayNumbers">Number of days:</label>
-									<input type="number" class="form-control" id="dayNumbers" min="1" max="365"/>
-									<div class="invalid-feedback">
-										Too many days. Please keep it below 365 :)
-									</div>
-								</div>
-							</div>
+                            <div class="form-row p-1">
+                                <div class="col">
+                                    <label for="dayNumbers">Number of days:</label>
+                                    <input type="number" class="form-control" id="dayNumbers" min="1" max="365"/>
+                                    <div class="invalid-feedback">
+                                        Too many days. Please keep it below 365 :)
+                                    </div>
+                                </div>
+                            </div>
 
-						</form>
-					</div>
-				</div>
+                        </form>
+                    </div>
+                </div>
 
-				<div class="modal-footer">
+                <div class="modal-footer">
 
-					<button type="button" class="btn btn-secondary btn-saveSettings">Save</button>
-				</div>
-			</div>
-		</div>
-	</div>
+                    <button type="button" class="btn btn-primary btn-saveSettings text-white">
+                        <i class="fa mr-2 fa-save"></i>Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <!-- template for each row -->
 <template name="dayTemplate">
-    <div class="row align-items-center p-3">
-        <!--for each day, there is a day button and locations within the day template.-->
-        <button type="button" class="close btn-dayRemoveDay"  aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <div class="card border-primary m-1 mr-4 text-center planner-day">
-            <div class="card-body mt-sm-3">
-                <p class="card-text text-primary">Day {{getDayNum dayIndex}}</p>
-            </div>
 
-            <!--<div class="btn btn-danger btn-dayRemoveDay mt-2">Delete</div>-->
-        </div>
+    <!-- New Layout-->
+    <ul class="timeline">
 
+        <li class="timeline-line"></li>
+        <li class="timeline-group">
+            <button type="button" class="close btn-dayRemoveDay text-info" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <a href="#" class="btn btn-primary"><i class="fa fa-calendar mr-2"></i>Day {{getDayNum dayIndex}}</a>
+            <div class="btn btn-danger btn-dayAddLoc">Add Location</div> <!-- Should change to modal-->
+        </li>
+    </ul>
+
+    <ul class="timeline">
         {{# each location in day}}
             {{> locationTemplate dayIndex=dayIndex locIndex=@index location=location trip=trip}}
         {{/each}}
-        <div class="btn btn-danger btn-dayAddLoc ml-4">Add Location</div>
-    </div>
-    <div class="w-100"></div>
+
+    </ul>
+
+    <!-- Old Layout -->
+    <!--<div class="row align-items-center p-3">-->
+    <!--&lt;!&ndash;for each day, there is a day button and locations within the day template.&ndash;&gt;-->
+    <!--<button type="button" class="close btn-dayRemoveDay text-info"  aria-label="Close">-->
+    <!--<span aria-hidden="true">&times;</span>-->
+    <!--</button>-->
+    <!--<div class="card border-primary m-1 mr-4 text-center planner-day">-->
+    <!--<div class="card-body mt-sm-3">-->
+    <!--<p class="card-text text-primary">Day {{getDayNum dayIndex}}</p>-->
+    <!--</div>-->
+    <!--</div>-->
+
+        <!--{{# each location in day}}-->
+    <!--{{> locationTemplate dayIndex=dayIndex locIndex=@index location=location trip=trip}}-->
+        <!--{{/each}}-->
+    <!--<div class="btn btn-danger btn-dayAddLoc ml-4">Add Location</div>-->
+    <!--</div>-->
+    <!--<div class="w-100"></div>-->
+
 </template>
 
 <!-- template for each location -->
 <template name="locationTemplate">
-    <div class="card border-primary m-1" style="width: 12rem;">
-        <img class="card-img-top planner m-1 border border-dark">
-        <div class="card-body">
-            <h6 class="card-title">{{getLocName}}</h6>
-            <p class="card-text"></p>
+    <!-- New layout-->
+    <li class="timeline-line"></li>
+    <li class="timeline-item">
+        <div class="timeline-badge"><a href="#"></a></div>
+        <div class="timeline-panel">
+            <div class="timeline-heading">
+                {{getLocName}}
+            </div>
+            <div class="timeline-content">
+                <ul>
+                    <li>INFORMATION IN HERE</li>
+                    <li>PICTURE IN HERE</li>
+                </ul>
+            </div>
+            <div class="timeline-footer">
+                <button class="close text-danger btn-deleteLoc">
+                    <span aria-hidden="true">&times;</span>
+                </button>
 
-            <button class="btn btn-danger btn-deleteLoc float-left m-1">
-                <span aria-hidden="true">&times;</span>
-            </button>
-
-            <button class="btn btn-success btn-selectLoc float-right m-1" data-toggle="modal"
-                    data-target="#locationModal" data-location={{location}}>Select Location
-            </button>
+                <button class="btn btn-success btn-selectLoc" data-toggle="modal"
+                        data-target="#locationModal" data-location={{location}}>Select Location
+                </button>
+            </div>
         </div>
-    </div>
+    </li>
+
+
+    <!-- Old Layout-->
+    <!--<div class="card border-primary m-1" style="width: 12rem;">-->
+    <!--<img class="card-img-top planner m-1 border border-dark">-->
+    <!--<div class="card-body">-->
+    <!--<h6 class="card-title">{{getLocName}}</h6>-->
+    <!--<p class="card-text"></p>-->
+
+    <!--<button class="btn btn-danger btn-deleteLoc float-left m-1">-->
+    <!--<span aria-hidden="true">&times;</span>-->
+    <!--</button>-->
+
+    <!--<button class="btn btn-success btn-selectLoc float-right m-1" data-toggle="modal"-->
+    <!--data-target="#locationModal" data-location={{location}}>Select Location-->
+    <!--</button>-->
+    <!--</div>-->
+    <!--</div>-->
 </template>
