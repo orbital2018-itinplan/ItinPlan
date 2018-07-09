@@ -1,6 +1,6 @@
 <template name="account">
     <section class="jumbotron loginback jumbotron-fluid">
-        {{> ensureSignedIn template="accountTemplate" auth="loginTemplate"}}
+        {{> ensureSignedIn template="accountTemplate"}}
     </section>
 </template>
 
@@ -12,21 +12,32 @@
     </div>
 </template>
 
+<!--atform-->
+<!-- 	At state:
+		signIn => display username and stuff
+		changePwd => changepwd form					-->
 <template name="accountTemplate">
     <div class="d-flex justify-content-center">
     	<div class="container rounded bg-dark pt-3 pb-3">
-
-        	<div class="input-group mb-3">
-			 <div class="input-group-prepend">
-			    <span class="input-group-text" id="basic-addon1">@</span>
-			  </div>
-			  <input type="text" id="emailBox" class="form-control" placeholder="Username" aria-label="Username"  aria-describedby="basic-addon1" readonly>
-			</div>
-
+			{{#if detailsShow}}
+				<form>
+					<div class="form-group row p-1">
+						<label for="username" class="col-sm-2 col-form-label">Username: </label>
+						<input id="username" type="text" readonly class="form-control-plaintext col-sm-10" value={{accountUsername}}>
+					</div>
+					<div class="form-group row p-1">
+						<label for="email" class="col-sm-2 col-form-label">Email: </label>
+						<input id="email" type="text" readonly class="form-control-plaintext col-sm-10" value={{accountEmail}}>
+					</div>
+				</form>
+			{{else}}
+				{{> atForm}}
+			{{/if}}
         </div>
     </div>
 </template>
 
+<!-- for navbar -->
 <template name="loginNav">
     {{#if currentUser}}
         <div class="btn-group nav-item">
@@ -34,9 +45,10 @@
 		    {{username}}
 		  </button>
 		  <div class="dropdown-menu">
-		    <a class="dropdown-item controlPanel" href="/account">Control Panel</a>
+			<a class="dropdown-item" id="ddl-ViewDetails">View Details</a>
+		    <a class="dropdown-item" id="ddl-ResetPassword">Reset Password</a>
 		    <div class="dropdown-divider"></div>
-		    <a class="dropdown-item logout" href="#">Logout</a>
+		    <a class="dropdown-item" id="ddl-logout">Logout</a>
 		  </div>
 		</div>
     {{else}}
