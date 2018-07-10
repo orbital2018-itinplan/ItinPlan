@@ -355,18 +355,31 @@ Template.settingsModalTemplate.helpers({
 	countryDropDown: function() {
 		return Template.instance().countryDropDown.get();
 	},
-	setSelected: function() {
+	setCountrySelected: function() {
 		//just to ensure the starting value of the modal is the correct one, cant be done in show.bs.modal
 		country.value = this.trip.get().country;
 	},
 	isOwner: function() {
-		console.log(Meteor.userId() );
-		console.log(this.trip.get().owner);
-
-		if(Meteor.userId() == this.trip.get().owner)
+		//if dont have, return false
+		if(this.trip.get() != undefined)
+		{
+			//if owner is user and trip id is not null = trip is saved in our db and setting can be adjusted
+			if(Meteor.userId() == this.trip.get().owner && this.trip.get()._id != null)
+				return true;
+			else
+				return false;
+		}
+		else
+			return false;
+	},
+	publicTrip: function() {
+		if(this.trip.get().public)
 			return true;
 		else
 			return false;
+	},
+	shareURL: function() {
+		return "www.itinplan.com/planner/?_id=" + this.trip.get()._id;
 	}
 });
 
@@ -380,6 +393,15 @@ Template.settingsModalTemplate.events({
 		Template.instance().find("#dateMonth").value = Template.instance().monthsDropDown[date.getMonth()];
 		Template.instance().find("#dateDay").value = date.getDate();
 		Template.instance().find("#dayNumbers").value = this.trip.get().dayArray.length;
+
+		//set public or private
+		if(Meteor.userId() == this.trip.get().owner && this.trip.get()._id != null)
+		{
+			if(this.trip.get().public)
+				Template.instance().find("#radio-PublicLabel").classList.add("active");
+			else
+				Template.instance().find("#radio-PrivateLabel").classList.add("active");
+		}
 	},
 
 	//change date month and year -> check for 30/31 days and leapyear
@@ -500,10 +522,105 @@ Template.settingsModalTemplate.events({
 			//set to update
 			this.trip.set(this.trip.get());
 
+
+			//save to db (EXACT COPY FROM btn-saveTrip BUT only for registered users)
+			if(Meteor.user()) {
+				//if there is existing, update
+				//else add new entry
+				var trip = this.trip.get();
+				var tripReact = this.trip;
+				var queryTrip = Trips.findOne( { _id: this.trip.get()._id } );
+				if(queryTrip == undefined)
+				{
+					//create new
+					Meteor.call('trips.add', trip, function(error, result) {
+						tripReact.get()._id = result;
+						tripReact.set(tripReact.get());
+						//alert("Trip Saved");
+						$('#saveTrip').modal("show");
+					});
+					//set to currently saving UNTIL trip id is gotten from server
+					tripReact.get()._id = "Currently Saving";
+					tripReact.set(tripReact.get());
+				}
+				else
+				{
+					//update existing
+					Meteor.call('trips.update', trip, function(error, result) {
+						//set session state to complete.
+						//alert("Trip Saved");
+						$('#saveTrip').modal("show");
+					});
+					//can set session.state to loading if want
+				}
+				console.log("Saving . . .");
+			}
+
 			//close modal here
 			$("#settingsModal").modal('hide');
 		}
-	}
+	},
+
+	'change #publicSelector'(event) {
+		//to set the trip to public or private
+		if(event.target.id === "radio-Private")
+			this.trip.get().public = false;
+		else
+			this.trip.get().public = true;
+		this.trip.set(this.trip.get());
+
+		//need to save to database immediately because this is public and private setter.
+		//BUT IT ONLY SAVES THE PUBLIC OR PRIVATE ATTRIBUTE===============================IMPT
+		if(Meteor.user()) {
+			//if there is existing, update
+			//else add new entry
+			var trip = this.trip.get();
+			var tripReact = this.trip;
+			var queryTrip = Trips.findOne( { _id: this.trip.get()._id } );
+			if(queryTrip == undefined)
+			{
+				//create new
+				Meteor.call('trips.add', trip, function(error, result) {
+					tripReact.get()._id = result;
+					tripReact.set(tripReact.get());
+					//alert("Trip Saved");
+					//$('#saveTrip').modal("show");
+				});
+				//set to currently saving UNTIL trip id is gotten from server
+				tripReact.get()._id = "Currently Saving";
+				tripReact.set(tripReact.get());
+			}
+			else
+			{
+				//update existing
+				Meteor.call('trips.update', trip, function(error, result) {
+					//set session state to complete.
+					//alert("Trip Saved");
+					//$('#saveTrip').modal("show");
+				});
+				//can set session.state to loading if want
+			}
+			console.log("Saving . . .");
+		}
+
+	},
+
+	'click #btn-copyURL' (event) {
+		//to copy the url
+		let url = Template.instance().find("#shareURL");
+		url.select();
+		document.execCommand("copy");
+		url.classList.add("is-valid");
+	},
+
+	'hide.bs.modal #settingsModal' (event) {
+		if(this.trip.get().public && Template.instance().find("#shareURL").classList.contains("is-valid"))
+			Template.instance().find("#shareURL").classList.remove("is-valid");
+		if(Template.instance().find("#tripName").classList.contains("is-invalid"))
+			Template.instance().find("#tripName").classList.remove("is-invalid");
+		if(Template.instance().find("#dayNumbers").classList.contains("is-invalid"))
+			Template.instance().find("#dayNumbers").classList.remove("is-invalid");
+	},
 
 });
 

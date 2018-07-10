@@ -187,7 +187,7 @@
                                         {{#each country in countryDropDown}}
                                             <option value={{country}}>{{country}}</option>
                                             <!-- ensures the select option is the trip option -->
-                                            {{setSelected}}
+                                            {{setCountrySelected}}
                                         {{/each}}
                                     </select>
                                 </div>
@@ -219,17 +219,10 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col">
-                                    <select class="form-control" id="dateYear" placeholder="Year">
-                                        {{#each year in yearsDropDown}}
-                                            <option>{{year}}</option>
-                                        {{/each}}
-                                    </select>
-                                </div>
                             </div>
 
                             <div class="form-row p-1">
-                                <div class="col">
+                                <div class="form-group col">
                                     <label for="dayNumbers">Number of days:</label>
                                     <input type="number" class="form-control" id="dayNumbers" min="1" max="365"/>
                                     <div class="invalid-feedback">
@@ -239,15 +232,37 @@
                             </div>
                             
                             {{#if isOwner}}
-                                <div class="form-row p-1">
-                                    <div class="col">
-                                        <label for="dayNumbers">Number of days:</label>
-                                        <input type="number" class="form-control" id="dayNumbers" min="1" max="365"/>
-                                        <div class="invalid-feedback">
-                                            Too many days. Please keep it below 365 :)
+                                <div class="form-row p-1 align-items-center">
+                                    <div class="form-group col m-0">
+                                        <label for="publicSelector">Make public:</label>
+                                    </div>
+                                    <div class="form-group col m-0">
+                                        <div class="btn-group btn-group-toggle" id="publicSelector" data-toggle="buttons">
+                                            <label class="btn btn-primary" id="radio-PrivateLabel">
+                                                <input type="radio" name="options" id="radio-Private" autocomplete="off"> Private
+                                            </label>
+                                            <label class="btn btn-primary" id="radio-PublicLabel">
+                                                <input type="radio" name="options" id="radio-Public" autocomplete="off"> Public
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
+                                {{#if publicTrip}}
+                                    <div class="form-row p-1 align-items-center">
+                                        <div class="form-group col">
+                                            <label for="shareURL">Copy this URL to share with your friends!:</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="shareURL" value={{shareURL}} readonly>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" type="button" id="btn-copyURL">copypicture</button>
+                                                </div>
+                                                <div class="valid-feedback">
+                                                    URL Copied!
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
                             {{/if}}
                             
                         </form>
