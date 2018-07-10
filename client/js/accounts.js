@@ -6,7 +6,12 @@ Template.loginNav.helpers({
 });
 
 Template.loginNav.events({
-	'click #ddl-logout': ()=> {
+	'click #btn-Login'(event) {
+		FlowRouter.go('accounts');
+		AccountsTemplates.setState("signIn");
+	},
+
+	'click #ddl-logout'(event) {
 		//get email
 		console.log("logging out of user: " + Meteor.user().username);
 		AccountsTemplates.logout();
@@ -18,7 +23,7 @@ Template.loginNav.events({
 		AccountsTemplates.setState("signIn");
 	},
 
-	'click #ddl-ResetPassword'(event) {
+	'click #ddl-ChangePassword'(event) {
 		FlowRouter.go('accounts');
 		AccountsTemplates.setState("changePwd");
 	},
@@ -38,3 +43,10 @@ Template.accountTemplate.helpers({
 		return Meteor.user().emails[0].address;
 	},
 });
+
+Template.accountTemplate.events({
+	'click #btn-ChangePassword'(event) {
+		FlowRouter.go('accounts');
+		AccountsTemplates.setState("changePwd");
+	},
+})

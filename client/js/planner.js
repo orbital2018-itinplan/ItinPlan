@@ -55,6 +55,7 @@ Template.planner.onCreated(function() {
 			dayArray: [
 				[],
 			],
+			public: false,
 		};
 		trip.set(newTrip);
 	}
@@ -357,6 +358,15 @@ Template.settingsModalTemplate.helpers({
 	setSelected: function() {
 		//just to ensure the starting value of the modal is the correct one, cant be done in show.bs.modal
 		country.value = this.trip.get().country;
+	},
+	isOwner: function() {
+		console.log(Meteor.userId() );
+		console.log(this.trip.get().owner);
+
+		if(Meteor.userId() == this.trip.get().owner)
+			return true;
+		else
+			return false;
 	}
 });
 

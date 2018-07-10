@@ -1,12 +1,12 @@
 <template name="account">
     <section class="jumbotron loginback jumbotron-fluid">
-        {{> ensureSignedIn template="accountTemplate"}}
+        {{> ensureSignedIn template="accountTemplate" auth="loginTemplate"}}
     </section>
 </template>
 
 <template name="loginTemplate">
     <div class="d-flex justify-content-center">
-    	<div class="container rounded bg-dark pt-3 pb-3">
+    	<div class="container rounded bg-dark p-3">
         	{{> atForm}}
         </div>
     </div>
@@ -18,18 +18,27 @@
 		changePwd => changepwd form					-->
 <template name="accountTemplate">
     <div class="d-flex justify-content-center">
-    	<div class="container rounded bg-dark pt-3 pb-3">
+    	<div class="container rounded bg-dark p-3">
 			{{#if detailsShow}}
 				<form>
-					<div class="form-group row p-1">
-						<label for="username" class="col-sm-2 col-form-label">Username: </label>
-						<input id="username" type="text" readonly class="form-control-plaintext col-sm-10" value={{accountUsername}}>
+					<div class="form-row m-1">
+						<label for="username" class="col-4 col-form-label">Username: </label>
+						<div class="col-sm">
+							<input id="username" type="text" readonly class="form-control" value={{accountUsername}}>
+						</div>
 					</div>
-					<div class="form-group row p-1">
-						<label for="email" class="col-sm-2 col-form-label">Email: </label>
-						<input id="email" type="text" readonly class="form-control-plaintext col-sm-10" value={{accountEmail}}>
+					<div class="form-row m-1">
+						<label for="email" class="col-4 col-form-label">Email: </label>
+						<div class="col-sm">
+							<input id="email" type="text" readonly class="form-control" value={{accountEmail}}>
+						</div>
 					</div>
 				</form>
+				<div class="form-row justify-content-center m-1 mt-2">
+					<div class="col-auto">
+						<button class="btn btn-primary" id="btn-ChangePassword">Change Password</button>
+					</div>
+				</div>
 			{{else}}
 				{{> atForm}}
 			{{/if}}
@@ -45,13 +54,13 @@
 		    {{username}}
 		  </button>
 		  <div class="dropdown-menu">
-			<a class="dropdown-item" id="ddl-ViewDetails">View Details</a>
-		    <a class="dropdown-item" id="ddl-ResetPassword">Reset Password</a>
+			<a class="dropdown-item" id="ddl-ViewDetails" href="#">View Details</a>
+		    <a class="dropdown-item" id="ddl-ChangePassword" href="#">Change Password</a>
 		    <div class="dropdown-divider"></div>
-		    <a class="dropdown-item" id="ddl-logout">Logout</a>
+		    <a class="dropdown-item" id="ddl-logout" href="#">Logout</a>
 		  </div>
 		</div>
     {{else}}
-    	<a class="btn btn-outline-secondary nav-item" type="btn" href="/account">Login</a>
+    	<a class="btn btn-outline-secondary nav-item" id="btn-Login" type="btn" href="#">Login</a>
     {{/if}}
 </template>

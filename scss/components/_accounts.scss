@@ -1,0 +1,27 @@
+.at-link {
+    display: inline-block;
+    padding: .25em .4em;
+    font-size: 110%;
+    font-weight: 100;
+    line-height: 1.5;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    color: #fff;
+    background-color: $purple;
+}
+
+.at-title h3{
+    margin: 0px;
+}
+
+.at-error p {
+    color: $red;
+    margin: 0px;
+}
+
+.at-result {
+    color: #4fd45a;
+    margin: 0px;
+}
