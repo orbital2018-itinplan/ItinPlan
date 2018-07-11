@@ -65,7 +65,7 @@ Template.planner.onCreated(function() {
 		if(FlowRouter.getQueryParam('_id') == undefined)
 		{
 			//current existing trip being edited
-			//Session.set('trip', JSON.parse(localStorage.getItem('trip')));
+			//get current trip from localstorage and save it as current trip.
 			trip.set(JSON.parse(localStorage.getItem('trip')));
 			if(Meteor.userId())
 			{
@@ -75,10 +75,11 @@ Template.planner.onCreated(function() {
 		}
 		else
 		{
-			//load a trip from db
+			//_id exists, try to load it from db
+			//autorun will wait until tripsubscription is ready, then query db
 			this.autorun(function(autorunner) {
 				//not yet subscribed, return
-				if(! tripSubscription.ready())
+				if(!tripSubscription.ready())
 					return;
 				//else do this
 				else
@@ -89,17 +90,22 @@ Template.planner.onCreated(function() {
 						trip.set(queryTrip);
 					else
 					{
+						//trip is not in the database. just create new trip for the user.
 						newlyCreated.set(true);
 						var today = new Date();
 						let newTrip = {
 							owner: Meteor.userId(),
+							tripName: "New Trip",
 							country: "Custom",
 							startDate: new Date(today.getFullYear(), today.getMonth(), today.getDate(),0,0,0,0),
 							dayArray: [
 								[],
 							],
+							public: false,
 						};
 						trip.set(newTrip);
+						//because onrendered will not trigger.
+						$('#settingsModal').modal('show');
 					}
 					autorunner.stop();
 				}
@@ -129,7 +135,20 @@ Template.planner.helpers({
 		else
 			return true;
 	},
-
+	//check if trip is owned or other's
+	isOwner: function() {
+		//if dont have, return false
+		if(Template.instance().trip.get() != undefined)
+		{
+			//if owner is user and trip id is not null = trip belongs to the user (can be registered or not)
+			if(Meteor.userId() == Template.instance().trip.get().owner)
+				return true;
+			else
+				return false;
+		}
+		else
+			return false;
+	},
 	//getters for trip attributes
 	tripDays() {
 		if(Template.instance().trip.get() == undefined)
@@ -158,26 +177,25 @@ Template.planner.helpers({
 	},
 
 	//for displaying savetrip button
-	checkLoginAndData: function() {
+	checkLoginAndConnected: function() {
 		return value = (Template.instance().subscriptionsReady() && Meteor.userId() != null)
 	},
 
-	//pass on reactive trip to children templates
+	//pass on reactive variables to children templates
 	reactiveTrip: function() {
 		return Template.instance().trip;
 	},
-
-	//pass on reactive trip to children templates
 	reactiveNewlyCreated: function() {
 		return Template.instance().newlyCreated;
 	},
 
-	//save trip in localstorage
+	//save trip constantly upon changes in localstorage
 	localStorageTrip: function() {
 		localStorage.setItem('trip', JSON.stringify(Template.instance().trip.get()));
 		console.log("Trip saved in localstorage");
 	},
 
+	//to display alert if newlycreated is true
 	isNewlyCreated: function() {
 		//if newly created, wait till data populated then show modal.
 		return Template.instance().newlyCreated.get();
@@ -336,8 +354,6 @@ Template.settingsModalTemplate.onCreated(function() {
 	this.yearsDropDown.set(yearCount);
 
 	//initialise validation for trip name and trip days
-	this.tripNameValidation = new ReactiveVar();
-	var tripNameValidation = this.tripNameValidation;
 	this.countryDropDown = new ReactiveVar();
 	var countryDropDown = this.countryDropDown;
 });
@@ -614,8 +630,12 @@ Template.settingsModalTemplate.events({
 	},
 
 	'hide.bs.modal #settingsModal' (event) {
-		if(this.trip.get().public && Template.instance().find("#shareURL").classList.contains("is-valid"))
-			Template.instance().find("#shareURL").classList.remove("is-valid");
+		//if i am owner of trip and it is public do all these.
+		if(this.trip.get().public && Meteor.userId() == this.trip.get().owner)
+		{
+		 	if(Template.instance().find("#shareURL").classList.contains("is-valid"))
+				Template.instance().find("#shareURL").classList.remove("is-valid");
+		}
 		if(Template.instance().find("#tripName").classList.contains("is-invalid"))
 			Template.instance().find("#tripName").classList.remove("is-invalid");
 		if(Template.instance().find("#dayNumbers").classList.contains("is-invalid"))

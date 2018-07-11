@@ -6,7 +6,7 @@ Template.myTrips.onCreated(function() {
 
 Template.myTrips.helpers({
     tripList: function() {
-        return Trips.find({}, {sort: {tripName: 1}});
+        return Trips.find({ owner: Meteor.userId() }, { sort: {tripName: 1} });
     },
     startDate: function() {
 		return new Date(this.startDate).toLocaleDateString('en-GB', {  day: 'numeric', month: 'long', year: 'numeric' });
