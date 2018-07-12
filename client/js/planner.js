@@ -700,11 +700,11 @@ Template.locationTemplate.helpers({
 	locationName: function() {
 		return this;
 	},
-
 	getLocName() {
 		var result = ReactiveMethod.call('getLocName', this.location);
 		return result.data.result.name;
 	},
+	
 });
 
 Template.locationTemplate.events({

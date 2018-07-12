@@ -85,7 +85,7 @@
                 <div class="container-fluid ">
                     <h3 class="page-title">Timeline</h3>
                     {{# each day in tripDays}}
-                        {{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
+                        {{> dayTemplate dayIndex=@index day=day trip=reactiveTrip isOwner=isOwner}}
                     {{/each}}
                 </div>
 
@@ -116,7 +116,7 @@
                             <div class="col-sm-1 planner-controller-btn">
                                 <button class="btn btn-outline-secondary border-0" data-toggle="modal"
                                         data-target="#settingsModal">
-                                    <i class="fa mr-1 fa-cogs"></i> "change to create copy"
+                                    <i class="fa mr-1 fa-cogs"></i> "to remove this btn"
                                 </button>
                             </div>
                         </div>
@@ -127,7 +127,7 @@
                 {{#if checkLoginAndConnected}}
                     <div class="container-fluid planner-save">
                         <button class="btn btn-success btn-copyTrip float-right">
-                            <i class="fa fa-save mr-1"></i> change to create copy
+                            <i class="fa fa-save mr-1"></i> create copy of trip
                         </button>
                     </div>
                 {{/if}}
@@ -154,7 +154,7 @@
                 <div class="container-fluid ">
                     <h3 class="page-title">Timeline</h3>
                     {{# each day in tripDays}}
-                        {{> dayTemplate dayIndex=@index day=day trip=reactiveTrip}}
+                        {{> dayTemplate dayIndex=@index day=day trip=reactiveTrip isOwner=isOwner}}
                     {{/each}}
                 </div>
                 <div class="w-100"></div>
@@ -203,7 +203,6 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <!--setting template for modal-->
@@ -345,17 +344,21 @@
 
         <li class="timeline-line"></li>
         <li class="timeline-group">
+            {{#if isOwner}}
             <button type="button" class="close btn-dayRemoveDay text-info" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
+            {{/if}}
             <a href="#" class="btn btn-primary"><i class="fa fa-calendar mr-2"></i>Day {{getDayNum dayIndex}}</a>
-            <div class="btn btn-danger btn-dayAddLoc">Add Location</div> <!-- Should change to modal-->
+            {{#if isOwner}}
+                <div class="btn btn-danger btn-dayAddLoc">Add Location</div> <!-- Should change to modal-->
+            {{/if}}
         </li>
     </ul>
 
     <ul class="timeline">
         {{# each location in day}}
-            {{> locationTemplate dayIndex=dayIndex locIndex=@index location=location trip=trip}}
+            {{> locationTemplate dayIndex=dayIndex locIndex=@index location=location trip=trip isOwner=isOwner}}
         {{/each}}
 
     </ul>
@@ -397,6 +400,7 @@
                     <li>PICTURE IN HERE</li>
                 </ul>
             </div>
+            {{#if isOwner}}
             <div class="timeline-footer">
                 <button class="close text-danger btn-deleteLoc">
                     <span aria-hidden="true">&times;</span>
@@ -406,6 +410,7 @@
                         data-target="#locationModal" data-location={{location}}>Select Location
                 </button>
             </div>
+            {{/if}}
         </div>
     </li>
 
