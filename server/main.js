@@ -113,7 +113,8 @@ Meteor.startup(() => {
     // This code only runs on the server
     Meteor.publish('trips', function() {
         return Trips.find({
-            owner: this.userId //<-- use only when nid to filter by user
+            //owner: this.userId //<-- use only when nid to filter by user
+            $or: [{owner: this.userId}, {public: true}]
         });
     });
 
