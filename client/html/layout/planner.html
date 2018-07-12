@@ -100,7 +100,7 @@
             {{localStorageTrip}}
 
         {{else}}
-            <!-- not owner: render a disabled version of planner. -->
+            <!-- not owner: render a disabled version of planner. work in progress-->
 
             <!-- Control Panel: BackgroundPic and Details of Trip -->
             <div class="container-fluid plannerControl ">
@@ -114,7 +114,7 @@
                                 <h5>From {{tripStartDate}}</h5>
                             </div>
                             <div class="col-sm-1 planner-controller-btn">
-                                <button class="btn btn-openSetting btn-outline-secondary border-0" data-toggle="modal"
+                                <button class="btn btn-outline-secondary border-0" data-toggle="modal"
                                         data-target="#settingsModal">
                                     <i class="fa mr-1 fa-cogs"></i> "change to create copy"
                                 </button>
@@ -123,30 +123,28 @@
                     </div>
                 </div>
 
-                <!-- For members, allow save -->
+                <!-- For members, allow copy to localstorage -->
                 {{#if checkLoginAndConnected}}
                     <div class="container-fluid planner-save">
-                        <button class="btn btn-success btn-saveTrip float-right">
+                        <button class="btn btn-success btn-copyTrip float-right">
                             <i class="fa fa-save mr-1"></i> change to create copy
                         </button>
                     </div>
                 {{/if}}
             </div>
 
-            <!-- Alert: for newly created trips -->
-            {{#if isNewlyCreated}}
-                <div class="container-fluid p-3">
-                    <div class="container-fluid alert alert-success alert-dismissible fade show" role="alert"
-                        id="newTripAlert">
-                        <h4 class="alert-heading">This is a copy of another trip!</h4>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <hr>
-                        <p class="mb-0">* To edit it, copy it as your current trip! *</p>
-                    </div>
+            <!-- Alert: info to let people know it is not an actual edittable trip -->
+            <div class="container-fluid p-3">
+                <div class="container-fluid alert alert-success alert-dismissible fade show" role="alert"
+                    id="newTripAlert">
+                    <h4 class="alert-heading">This is a copy of another trip!</h4>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <hr>
+                    <p class="mb-0">* To edit it, copy it as your current trip! *</p>
                 </div>
-            {{/if}}
+            </div>
 
             <!-- Trip Planner -->
             <div class="container-fluid planner">

@@ -10,7 +10,6 @@ import {Session} from 'meteor/session'
 */
 
 Template.planner.onCreated(function() {
-
 	// We can use the `ready` callback to interact with the map API once the map is ready.
 	GoogleMaps.ready('locMap', function (map) {
 		// Add a marker to the map once it's ready
@@ -282,8 +281,28 @@ Template.planner.events({
                 $('#saveTrip').modal("show");
 			});
 			//can set session.state to loading if want
+			console.log("WUT");
 		}
 		console.log("Saving . . .");
+	},
+
+	//save trip in database (only if user is registered)
+	'click .btn-copyTrip' (event) {
+		//set to local storage and go to flowrouter.go(planner)
+		var copyTrip = JSON.parse(JSON.stringify(Template.instance().trip.get()));
+		console.log(Template.instance().trip.get());
+		console.log(copyTrip);
+		copyTrip.owner = Meteor.userId();
+		delete copyTrip._id;
+		copyTrip.public = false;
+		console.log(Template.instance().trip.get());
+		console.log(copyTrip);
+		Template.instance().trip.set(copyTrip);
+		//FlowRouter.go("planner");
+		FlowRouter.withReplaceState(function() {
+			FlowRouter.setQueryParams({_id: null});
+			FlowRouter.setQueryParams({country: null});
+		});
 	},
 
 	//add new day to dayarray
