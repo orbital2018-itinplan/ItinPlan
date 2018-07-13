@@ -1,0 +1,111 @@
+<template name="override-atForm">
+        {{#unless hide}}
+            <div class="at-form">
+                <div class="form-row">
+                    <div class="form-group col m-1">
+                        {{#if showTitle}}
+                            {{> atTitle}}
+                        {{/if}}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col m-1">
+                        {{#if showError}}
+                            {{> atError}}
+                        {{/if}}
+                        {{#if showResult}}
+                            {{> atResult}}
+                        {{/if}}
+                    </div>
+                </div>
+
+                {{#if showMessage}}
+                    {{> atMessage}}
+                {{/if}}
+                {{#if showOauthServices}}
+                    {{> atOauth}}
+                {{/if}}
+                {{#if showServicesSeparator}}
+                    {{> atSep}}
+                {{/if}}
+                {{#if showPwdForm}}
+                    {{> atPwdForm}}
+                {{/if}}
+                {{#if showTermsLink}}
+                    {{> atTermsLink}}
+                {{/if}}
+                {{#if showSignInLink}}
+                    {{> atSigninLink}}
+                {{/if}}
+                {{#if showSignUpLink}}
+                    {{> atSignupLink}}
+                {{/if}}
+                {{#if showResendVerificationEmailLink}}
+                    {{> atResendVerificationEmailLink}}
+                {{/if}}
+            </div>
+        {{/unless}}
+</template>
+
+<template name="override-atTextInput">
+    <div class="at-input {{#if isValidating}}validating{{/if}} {{#if hasError}}has-error{{/if}} {{#if hasSuccess}}has-success{{/if}} {{#if feedback}}has-feedback{{/if}}">
+        <!--not used-->
+        {{#if showLabels}}
+          <label for="at-field-{{_id}}">
+            {{displayName}} {{#unless required}}{{optionalText}}{{/unless}}
+          </label>
+        {{/if}}
+        <div class="form-row">
+            <div class="form-group col m-1">
+                <input class="form-control {{#if hasError}}is-invalid{{/if}}" type="{{type}}" id="at-field-{{_id}}" name="at-field-{{_id}}" placeholder="{{placeholder}}" autocapitalize="none" autocorrect="off">
+                <div class="invalid-feedback">
+                    {{#if hasIcon}}
+                        <span class="{{iconClass}}"></span>
+                    {{/if}}
+                    {{#if hasError}}
+                        <span>{{errorText}}</span>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="override-atPwdFormBtn">
+    <div class="form-row justify-content-end">
+        <div class="form-group col-auto m-1">
+            <button type="submit" class="btn at-btn submit {{submitDisabled}}" id="at-btn">
+                {{buttonText}}
+            </button>
+        </div>
+    </div>
+</template>
+
+<template name="override-atSignupLink">
+    <div class="form-row justify-content-end">
+        <div class="form-group col-auto m-1">
+            <div class="at-signup-link">
+                <p class="m-1">
+                    {{preText}}: 
+                    <a href="{{signUpLink}}" id="at-signUp" class="at-link at-signup {{disabled}}">{{linkText}}</a>
+                    {{suffText}}
+                </p>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="override-atSigninLink">
+    <div class="form-row justify-content-end">
+        <div class="form-group col-auto m-1">
+            <div class="at-signin-link">
+                <p class="m-1">
+                    {{preText}}: 
+                    <a href="{{signInLink}}" id="at-signIn" class="at-link at-signin {{disabled}}">{{linkText}}</a>
+                    {{suffText}}
+                </p>
+            </div>
+        </div>
+    </div>
+</template>
