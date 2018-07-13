@@ -2,20 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff9e25d5-d0bd-4181-a3f0-0661086208f8" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/client/html/layout/useraccountOverride.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/js/useraccountOverride.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/packages" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/packages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/versions" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/versions" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/html/layout/accounts.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/html/layout/accounts.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/html/layout/planner.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/html/layout/planner.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/js/accounts.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/accounts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/js/navBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/navBar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/js/planner.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/planner.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/js/trips.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/trips.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/config/at_config.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/at_config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scss/components/_accounts.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/components/_accounts.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scss/components/_planner.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/components/_planner.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -53,8 +40,16 @@
       <file leaf-file-name="planner.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/html/layout/planner.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-276">
-              <caret line="363" column="81" selection-start-line="363" selection-start-column="81" selection-end-line="363" selection-end-column="81" />
+            <state relative-caret-position="120">
+              <caret line="184" column="26" lean-forward="true" selection-start-line="184" selection-start-column="26" selection-end-line="184" selection-end-column="26" />
+              <folding>
+                <element signature="n#style#0;n#h1#0;n#div#0;n#div#0;n#div#3;n#template#0;n#!!top" expanded="true" />
+                <element signature="e#7042#7049#1#HTML" expanded="true" />
+                <element signature="e#8667#8674#1#HTML" expanded="true" />
+                <element signature="e#10407#10414#1#HTML" expanded="true" />
+                <element signature="e#17385#17392#1#HTML" expanded="true" />
+                <element signature="e#19774#19781#1#HTML" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -131,6 +126,7 @@
       <find>getDayNum</find>
       <find>getDaynum</find>
       <find>dayTemplate</find>
+      <find>old</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -164,8 +160,8 @@
         <option value="$PROJECT_DIR$/scss/custom.scss" />
         <option value="$PROJECT_DIR$/scss/components/_planner.scss" />
         <option value="$PROJECT_DIR$/client/js/main.js" />
-        <option value="$PROJECT_DIR$/client/html/layout/planner.html" />
         <option value="$PROJECT_DIR$/client/js/planner.js" />
+        <option value="$PROJECT_DIR$/client/html/layout/planner.html" />
       </list>
     </option>
   </component>
@@ -331,12 +327,12 @@
       <workItem from="1530441193505" duration="20209000" />
       <workItem from="1531022133739" duration="19276000" />
       <workItem from="1531364574069" duration="2622000" />
-      <workItem from="1531399980208" duration="313000" />
+      <workItem from="1531399980208" duration="721000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="118082000" />
+    <option name="totallyTimeSpent" value="118490000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="797" extended-state="0" />
@@ -622,8 +618,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/html/layout/planner.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-276">
-          <caret line="363" column="81" selection-start-line="363" selection-start-column="81" selection-end-line="363" selection-end-column="81" />
+        <state relative-caret-position="120">
+          <caret line="184" column="26" lean-forward="true" selection-start-line="184" selection-start-column="26" selection-end-line="184" selection-end-column="26" />
+          <folding>
+            <element signature="n#style#0;n#h1#0;n#div#0;n#div#0;n#div#3;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#7042#7049#1#HTML" expanded="true" />
+            <element signature="e#8667#8674#1#HTML" expanded="true" />
+            <element signature="e#10407#10414#1#HTML" expanded="true" />
+            <element signature="e#17385#17392#1#HTML" expanded="true" />
+            <element signature="e#19774#19781#1#HTML" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

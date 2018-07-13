@@ -364,25 +364,6 @@
 
     </ul>
 
-    <!-- Old Layout -->
-    <!--<div class="row align-items-center p-3">-->
-    <!--&lt;!&ndash;for each day, there is a day button and locations within the day template.&ndash;&gt;-->
-    <!--<button type="button" class="close btn-dayRemoveDay text-info"  aria-label="Close">-->
-    <!--<span aria-hidden="true">&times;</span>-->
-    <!--</button>-->
-    <!--<div class="card border-primary m-1 mr-4 text-center planner-day">-->
-    <!--<div class="card-body mt-sm-3">-->
-    <!--<p class="card-text text-primary">Day {{getDayNum dayIndex}}</p>-->
-    <!--</div>-->
-    <!--</div>-->
-
-        <!--{{# each location in day}}-->
-    <!--{{> locationTemplate dayIndex=dayIndex locIndex=@index location=location trip=trip}}-->
-        <!--{{/each}}-->
-    <!--<div class="btn btn-danger btn-dayAddLoc ml-4">Add Location</div>-->
-    <!--</div>-->
-    <!--<div class="w-100"></div>-->
-
 </template>
 
 <!-- template for each location -->
@@ -414,22 +395,4 @@
             {{/if}}
         </div>
     </li>
-
-
-    <!-- Old Layout-->
-    <!--<div class="card border-primary m-1" style="width: 12rem;">-->
-    <!--<img class="card-img-top planner m-1 border border-dark">-->
-    <!--<div class="card-body">-->
-    <!--<h6 class="card-title">{{getLocName}}</h6>-->
-    <!--<p class="card-text"></p>-->
-
-    <!--<button class="btn btn-danger btn-deleteLoc float-left m-1">-->
-    <!--<span aria-hidden="true">&times;</span>-->
-    <!--</button>-->
-
-    <!--<button class="btn btn-success btn-selectLoc float-right m-1" data-toggle="modal"-->
-    <!--data-target="#locationModal" data-location={{location}}>Select Location-->
-    <!--</button>-->
-    <!--</div>-->
-    <!--</div>-->
 </template>
