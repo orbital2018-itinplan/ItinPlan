@@ -20,7 +20,6 @@ $(document).ready(function() {
         // checks if window is scrolled more than 500px, adds/removes solid class
         if($(this).scrollTop() > 10) {
             $('.navbar').css('opacity', 1);
-            console.log("DONENENENENEN");
         } else {
             $('.navbar').css('opacity', 0.9);
         }

@@ -518,6 +518,19 @@ Template.dayTemplate.events({
 	'click .btn-dayRemoveDay' (event) {
 		this.trip.get().dayArray.splice(this.dayIndex, 1);
 		this.trip.set(this.trip.get());
+	},
+	//change icon for collapse day
+	'click .btn-collapseDay' (event) {
+        const day = this.dayIndex + 1;
+		if($(".icon-collapse-"+day).hasClass("fa-minus-square-o")){
+            $(".icon-collapse-"+day).removeClass("fa-minus-square-o").addClass("fa-plus-square-o");
+            console.log("Found minus");
+		} else {
+            $(".icon-collapse-"+day).removeClass("fa-plus-square-o").addClass("fa-minus-square-o");
+            console.log("Found plus");
+
+		}
+
 	}
 });
 
@@ -538,7 +551,7 @@ Template.locationTemplate.helpers({
 	getLocName() {
 		var result = ReactiveMethod.call('getLocName', this.location);
 		return result.data.result.name;
-	},
+	}
 });
 
 Template.locationTemplate.events({
