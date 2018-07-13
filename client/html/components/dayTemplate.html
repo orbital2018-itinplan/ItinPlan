@@ -1,0 +1,29 @@
+<!-- template for each row -->
+<template name="dayTemplate">
+
+    <!-- New Layout-->
+    <ul class="timeline">
+
+        <li class="timeline-line"></li>
+        <li class="timeline-group">
+            {{#if isOwner}}
+            <button type="button" class="close btn-dayRemoveDay text-info" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{/if}}
+            <a class="btn btn-primary btn-collapseDay" data-toggle="collapse" href="#day{{getDayNum dayIndex}}"><i
+                    class="fa fa-calendar mr-2"></i>Day {{getDayNum dayIndex}}<i  class="fa fa-minus-square-o ml-4 icon-collapse-{{getDayNum dayIndex}}"></i></a>
+            {{#if isOwner}}
+                <div class="btn btn-danger btn-dayAddLoc">Add Location</div> <!-- Should change to modal-->
+            {{/if}}
+        </li>
+    </ul>
+
+    <ul class="timeline collapse show" id="day{{getDayNum dayIndex}}" >
+        {{# each location in day}}
+            {{> locationTemplate dayIndex=dayIndex locIndex=@index location=location trip=trip isOwner=isOwner}}
+        {{/each}}
+
+    </ul>
+
+</template>

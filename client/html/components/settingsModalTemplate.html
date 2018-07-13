@@ -1,0 +1,130 @@
+<!--setting template for modal-->
+<template name="settingsModalTemplate">
+    <div class="modal fade rounded" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="modal display"
+         aria-hidden="true">
+        <!-- Modal : settingsModal -->
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <!-- Header-->
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="exampleModalLabel">My Trip Settings:</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Body -->
+                <div class="modal-body">
+                    <div class="container pr-1 pl-1">
+                        <form>
+                            <div class="form-row p-1">
+                                <div class="form-group col">
+                                    <label for="country">Trip name:</label>
+                                    <input class="form-control" id="tripName"/>
+                                    <div class="invalid-feedback">
+                                        Invalid trip name.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row p-1">
+                                <div class="form-group col">
+                                    <label for="country">Country:</label>
+                                    <select class="form-control" id="country">
+                                        <option value="Custom">Custom</option>
+                                        {{#each country in countryDropDown}}
+                                            <option value={{country}}>{{country}}</option>
+                                            <!-- ensures the select option is the trip option -->
+                                            {{setCountrySelected}}
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row p-1 align-items-end">
+                                <div class="form-group col">
+                                    <label for="dateDay">Start Date:</label>
+                                    <select class="form-control" id="dateDay" placeholder="Day">
+                                        {{#each day in daysDropDown}}
+                                            <option>{{day}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+
+                                <div class="form-group col">
+                                    <select class="form-control" id="dateMonth" placeholder="Month">
+                                        {{#each month in monthsDropDown}}
+                                            <option>{{month}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+
+                                <div class="form-group col">
+                                    <select class="form-control" id="dateYear" placeholder="Year">
+                                        {{#each year in yearsDropDown}}
+                                            <option>{{year}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="form-row p-1">
+                                <div class="form-group col">
+                                    <label for="dayNumbers">Number of days:</label>
+                                    <input type="number" class="form-control" id="dayNumbers" min="1" max="365"/>
+                                    <div class="invalid-feedback">
+                                        Too many days. Please keep it below 365 :)
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{#if isOwner}}
+                                <div class="form-row p-1 align-items-center">
+                                    <div class="form-group col">
+                                        <label for="publicSelector">Make public:</label>
+                                    </div>
+                                    <div class="form-group col">
+                                        <div class="btn-group btn-group-toggle" id="publicSelector" data-toggle="buttons">
+                                            <label class="btn btn-primary" id="radio-PrivateLabel">
+                                                <input type="radio" name="options" id="radio-Private" autocomplete="off"> Private
+                                            </label>
+                                            <label class="btn btn-primary" id="radio-PublicLabel">
+                                                <input type="radio" name="options" id="radio-Public" autocomplete="off"> Public
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{#if publicTrip}}
+                                    <div class="form-row p-1 align-items-center">
+                                        <div class="form-group col">
+                                            <label for="shareURL">Copy this URL to share with your friends!:</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="shareURL" value={{shareURL}} readonly>
+                                                <span class="input-group-append">
+                                                    <button class="btn btn-outline-secondary pr-3 pl-3" id="btn-copyURL" type="button">
+                                                        <i class="fa fa-clipboard"></i>
+                                                    </button>
+                                                </span>
+                                                <div class="valid-feedback">
+                                                        URL Copied!
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                            {{/if}}
+
+                        </form>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-saveSettings text-white">
+                        <i class="fa mr-2 fa-save"></i>Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
