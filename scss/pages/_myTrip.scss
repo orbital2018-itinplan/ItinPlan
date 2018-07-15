@@ -1,0 +1,29 @@
+.myTrip {
+  margin-top: 110px;
+  margin-bottom: 1.5em;
+  text-transform: uppercase;
+}
+
+.myTrip-card {
+  max-width: 22em;
+}
+
+.myTrip-card-button{
+  transition: .5s ease;
+  opacity: 0;
+}
+
+.myTrip-card-button:hover {
+  opacity: 1;
+}
+
+.myTrip-card-img {
+  opacity: 0.5;
+}
+
+.btn-removeTrips {
+  position: absolute;
+  left: 88%;
+  font-size: 35px;
+  color: red !important;
+}

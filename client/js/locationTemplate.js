@@ -12,8 +12,13 @@ Template.locationTemplate.helpers({
 		return this;
 	},
 	getLocName() {
-		var result = ReactiveMethod.call('getLocName', this.location);
-		return result.data.result.name;
+		try {
+            var result = ReactiveMethod.call('getLocName', this.location);
+            return result.data.result.name;
+		} catch (err){
+
+		}
+
 	}
 });
 

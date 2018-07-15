@@ -1,45 +1,40 @@
 <template name="myTrips">
-    <div class="container-fluid bodyWithPaddingTop">
-        <h1 class="text-center pt-2 pb-2">My saved trips</h1>
-        <div class="list-group">
+    <section class="myTrip">
+        <div class="text-center pb-4">
+            <h4 class="title text-secondary">My Trips</h4>
+        </div>
+        <div class="card-group mx-auto">
             {{#each tripList}}
-            <div class="row pb-1 pl-1 pr-1 no-gutters">
-                <div class="col-md pl-1 pr-1">
-                    <button type="button" class="list-group-item list-group-item-action" data-toggle="collapse" data-target="#{{_id}}">{{tripName}}</button>
-                </div>
-                <div class="col-sm-auto pl-1 pr-1">
-                    <button type="button" class="list-group-item list-group-item-action list-group-item-success text-center" id="btn-Planner">Open Planner</button>
-                </div>
-                <div class="col-sm-auto pl-1 pr-1">
-                    <button type="button" class="list-group-item list-group-item-action list-group-item-danger text-center" id="btn-Delete" data-toggle="modal"
-                    data-target="#confirmationModal">Delete Trip</button>
-                </div>
-            </div>
-
-            <div class="row pb-1 pl-1 pr-1 no-gutters">
-                <div class="col pl-1 pr-1">
-                    <div class="card collapse" id={{_id}}>
-                        <div class="container-fluid">
-                            <h5>Trip name: {{tripName}}</h5>
-                            <h5>Country of interest: {{country}}</h5>
-                            <h5>Start Date: {{startDate}}</h5>
-                            <h5>Days: {{dayArray.length}}</h5>
+                <div class="col-lg-3">
+                    <div class="card text-center myTrip-card mb-5" id={{_id}}>
+                        <div class="myTrip-card-body">
+                            <img class="card-img myTrip-card-img" src="/image/country/{{country}}.jpg"
+                                 alt="{{country}}">
+                            <div class="card-img-overlay text-secondary font-weight-bold">
+                                <h5>{{dayArray.length}} Days in {{country}}</h5>
+                                <h7>From {{startDate}}</h7>
+                            </div>
+                        </div>
+                        <div class="myTrip-card-button card-img-overlay mt-0">
+                            <button  class="btn btn-primary text-white" id="btn-Planner">Open Planner</button>
+                        </div>
+                        <button type="button" class="close btn-0 text-info btn-removeTrips" id="btn-Delete" data-toggle="modal" data-target="#confirmationModal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <div class="card-footer text-primary">
+                            {{tripName}}
                         </div>
                     </div>
                 </div>
-            </div>
             {{/each}}
         </div>
-    </div>
+    </section>
 
-    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
+    <!-- Modal for delete of trip-->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="modal display"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
                 <div class="modal-body text-center">
                     <h3>Are you sure?</h3>
                     <div class="container pt-3">

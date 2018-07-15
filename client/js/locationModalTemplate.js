@@ -19,14 +19,25 @@ Template.locationModalTemplate.helpers({
 
 		var country = Country.find({country_name: countryName}).fetch();
 		//console.log("FROM DB:" + country[0].lat);
+		try {
+            if (GoogleMaps.loaded()) {
+                // Map initialization options
+                return {
+                    center: new google.maps.LatLng(country[0].lat, country[0].lng),
+                    zoom: 6
+                };
+            }
+		} catch(err) {}
 
-		if (GoogleMaps.loaded()) {
-			// Map initialization options
-			return {
-				center: new google.maps.LatLng(country[0].lat, country[0].lng),
-				zoom: 6
-			};
-		}
+	},
+
+    searchSchema: function() {
+        return Schemas.Search;
+    },
+
+	//Check if google map is loaded
+	googleMapsReady : function() {
+		return GoogleMaps.loaded();
 	}
 });
 

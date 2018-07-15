@@ -12,8 +12,12 @@
     background-color: $purple;
 }
 
-.at-title h3{
+.at-title {
     margin: 0px;
+    color: white;
+    text-transform: uppercase;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
 }
 
 .at-error p {
@@ -25,3 +29,23 @@
     color: #4fd45a;
     margin: 0px;
 }
+
+.at-btn {
+    background-color: #989ECD;
+    color: white;
+}
+
+.accounts-title {
+    text-transform: uppercase;
+}
+
+.at-signup {
+    margin-left: 8px;
+    padding: 7px;
+    background-color: #7475FF;
+}
+
+.at-signup-link {
+    padding-top: 10px;
+}
+

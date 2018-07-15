@@ -1,6 +1,5 @@
 <template name="locationModalTemplate">
     <!-- Local Modal-->
-    <!--modal for opening location @yuanrong javascript must be in planner template-->
     <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -12,17 +11,36 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="form-row align-items-center">
-                            <div class="col-auto">
-                                <input type="text" class="form-control" id="recipient-name">
-                            </div>
-                            <div class="col-auto">
-                                <button type="button" class="btn btn-secondary btn-searchLoc">Search</button>
-                            </div>
-                        </div>
 
-                    </form>
+                    <!--New Layout-->
+
+                    {{#autoForm schema=searchSchema id="searchLocation" type="normal"}}
+                    <div class="row p-2 align-items-center">
+                        <div class="col-11 pr-2">
+                            {{#if googleMapsReady}}
+                                {{> afQuickField name="location" type="googleplace" class="form-control" placeholder="Enter location"}}
+                            {{/if}}
+                        </div>
+                        <div class="col-2 mb-3 pl-1">
+                            <button type="submit" class="btn btn-secondary btn-searchLoc">Search</button>
+                        </div>
+                    </div>
+                    {{/autoForm}}
+
+
+
+                    <!--Old Layout-->
+                    <!--<form>-->
+                        <!--<div class="form-row align-items-center">-->
+                            <!--<div class="col-auto">-->
+                                <!--<input type="text" class="form-control" id="recipient-name">-->
+                            <!--</div>-->
+                            <!--<div class="col-auto">-->
+                                <!--<button type="button" class="btn btn-secondary btn-searchLoc">Search</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                    <!--</form>-->
                     <div class="map-container">
                         {{> googleMap name="locMap" options=locationMap}}
                     </div>

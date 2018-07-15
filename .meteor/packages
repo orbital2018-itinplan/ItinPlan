@@ -23,6 +23,10 @@ kadira:blaze-layout             # Package for routing
 dburles:google-maps             # Google Map API
 deanius:promise                 # Promise for client side
 fortawesome:fontawesome         # icon
+lukemadera:autoform-googleplace # Google AutoComplete
+ejson
+aldeed:simple-schema
+aldeed:autoform
 
 simple:reactive-method
 
