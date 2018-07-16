@@ -10,15 +10,19 @@ Template.locationModalTemplate.onCreated(function() {
 		//     map: map.instance
 		// });
 		//console.log(GoogleMaps.maps.locMap.places.Autocomplete(input));
-		
 	});
-	
 
 });
+
+
 
 Template.locationModalTemplate.helpers({
 	locationMap: function () {
 		//initialization for google map
+		//console.log($("#locationModal").data);
+		
+	console.log($("#locationModal").data("row"));
+	console.log($("#locationModal").data("col"));
 		const countryName = this.trip.get().country;
 		console.log(countryName);
 
@@ -26,13 +30,28 @@ Template.locationModalTemplate.helpers({
 		//console.log("FROM DB:" + country[0].lat);
 		try {
             if (GoogleMaps.loaded()) {
-                // Map initialization options
-                return {
-                    center: new google.maps.LatLng(country[0].lat, country[0].lng),
-                    zoom: 6
-                };
+				// Map initialization options
+				//https://developers.google.com/maps/documentation/javascript/places-autocomplete
+				//if(Template.instance().find("#pac-input") != undefined)
+				//{
+				//	var input = Template.instance().find("#pac-input");
+				//	var autocomplete = new google.maps.places.Autocomplete(input);
+				//	autocomplete.bindTo('bounds', GoogleMaps.maps.locMap.instance);
+				//}
+				
+				if(country[0] != undefined) 
+				{
+					return {
+						center: new google.maps.LatLng(country[0].lat, country[0].lng),
+						zoom: 6
+					};
+				}
             }
-		} catch(err) {}
+		} catch(err) {
+			console.log(err);
+		}
+
+		
 
 	},
 
@@ -79,4 +98,6 @@ Template.locationModalTemplate.events({
 		Session.set('placeId', result.data.results[0].place_id);
 
 	},
+
+
 });

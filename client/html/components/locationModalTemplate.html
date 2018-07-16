@@ -11,8 +11,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-
-                    <!--New Layout-->
+                    <div class="container-fluid">
+                    <!--New Layout
 
                     {{#autoForm schema=searchSchema id="searchLocation" type="normal"}}
                     <div class="row p-2 align-items-center">
@@ -25,11 +25,13 @@
                             <button type="submit" class="btn btn-secondary btn-searchLoc">Search</button>
                         </div>
                     </div>
-                    {{/autoForm}}
+                    {{/autoForm}}-->
+
+
+
                     <div class="row p-2 align-items-center">
                         <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
                     </div>
-
 
                     <!--Old Layout-->
                     <!--<form>-->
@@ -43,9 +45,13 @@
                         <!--</div>-->
 
                     <!--</form>-->
-                    <div class="map-container">
-                        {{> googleMap name="locMap" options=locationMap}}
+                        <div class="row p-2 align-items-center">
+                            <div class="map-container">
+                                {{> googleMap name="locMap" options=locationMap}}
+                            </div>
+                        </div>
                     </div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-saveLoc" data-dismiss="modal">Save</button>

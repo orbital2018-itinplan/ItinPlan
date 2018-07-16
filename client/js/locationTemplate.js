@@ -32,6 +32,7 @@ Template.locationTemplate.events({
 	'click .btn-selectLoc' (event) {
 		dayIndex = this.dayIndex;
 		locIndex = this.locIndex;
+		//set reactive var pair for locationModalTemplate to render google maps.
 		//open a javascript modal thing
 		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
 		$('#locationModal').one('show.bs.modal', function (event) {
@@ -41,6 +42,7 @@ Template.locationTemplate.events({
 			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 			var modal = $(this);
 			modal.find('.modal-body input').val(location);
+			console.log(modal.data());
 			//set row and column for later setting data
 			modal.data("row", dayIndex);
 			modal.data("col", locIndex);
