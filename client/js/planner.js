@@ -212,11 +212,12 @@ Template.planner.events({
 				tripReact.get()._id = result;
 				tripReact.set(tripReact.get());
 				//alert("Trip Saved");
-                $('#saveTrip').modal("show");
+				$('#saveTrip').modal("show");
+
 			});
 			//set to currently saving UNTIL trip id is gotten from server
-			tripReact.get()._id = "Currently Saving";
-			tripReact.set(tripReact.get());
+			//tripReact.get()._id = "Currently Saving";
+			//tripReact.set(tripReact.get());
 		}
 		else
 		{

@@ -9,11 +9,16 @@ Template.locationModalTemplate.onCreated(function() {
 		//     position: map.options.center,
 		//     map: map.instance
 		// });
+		//console.log(GoogleMaps.maps.locMap.places.Autocomplete(input));
+		
 	});
+	
+
 });
 
 Template.locationModalTemplate.helpers({
 	locationMap: function () {
+		//initialization for google map
 		const countryName = this.trip.get().country;
 		console.log(countryName);
 

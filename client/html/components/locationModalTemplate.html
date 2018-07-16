@@ -2,7 +2,7 @@
     <!-- Local Modal-->
     <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display"
          aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Select Location:</h5>
@@ -26,7 +26,9 @@
                         </div>
                     </div>
                     {{/autoForm}}
-
+                    <div class="row p-2 align-items-center">
+                        <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+                    </div>
 
 
                     <!--Old Layout-->
