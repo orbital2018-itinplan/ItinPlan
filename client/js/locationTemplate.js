@@ -32,10 +32,13 @@ Template.locationTemplate.events({
 	'click .btn-selectLoc' (event) {
 		dayIndex = this.dayIndex;
 		locIndex = this.locIndex;
+		placeID = this.location;
 		//set reactive var pair for locationModalTemplate to render google maps.
 		//open a javascript modal thing
 		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
 		$('#locationModal').one('show.bs.modal', function (event) {
+
+			/*not nice implementation. fix with session variable @yuanrong
 			var button = $(event.relatedTarget); // Button that triggered the modal
 			var location = button.data('location'); // Extract info from data-* attributes
 			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
@@ -45,7 +48,10 @@ Template.locationTemplate.events({
 			console.log(modal.data());
 			//set row and column for later setting data
 			modal.data("row", dayIndex);
-			modal.data("col", locIndex);
+			modal.data("col", locIndex);*/
+			
+			//set the session variable "currentLocation" to the placeid and row and col, allow the modal to edit.
+			Session.set("currentLocation", { placeID: placeID, row: dayIndex, col: locIndex });
 		})
 	}
 });

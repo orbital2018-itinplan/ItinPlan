@@ -29,12 +29,9 @@ Template.myTrips.events({
 	},
 
     //to delete. ((should have confirmation whether want to delete.))
-	'click #btn-ConfirmDelete' (event) {
-        var trip = $("#confirmationModal").data("trip");
-        //console.log(event.target.data("trip"));
-        Meteor.call('trips.remove', trip, function(error, result) {
-            alert("trip deleted");
-        });
+	async 'click #btn-ConfirmDelete' (event) {
+        let trip = $("#confirmationModal").data("trip");
+        let noOfDeleted = Meteor.callPromise('trips.remove', trip);
         console.log("Deleting . . .");
 	},
 });

@@ -8,6 +8,7 @@ import {Location} from '../lib/models/db';
 
 
 const initialise = function () {
+    const APIKey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
     console.log("-------INITIALISING STARTED--------");
 
     if (Country.find().count() === 0) {
@@ -102,6 +103,15 @@ Meteor.startup(() => {
 
 
             const result = HTTP.get(url, {});
+            return result;
+        },
+
+        'getPlace': function(placeId) {
+            const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
+            let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,opening_hours,geometry,photo" + "&key=" + APIkey + "";
+            
+            var result = HTTP.get(url, {});
+            console.log(result);
             return result;
         }
     });

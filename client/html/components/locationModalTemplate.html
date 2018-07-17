@@ -28,9 +28,11 @@
                     {{/autoForm}}-->
 
 
-
-                    <div class="row p-2 align-items-center">
-                        <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+                    {{modalController}}
+                    <div class="row">
+                        <div class="col">
+                            <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
+                        </div>
                     </div>
 
                     <!--Old Layout-->
@@ -45,9 +47,9 @@
                         <!--</div>-->
 
                     <!--</form>-->
-                        <div class="row p-2 align-items-center">
+                        <div class="row">
                             <div class="map-container">
-                                {{> googleMap name="locMap" options=locationMap}}
+                                {{> googleMap name="locationMap" options=initialOptions}}
                             </div>
                         </div>
                     </div>

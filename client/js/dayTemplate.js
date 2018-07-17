@@ -12,7 +12,7 @@ Template.dayTemplate.helpers({
 Template.dayTemplate.events({
 	//add a blank location.
 	'click .btn-dayAddLoc' (event) {
-		this.trip.get().dayArray[this.dayIndex].push("New Location");
+		this.trip.get().dayArray[this.dayIndex].push("");
 		this.trip.set(this.trip.get());
 	},
 	//remove day

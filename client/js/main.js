@@ -10,7 +10,7 @@ Meteor.startup(function() {
     //load GoogleMaps
     GoogleMaps.load({
         key: APIKey,
-        libraries: 'geometry,places'
+        libraries: 'geometry, places'
     });
 });
 

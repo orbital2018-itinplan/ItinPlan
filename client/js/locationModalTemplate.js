@@ -3,13 +3,14 @@ import {Session} from 'meteor/session'
 
 Template.locationModalTemplate.onCreated(function() {
 	// We can use the `ready` callback to interact with the map API once the map is ready.
-	GoogleMaps.ready('locMap', function (map) {
+	GoogleMaps.ready('locationMap', function (map) {
 		// Add a marker to the map once it's ready
 		// var marker = new google.maps.Marker({
 		//     position: map.options.center,
 		//     map: map.instance
 		// });
-		//console.log(GoogleMaps.maps.locMap.places.Autocomplete(input));
+		//console.log(GoogleMaps.maps.locationMap.places.Autocomplete(input));
+		
 	});
 
 });
@@ -17,42 +18,71 @@ Template.locationModalTemplate.onCreated(function() {
 
 
 Template.locationModalTemplate.helpers({
-	locationMap: function () {
-		//initialization for google map
-		//console.log($("#locationModal").data);
-		
-	console.log($("#locationModal").data("row"));
-	console.log($("#locationModal").data("col"));
-		const countryName = this.trip.get().country;
-		console.log(countryName);
-
-		var country = Country.find({country_name: countryName}).fetch();
-		//console.log("FROM DB:" + country[0].lat);
-		try {
-            if (GoogleMaps.loaded()) {
-				// Map initialization options
-				//https://developers.google.com/maps/documentation/javascript/places-autocomplete
-				//if(Template.instance().find("#pac-input") != undefined)
-				//{
-				//	var input = Template.instance().find("#pac-input");
-				//	var autocomplete = new google.maps.places.Autocomplete(input);
-				//	autocomplete.bindTo('bounds', GoogleMaps.maps.locMap.instance);
-				//}
-				
-				if(country[0] != undefined) 
+	modalController: async function() {
+		if(Session.get("currentLocation") == undefined || Session.get("currentLocation").row == -1)
+			return;
+		console.log(Session.get("currentLocation"));
+		//when opening the modal, this will run (due to change in session.get())
+		if(Template.instance().subscriptionsReady() && GoogleMaps.maps.locationMap != undefined)
+		{
+			if(Session.get("currentLocation").placeID == "")
+			{
+				//if location is empty, render the base location (country or custom)
+				let countryName = this.trip.get().country;
+				let country = Country.find({country_name: countryName}).fetch();
+				if(country[0] != undefined)
 				{
-					return {
+					GoogleMaps.maps.locationMap.instance.setOptions({
 						center: new google.maps.LatLng(country[0].lat, country[0].lng),
 						zoom: 6
-					};
+					});
 				}
+				else
+				{
+					GoogleMaps.maps.locationMap.instance.setOptions({
+						center: new google.maps.LatLng(0, 0),
+						zoom: 2
+					});
+				}
+			}
+			else
+			{
+				//render placeID
+				//search through db for location first.
+				//if dont have, use google api 
+				//for now, just google api first.
+				let placeID = Session.get("currentLocation").placeID;
+				//find in google.
+				var result = await Meteor.callPromise('getPlace', placeID);
+				console.log(result);
+				try{
+					console.log(result.data.result);
+					var locLat = result.data.result.geometry.location.lat;
+					var loclng = result.data.result.geometry.location.lng;
+					//console.log("Second Try: "+ result.data.results[0].geometry.location.lat);
+
+					//update google map
+					GoogleMaps.maps.locationMap.instance.setCenter({lat: locLat, lng: loclng});
+				} catch (err)
+				{
+					console.log(err);
+				}
+			}
+		}
+	},
+
+	initialOptions: function () {
+		//initialization for google map
+		try {
+            if (GoogleMaps.loaded()) {
+				return {
+					center: new google.maps.LatLng(0, 0),
+					zoom: 1
+				};
             }
 		} catch(err) {
 			console.log(err);
 		}
-
-		
-
 	},
 
     searchSchema: function() {
@@ -92,12 +122,14 @@ Template.locationModalTemplate.events({
 		//console.log("Second Try: "+ result.data.results[0].geometry.location.lat);
 
 		//update google map
-		GoogleMaps.maps.locMap.instance.setCenter({lat: locLat, lng: loclng});
-		GoogleMaps.maps.locMap.instance.setZoom(15);
+		GoogleMaps.maps.locationMap.instance.setCenter({lat: locLat, lng: loclng});
+		GoogleMaps.maps.locationMap.instance.setZoom(15);
 
 		Session.set('placeId', result.data.results[0].place_id);
 
 	},
 
-
+	'hide.bs.modal #locationModal'(event) {
+		Session.set("currentLocation", { placeID: placeID, row: -1, col: -1 });
+	}
 });
