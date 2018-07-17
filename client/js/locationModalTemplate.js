@@ -44,6 +44,8 @@ Template.locationModalTemplate.onCreated(function() {
 			});
 			markerVar.setVisible(true);
 
+			//--@shanjing change marker with POI stuff https://developers.google.com/maps/documentation/javascript/examples/event-poi
+			//https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple 
 			//infowindowContent.children['place-name'].textContent = place.name;
 			//infowindowContent.children['place-id'].textContent = place.place_id;
 			//infowindowContent.children['place-address'].textContent =
