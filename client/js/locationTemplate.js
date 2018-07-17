@@ -33,10 +33,11 @@ Template.locationTemplate.events({
 		dayIndex = this.dayIndex;
 		locIndex = this.locIndex;
 		placeID = this.location;
+		Session.set("currentLocation", { placeID: placeID, row: dayIndex, col: locIndex });
 		//set reactive var pair for locationModalTemplate to render google maps.
 		//open a javascript modal thing
 		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
-		$('#locationModal').one('show.bs.modal', function (event) {
+		//$('#locationModal').one('show.bs.modal', function (event) {
 
 			/*not nice implementation. fix with session variable @yuanrong
 			var button = $(event.relatedTarget); // Button that triggered the modal
@@ -51,7 +52,7 @@ Template.locationTemplate.events({
 			modal.data("col", locIndex);*/
 			
 			//set the session variable "currentLocation" to the placeid and row and col, allow the modal to edit.
-			Session.set("currentLocation", { placeID: placeID, row: dayIndex, col: locIndex });
-		})
+			
+		//})
 	}
 });

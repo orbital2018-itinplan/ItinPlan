@@ -3,81 +3,71 @@ import {Session} from 'meteor/session'
 
 Template.locationModalTemplate.onCreated(function() {
 	// We can use the `ready` callback to interact with the map API once the map is ready.
-	GoogleMaps.ready('locationMap', function (map) {
-		// Add a marker to the map once it's ready
-		// var marker = new google.maps.Marker({
-		//     position: map.options.center,
-		//     map: map.instance
-		// });
-		//console.log(GoogleMaps.maps.locationMap.places.Autocomplete(input));
-		
-	});
+	var template = Template.instance();
+	this.markers = new ReactiveVar();
+	var markers = this.markers;
 
+	GoogleMaps.ready('locationMap', function (map) {
+		console.log("GOOGLE MAP READY");
+		//marker will change for every one
+		//influence the autocomplete.
+		//template.autocomplete.bindTo('bounds', map.instance);
+		
+		//when the autocomplete thing changes
+		let input = template.find('#input-placeAutocomplete');
+		var autocomplete = new google.maps.places.Autocomplete(input);
+		autocomplete.bindTo('bounds', map.instance);
+
+		//to set the map for the markers
+		let markerVar = markers.get();
+		markerVar.setMap(map.instance);
+		
+		autocomplete.addListener('place_changed', function() {
+			var place = autocomplete.getPlace();
+			if (!place.geometry) {
+				return;
+			}
+			//make the map centered on the place
+			if (place.geometry.viewport) {
+				map.instance.fitBounds(place.geometry.viewport);
+			} 
+			else {
+				map.instance.setCenter(place.geometry.location);
+				map.instance.setZoom(17);
+			}
+
+			//Set the position of the marker using the place ID and location.
+			let markerVar = markers.get();
+			markerVar.setPlace({
+				placeId: place.place_id,
+				location: place.geometry.location
+			});
+			markerVar.setVisible(true);
+
+			//infowindowContent.children['place-name'].textContent = place.name;
+			//infowindowContent.children['place-id'].textContent = place.place_id;
+			//infowindowContent.children['place-address'].textContent =
+			//place.formatted_address;
+			//infowindow.open(map, marker);
+		});
+	});
+	
 });
 
-
-
 Template.locationModalTemplate.helpers({
-	modalController: async function() {
-		if(Session.get("currentLocation") == undefined || Session.get("currentLocation").row == -1)
-			return;
-		console.log(Session.get("currentLocation"));
-		//when opening the modal, this will run (due to change in session.get())
-		if(Template.instance().subscriptionsReady() && GoogleMaps.maps.locationMap != undefined)
-		{
-			if(Session.get("currentLocation").placeID == "")
-			{
-				//if location is empty, render the base location (country or custom)
-				let countryName = this.trip.get().country;
-				let country = Country.find({country_name: countryName}).fetch();
-				if(country[0] != undefined)
-				{
-					GoogleMaps.maps.locationMap.instance.setOptions({
-						center: new google.maps.LatLng(country[0].lat, country[0].lng),
-						zoom: 6
-					});
-				}
-				else
-				{
-					GoogleMaps.maps.locationMap.instance.setOptions({
-						center: new google.maps.LatLng(0, 0),
-						zoom: 2
-					});
-				}
-			}
-			else
-			{
-				//render placeID
-				//search through db for location first.
-				//if dont have, use google api 
-				//for now, just google api first.
-				let placeID = Session.get("currentLocation").placeID;
-				//find in google.
-				var result = await Meteor.callPromise('getPlace', placeID);
-				console.log(result);
-				try{
-					console.log(result.data.result);
-					var locLat = result.data.result.geometry.location.lat;
-					var loclng = result.data.result.geometry.location.lng;
-					//console.log("Second Try: "+ result.data.results[0].geometry.location.lat);
-
-					//update google map
-					GoogleMaps.maps.locationMap.instance.setCenter({lat: locLat, lng: loclng});
-				} catch (err)
-				{
-					console.log(err);
-				}
-			}
-		}
-	},
-
+	//initial options of map
 	initialOptions: function () {
 		//initialization for google map
 		try {
             if (GoogleMaps.loaded()) {
+				//set the reactive variable for markers
+				Template.instance().markers.set(new google.maps.Marker());
 				return {
+					//clickableIcons: false,
 					center: new google.maps.LatLng(0, 0),
-					zoom: 1
+					zoom: 3,
+					minZoom: 3,
+					maxZoom: 18
 				};
             }
 		} catch(err) {
@@ -101,8 +91,7 @@ Template.locationModalTemplate.events({
 		row = modal.data("row");
 		col = modal.data("col");
 		//console.log(modal.find('.modal-body input').val());
-		console.log(Session.get('placeId'));
-
+		console.log(Template.instance().marker);
 
 		//console.log(Template.instance().trip.get());
 		this.trip.get().dayArray[row][col] = Session.get('placeId');
@@ -129,7 +118,69 @@ Template.locationModalTemplate.events({
 
 	},
 
+	//when open modal
+	async 'show.bs.modal #locationModal'(event) {
+		if(Session.get("currentLocation").row == -1)
+			return;
+		else
+		{
+			//console.log(Session.get("currentLocation"));
+			//when opening the modal, this will run (due to change in session.get())
+			if(Template.instance().subscriptionsReady() && GoogleMaps.maps.locationMap != undefined)
+			{
+				let markers = Template.instance().markers;
+				//marker.setMap(GoogleMaps.maps.locationMap.instance);
+				if(Session.get("currentLocation").placeID == "")
+				{
+					//if location is empty, render the base location (country or custom)
+					let countryName = this.trip.get().country;
+					let country = Country.find({country_name: countryName}).fetch();
+					if(country[0] != undefined)
+					{
+						GoogleMaps.maps.locationMap.instance.setOptions({
+							center: new google.maps.LatLng(country[0].lat, country[0].lng),
+							zoom: 6
+						});
+					}
+					else
+					{
+						GoogleMaps.maps.locationMap.instance.setOptions({
+							center: new google.maps.LatLng(0, 0),
+							zoom: 2
+						});
+					}
+				}
+				else
+				{
+					//render placeID
+					//search through db for location first.
+					//if dont have, use google api 
+					//for now, just google api first.
+					let placeID = Session.get("currentLocation").placeID;
+					var result = await Meteor.callPromise('getPlace', placeID);				
+					var center = result.data.result.geometry.location;
+					//update google map
+					GoogleMaps.maps.locationMap.instance.setCenter(center);
+					GoogleMaps.maps.locationMap.instance.setZoom(17);
+
+					//set reactive marker in the modal
+					var reactiveMarkers = markers.get();
+					reactiveMarkers.setPlace({
+						placeId: placeID,
+						location: center
+					});
+					reactiveMarkers.setVisible(true);
+					markers.set(reactiveMarkers);
+				}
+			}
+			return;
+		}
+	},
+
+	//when close modal
 	'hide.bs.modal #locationModal'(event) {
 		Session.set("currentLocation", { placeID: placeID, row: -1, col: -1 });
+		var reactiveMarkers = Template.instance().markers.get();
+		reactiveMarkers.setVisible(false);
 	}
 });

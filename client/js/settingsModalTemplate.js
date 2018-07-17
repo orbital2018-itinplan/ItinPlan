@@ -253,6 +253,7 @@ Template.settingsModalTemplate.events({
 					tripReact.get()._id = result;
 					tripReact.set(tripReact.get());
 				}
+				$('#saveTrip').modal("show");
 				console.log("Saving . . .");
 			}
 
@@ -281,6 +282,7 @@ Template.settingsModalTemplate.events({
 				tripReact.get()._id = result;
 				tripReact.set(tripReact.get());
 			}
+			$('#saveTrip').modal("show");
 			console.log("Saving . . .");
 		}
 	},

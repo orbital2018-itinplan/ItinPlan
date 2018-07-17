@@ -111,7 +111,6 @@ Meteor.startup(() => {
             let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,opening_hours,geometry,photo" + "&key=" + APIkey + "";
             
             var result = HTTP.get(url, {});
-            console.log(result);
             return result;
         }
     });
