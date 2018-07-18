@@ -4,19 +4,24 @@ import {Session} from 'meteor/session'
 Template.locationModalTemplate.onCreated(function() {
 	// We can use the `ready` callback to interact with the map API once the map is ready.
 	var template = Template.instance();
+
+	//expose markers for initialization when showing modal
 	this.markers = new ReactiveVar();
 	var markers = this.markers;
 
 	GoogleMaps.ready('locationMap', function (map) {
 		console.log("GOOGLE MAP READY");
 		//marker will change for every one
-		//influence the autocomplete.
-		//template.autocomplete.bindTo('bounds', map.instance);
 		
-		//when the autocomplete thing changes
+		//set the autocomplete input for use by googlemaps.
 		let input = template.find('#input-placeAutocomplete');
 		var autocomplete = new google.maps.places.Autocomplete(input);
 		autocomplete.bindTo('bounds', map.instance);
+
+		//set the infowindow for use by googlemaps.
+		let infoWindowHTML = template.find('#infowindow-content');
+		var infoWindow = new google.maps.InfoWindow();
+		infoWindow.setContent(infoWindowHTML);
 
 		//to set the map for the markers
 		let markerVar = markers.get();
@@ -44,13 +49,13 @@ Template.locationModalTemplate.onCreated(function() {
 			});
 			markerVar.setVisible(true);
 
-			//--@shanjing change marker with POI stuff https://developers.google.com/maps/documentation/javascript/examples/event-poi
-			//https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple 
-			//infowindowContent.children['place-name'].textContent = place.name;
-			//infowindowContent.children['place-id'].textContent = place.place_id;
-			//infowindowContent.children['place-address'].textContent =
-			//place.formatted_address;
-			//infowindow.open(map, marker);
+			//set the text content of infowindowhtml and open the information window
+			infoWindowHTML.children['place-name'].textContent = place.name;
+			infoWindowHTML.children['place-address'].textContent = place.formatted_address;
+			infoWindow.open(map.instance, markerVar);
+
+			//set the name of the place = can change to reactive?
+			template.find("#locationToSave").value = place.name;
 		});
 	});
 	
@@ -63,7 +68,7 @@ Template.locationModalTemplate.helpers({
 		try {
             if (GoogleMaps.loaded()) {
 				//set the reactive variable for markers
-				Template.instance().markers.set(new google.maps.Marker());
+				Template.instance().markers.set(new google.maps.Marker({ clickable: false }));
 				return {
 					//clickableIcons: false,
 					center: new google.maps.LatLng(0, 0),
@@ -75,6 +80,11 @@ Template.locationModalTemplate.helpers({
 		} catch(err) {
 			console.log(err);
 		}
+	},
+
+	getMarkerName: function() {
+		let marker = Template.instance().markers.get();
+		//todo later
 	},
 
     searchSchema: function() {
@@ -89,17 +99,19 @@ Template.locationModalTemplate.helpers({
 
 Template.locationModalTemplate.events({
 	async 'click .btn-saveLoc'(event) {
-		var modal = $('#locationModal')
-		row = modal.data("row");
-		col = modal.data("col");
-		//console.log(modal.find('.modal-body input').val());
-		console.log(Template.instance().marker);
 
-		//console.log(Template.instance().trip.get());
-		this.trip.get().dayArray[row][col] = Session.get('placeId');
-		this.trip.set(this.trip.get());
-		//close(save) a javascript modal thing
-		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
+		let currentLocation = Session.get("currentLocation");
+		let marker = Template.instance().markers.get();
+		console.log(currentLocation.row);
+		if(currentLocation.placeID != marker.place.placeId)
+		{
+			console.log("LOL");
+			let row = currentLocation.row;
+			let col = currentLocation.col;
+
+			this.trip.get().dayArray[row][col] = marker.place.placeId;
+			this.trip.set(this.trip.get());
+		}
 	},
 
 	async 'click .btn-searchLoc'(event) {
@@ -117,7 +129,6 @@ Template.locationModalTemplate.events({
 		GoogleMaps.maps.locationMap.instance.setZoom(15);
 
 		Session.set('placeId', result.data.results[0].place_id);
-
 	},
 
 	//when open modal
@@ -131,6 +142,7 @@ Template.locationModalTemplate.events({
 			if(Template.instance().subscriptionsReady() && GoogleMaps.maps.locationMap != undefined)
 			{
 				let markers = Template.instance().markers;
+				let template = Template.instance();
 				//marker.setMap(GoogleMaps.maps.locationMap.instance);
 				if(Session.get("currentLocation").placeID == "")
 				{
@@ -169,10 +181,14 @@ Template.locationModalTemplate.events({
 					var reactiveMarkers = markers.get();
 					reactiveMarkers.setPlace({
 						placeId: placeID,
-						location: center
+						location: center,
 					});
 					reactiveMarkers.setVisible(true);
 					markers.set(reactiveMarkers);
+
+					//save the name = can change to reactive?
+					template.find("#locationToSave").value = result.data.result.name;
+					
 				}
 			}
 			return;
@@ -180,9 +196,11 @@ Template.locationModalTemplate.events({
 	},
 
 	//when close modal
-	'hide.bs.modal #locationModal'(event) {
+	'hidden.bs.modal #locationModal'(event) {
 		Session.set("currentLocation", { placeID: placeID, row: -1, col: -1 });
 		var reactiveMarkers = Template.instance().markers.get();
 		reactiveMarkers.setVisible(false);
+		Template.instance().find("#input-placeAutocomplete").value = "";
+		Template.instance().find("#locationToSave").value = "";
 	}
 });
