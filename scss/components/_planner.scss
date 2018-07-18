@@ -453,7 +453,6 @@ planner-dayInner {
 
 //mapcontainer to change height etc
 .map-container {
-    width: 800px;
     max-width: 100%;
     height: 25rem;
 
@@ -461,4 +460,8 @@ planner-dayInner {
     #infowindow-content {
         display: inline;
     }
+}
+
+.modal-lg {
+    max-width: 900px;
 }

@@ -11,19 +11,19 @@
             <div class="timeline-content">
                 <ul>
                     <li>INFORMATION IN HERE</li>
-                    <li>PICTURE IN HERE</li>
+                    <li>PICTURE IN HERE</li> <!--Static url-->
                 </ul>
             </div>
             {{#if isOwner}}
-            <div class="timeline-footer">
-                <button class="close text-danger btn-deleteLoc">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <div class="timeline-footer">
+                    <button class="close text-danger btn-deleteLoc">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
 
-                <button class="btn btn-success btn-selectLoc" data-toggle="modal"
-                        data-target="#locationModal">Select Location
-                </button>
-            </div>
+                    <button class="btn btn-success btn-selectLoc" data-toggle="modal"
+                            data-target="#locationModal">Select Location
+                    </button>
+                </div>
             {{/if}}
         </div>
     </li>
