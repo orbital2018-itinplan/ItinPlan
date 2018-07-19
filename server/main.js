@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import {HTTP} from 'meteor/http';
 
 //get db stuff
-import {Country} from '../lib/models/db';
+import {Country, Locations} from '../lib/models/db';
 import {Trips} from '../lib/models/db';
 import {Location} from '../lib/models/db';
 
@@ -82,14 +82,12 @@ const initialise = function () {
 };
 
 Meteor.startup(() => {
-
+    const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
     initialise();
     //Meteor.setInterval(initialise, 300000);
-
+    
     Meteor.methods({
         'getLatLng': function(searchLoc){
-
-            const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
             const url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + searchLoc + "&key=" + APIkey + "";
 
             const result = HTTP.get(url, {});
@@ -98,20 +96,29 @@ Meteor.startup(() => {
         },
 
         'getLocName': function(placeId){
-            const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
             const url = "https://maps.googleapis.com/maps/api/place/details/json?placeid="+placeId+"&key=" + APIkey + "";
-
 
             const result = HTTP.get(url, {});
             return result;
         },
 
         'getPlace': function(placeId) {
-            const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
             let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,opening_hours,geometry,photo" + "&key=" + APIkey + "";
             
             var result = HTTP.get(url, {});
             return result;
+        },
+
+        'addPlace': function(placeId) {
+            //use server to get the place details, then add into the 
+            if(Meteor.userId() == undefined)
+                return;
+
+            let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,opening_hours,geometry,photo" + "&key=" + APIkey + "";
+            var result = HTTP.get(url, {});
+
+            //@shanjing
+            result;
         }
     });
 
@@ -127,7 +134,7 @@ Meteor.startup(() => {
         });
     });
 
-    Meteor.publish('location', function() {
-        return Location.find({});
+    Meteor.publish('locations', function() {
+        return Locations.find({});
     });
 });

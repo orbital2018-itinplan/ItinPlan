@@ -136,14 +136,16 @@ Template.locationModalTemplate.events({
 	async 'click .btn-saveLoc'(event) {
 		let currentLocation = Session.get("currentLocation");
 		let marker = Template.instance().markers.get();
-		if(currentLocation.placeID != marker.place.placeId)
+		if(marker.place != undefined && currentLocation.placeID != marker.place.placeId)
 		{
 			let row = currentLocation.row;
 			let col = currentLocation.col;
 
 			this.trip.get().dayArray[row][col] = marker.place.placeId;
 			this.trip.set(this.trip.get());
-			//save location inside of database. @shanjing
+
+			//non member cant reach here.
+			await Meteor.callPromise('addPlace', marker.place.placeId);
 		}
 	},
 
