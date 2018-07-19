@@ -2,14 +2,20 @@ import {Meteor} from 'meteor/meteor';
 import {HTTP} from 'meteor/http';
 
 //get db stuff
-import {Country, Locations} from '../lib/models/db';
+import {Country} from '../lib/models/db';
 import {Trips} from '../lib/models/db';
-import {Location} from '../lib/models/db';
+import {Locations} from '../lib/models/db';
 
 
 const initialise = function () {
     const APIKey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
     console.log("-------INITIALISING STARTED--------");
+    
+    //set expiry for location in db
+    Locations.rawCollection().createIndex(
+        { "expireAt": 1 },
+        { expireAfterSeconds: 0 }
+    );
 
     if (Country.find().count() === 0) {
         //Insert sample data as collection is empty
@@ -103,8 +109,14 @@ Meteor.startup(() => {
         },
 
         'getPlace': function(placeId) {
-            let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,opening_hours,geometry,photo" + "&key=" + APIkey + "";
+            let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
             
+
+            //once save location, search and save in server db
+            //server db sync with user db.
+            //upon opening, just search in own db, if cant find, getplace
+            //if dont find in server db, closing will save it.
+
             var result = HTTP.get(url, {});
             return result;
         },
@@ -114,11 +126,23 @@ Meteor.startup(() => {
             if(Meteor.userId() == undefined)
                 return;
 
-            let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,opening_hours,geometry,photo" + "&key=" + APIkey + "";
-            var result = HTTP.get(url, {});
+            let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
+            var result = HTTP.get(url, {}).data.result;
 
-            //@shanjing
-            result;
+            //please do verification to make sure the placeId is not INSIDE SERVER!!!
+            //or just create new location and update that.
+
+            //save in database - expiry in 7 days for now
+            let date = new Date();
+            date.setDate(date.getDate()+7);
+            Locations.insert({
+                _id: placeId,
+                name: result.name,
+                geometry: result.geometry,
+                formattedAddress: result.formatted_address,
+                photo: result.photos[0],
+                expireAt: date,
+            });
         }
     });
 
