@@ -20,8 +20,6 @@ Template.locationModalTemplate.onCreated(function() {
 
 		//set the infowindow for use by googlemaps.
 		let infoWindowVar = infoWindow.get();
-		let infoWindowHTML = template.find('#infowindow-content');
-		infoWindowVar.setContent(infoWindowHTML);
 
 		//set the autocomplete input for use by googlemaps.
 		let input = template.find('#input-placeAutocomplete');
@@ -48,6 +46,7 @@ Template.locationModalTemplate.onCreated(function() {
 			markerVar.setVisible(true);
 
 			//set the text content of infowindowhtml and open the information window
+			let infoWindowHTML = infoWindow.get().getContent();
 			infoWindowHTML.children['place-name'].textContent = place.name;
 			infoWindowHTML.children['place-address'].textContent = place.formatted_address;
 			infoWindowVar.open(map.instance, markerVar);
@@ -100,6 +99,7 @@ Template.locationModalTemplate.helpers({
 				//set the reactive variable for markers and infowindow
 				Template.instance().markers.set(new google.maps.Marker({ clickable: false })); 
 				Template.instance().infoWindow.set(new google.maps.InfoWindow());
+				Template.instance().infoWindow.get().setContent(Template.instance().find("#infowindow-content"));
 				return {
 					//clickableIcons: false,
 					center: new google.maps.LatLng(0, 0),
@@ -144,7 +144,6 @@ Template.locationModalTemplate.events({
 			this.trip.get().dayArray[row][col] = marker.place.placeId;
 			this.trip.set(this.trip.get());
 
-			//non member cant reach here.
 			await Meteor.callPromise('addPlace', marker.place.placeId);
 		}
 	},
@@ -173,14 +172,10 @@ Template.locationModalTemplate.events({
 			return;
 		else
 		{
-			//console.log(Session.get("currentLocation"));
-			//when opening the modal, this will run (due to change in session.get())
 			if(Template.instance().subscriptionsReady() && GoogleMaps.maps.locationMap != undefined)
 			{
 				let infoWindow = Template.instance().infoWindow;
 				let markers = Template.instance().markers;
-				let infoWindowHTML = Template.instance().find('#infowindow-content');
-				console.log(infoWindowHTML);
 				let template = Template.instance();
 				
 				//marker.setMap(GoogleMaps.maps.locationMap.instance);
@@ -207,12 +202,10 @@ Template.locationModalTemplate.events({
 				else
 				{
 					//render placeID
-					//search through db for location first.
-					//if dont have, use google api 
-					//for now, just google api first.
 					let placeID = Session.get("currentLocation").placeID;
-					var result = await Meteor.callPromise('getPlace', placeID);	//by right is get from db, cos saved location will be stored in db			
-					var center = result.data.result.geometry.location;
+					//use getPlace method to return a location.
+					var result = await Meteor.callPromise('getPlace', placeID);
+					var center = result.geometry.location;
 					
 					//update google map
 					GoogleMaps.maps.locationMap.instance.setCenter(center);
@@ -228,13 +221,13 @@ Template.locationModalTemplate.events({
 					markers.set(reactiveMarkers);
 
 					//set the text content of infowindowhtml and open the information window <-- (see function in GoogleMaps above, can reuse maybe)
-					
-					infoWindowHTML.children['place-name'].textContent = result.data.result.name;
-					infoWindowHTML.children['place-address'].textContent = result.data.result.formatted_address;
+					let infoWindowHTML = infoWindow.get().getContent();
+					infoWindowHTML.children['place-name'].textContent = result.name;
+					infoWindowHTML.children['place-address'].textContent = result.formatted_address;
 					infoWindow.get().open(GoogleMaps.maps.locationMap.instance, reactiveMarkers);
 
 					//save the name = can change to reactive?
-					template.find("#locationToSave").value = result.data.result.name;
+					template.find("#locationToSave").value = result.name;
 					
 				}
 			} else
@@ -250,6 +243,7 @@ Template.locationModalTemplate.events({
 		Session.set("currentLocation", { placeID: placeID, row: -1, col: -1 });
 		let reactiveMarkers = Template.instance().markers.get();
 		reactiveMarkers.setVisible(false);
+		Template.instance().infoWindow.get().close();
 		Template.instance().find("#input-placeAutocomplete").value = "";
 		Template.instance().find("#locationToSave").value = "";
 	}

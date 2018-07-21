@@ -109,40 +109,78 @@ Meteor.startup(() => {
         },
 
         'getPlace': function(placeId) {
-            let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
-            
 
-            //once save location, search and save in server db
-            //server db sync with user db.
-            //upon opening, just search in own db, if cant find, getplace
-            //if dont find in server db, closing will save it.
+            //search for location in server db
+            let locationQuery = Locations.findOne( { _id : placeId } );
 
-            var result = HTTP.get(url, {});
-            return result;
+            if(locationQuery == undefined)
+            {
+                let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
+
+                //once save location, search and save in server db
+                //server db sync with user db.
+                //upon opening, just search in own db, if cant find, getplace
+                //if dont find in server db, closing will save it.
+
+                var result = HTTP.get(url, {});
+
+                //ensure photo exists
+                let photo;
+                if(result.data.result.photos == undefined)
+                    photo = "";
+                else
+                    photo = result.data.result.photos[0];
+
+                let data = {
+                    name: result.data.result.name,
+                    geometry: result.data.result.geometry,
+                    formattedAddress: result.data.result.formatted_address,
+                    photo: photo,
+                }
+                return data;
+            }
+            else
+                return locationQuery;
         },
 
+        //can use getplace method inside addplace?
         'addPlace': function(placeId) {
             //use server to get the place details, then add into the 
-            if(Meteor.userId() == undefined)
-                return;
 
-            let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
-            var result = HTTP.get(url, {}).data.result;
-
-            //please do verification to make sure the placeId is not INSIDE SERVER!!!
-            //or just create new location and update that.
-
-            //save in database - expiry in 7 days for now
             let date = new Date();
             date.setDate(date.getDate()+7);
-            Locations.insert({
-                _id: placeId,
-                name: result.name,
-                geometry: result.geometry,
-                formattedAddress: result.formatted_address,
-                photo: result.photos[0],
-                expireAt: date,
-            });
+
+            //search for location in server db
+            let locationQuery = Locations.findOne( { _id : placeId } );
+
+            if(locationQuery == undefined)
+            {
+                //if location is not in main DB
+                let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
+                var result = HTTP.get(url, {}).data.result;
+
+                //ensure photo exists
+                let photo;
+                if(result.photos == undefined)
+                    photo = "";
+                else
+                    photo = result.photos[0];
+
+                Locations.insert({
+                    _id: placeId,
+                    name: result.name,
+                    geometry: result.geometry,
+                    formattedAddress: result.formatted_address,
+                    photo: photo,
+                    expireAt: date,
+                });
+            }
+            else
+            {
+                //update locationQuery date
+                locationQuery.expireAt = date;
+                Locations.update( { _id: placeId }, locationQuery );
+            }
         }
     });
 

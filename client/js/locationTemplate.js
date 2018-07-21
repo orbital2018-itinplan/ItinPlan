@@ -34,7 +34,6 @@ Template.locationTemplate.events({
 		locIndex = this.locIndex;
 		placeID = this.location;
 		Session.set("currentLocation", { placeID: placeID, row: dayIndex, col: locIndex });
-		console.log(Session.get("currentLocation"));
 		//set reactive var pair for locationModalTemplate to render google maps.
 		//open a javascript modal thing
 		//gotten from bootstrap https://getbootstrap.com/docs/4.0/components/modal/?#varying-modal-content
