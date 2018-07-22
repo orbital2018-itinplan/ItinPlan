@@ -24,15 +24,22 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- For members, allow save -->
-                {{#if checkLoginAndConnected}}
-                    <div class="container-fluid planner-save">
-                        <button class="btn btn-success btn-saveTrip float-right">
-                            <i class="fa fa-save mr-1"></i> Save Trip
+                <div class="row float-right">
+                    {{#if checkLoginAndConnected}}
+                        <div class="col-4 planner-save">
+                            <button class="btn btn-success btn-saveTrip">
+                                <i class="fa fa-save mr-1"></i> Save Trip
+                            </button>
+                        </div>
+                    {{/if}}
+                    <div class="col-4 planner-print">
+                        <button class="btn btn-success btn-print">
+                            <i class="fa fa-file-pdf-o mr-1"></i> Generate PDF
                         </button>
                     </div>
-                {{/if}}
+                </div>
+                <!-- For members, allow save -->
+
 
                 <!--this is for the control panel editing stuff-->
                 {{> settingsModalTemplate trip=reactiveTrip}}
@@ -116,9 +123,9 @@
                                 <h5>From {{tripStartDate}}</h5>
                             </div>
                             <div class="col-sm-1 planner-controller-btn">
-                                <button class="btn btn-outline-secondary border-0" data-toggle="modal"
+                                <button class="btn btn-outline-secondary border-0" disabled data-toggle="modal"
                                         data-target="#settingsModal">
-                                    <i class="fa mr-1 fa-cogs"></i> "to remove this btn"
+                                    <i class="fa mr-1 fa-cogs"></i> Edit settings
                                 </button>
                             </div>
                         </div>
@@ -129,7 +136,7 @@
                 {{#if checkConnected}}
                     <div class="container-fluid planner-save">
                         <button class="btn btn-success btn-copyTrip float-right">
-                            <i class="fa fa-save mr-1"></i> create copy of trip
+                            <i class="fa fa-copy mr-1"></i> Create Copy
                         </button>
                     </div>
                 {{/if}}

@@ -1,0 +1,35 @@
+.container-fluid.locationHeader {
+
+  //sizing
+  padding-top: 12vh;
+  padding-bottom: 9vh;
+  //padding-left: 5vw;
+  //padding-right: 5vw;
+  //display: inline-grid;
+
+
+
+  //background
+  //background-image: linear-gradient(rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0.25)), url("/image/country/South%20Korea.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+
+.location {
+  //min-height: 100vh;
+  //display: inline-block;
+  //width: fit-content;
+  //overflow-x: auto;
+  //padding-right: 500px;
+  padding: 30px 65px 20px 65px;
+
+
+}
+
+.location-header-text{
+  padding-top: 140px;
+  padding-bottom: 120px;
+}

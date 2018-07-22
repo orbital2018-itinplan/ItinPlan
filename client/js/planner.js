@@ -258,6 +258,49 @@ Template.planner.events({
 		trip.get().dayArray.push( [] );
 		trip.set(trip.get());
 	},
+
+	//Generate PDF
+	'click .btn-print' (event) {
+		var dateUnformated = Template.instance().trip.get().startDate;
+		var date = new Date(dateUnformated);
+		var day = date.getDate();
+		var month = date.getMonth() + 1;
+		var year = date.getFullYear()
+
+        // Define the pdf-document
+        var dd = {
+            content: [
+            	//Header [Trip Name]
+				{ text: Template.instance().trip.get().tripName, style: 'header'},
+                {
+                    alignment: 'center',
+                	columns: [
+                        { text: 'Event Start Date : ' + day + "/" + month + "/" + year},
+						{ text: 'Country : ' + Template.instance().trip.get().country }
+					]
+                }
+
+            ],
+
+            styles: {
+                header: {
+                    fontSize: 48,
+                    bold: true,
+					alignment: 'center',
+					marginBottom: 40
+                },
+
+				body: {
+                	alignment: 'center'
+				}
+            }
+
+        };
+        console.log(Template.instance().trip.get().dayArray);
+
+        // Start the pdf-generation process
+		pdfMake.createPdf(dd).download('itinerary.pdf');
+	}
 });
 
 /*

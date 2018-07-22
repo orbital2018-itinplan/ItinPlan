@@ -19,3 +19,9 @@ Template.home.onCreated(function(){
     Meteor.subscribe('getCountry');
 
 });
+
+Template.home.events({
+    'click .hot-card' (event) {
+        FlowRouter.go('/location/?country=' + this.country_name);
+    }
+});

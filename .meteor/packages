@@ -27,6 +27,7 @@ lukemadera:autoform-googleplace # Google AutoComplete
 ejson
 aldeed:simple-schema
 aldeed:autoform
+nilsdannemann:pdfmake
 
 simple:reactive-method
 
