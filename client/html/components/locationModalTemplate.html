@@ -1,18 +1,17 @@
 <template name="locationModalTemplate">
-    <!-- Local Modal-->
-    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <!-- location modal-->
+    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="modal display" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Select Location:</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Find a location!</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-
-                    <!--New Layout-->
+                    <!--New Layout
 
                     {{#autoForm schema=searchSchema id="searchLocation" type="normal"}}
                     <div class="row p-2 align-items-center">
@@ -25,10 +24,14 @@
                             <button type="submit" class="btn btn-secondary btn-searchLoc">Search</button>
                         </div>
                     </div>
-                    {{/autoForm}}
+                    {{/autoForm}}-->
 
-
-
+                    
+                    <div class="row pb-2 no-gutters">
+                        <div class="col-9">
+                            <input id="input-placeAutocomplete" class="form-control" type="text" placeholder="Search for a location">                    
+                        </div>
+                    </div>
                     <!--Old Layout-->
                     <!--<form>-->
                         <!--<div class="form-row align-items-center">-->
@@ -41,11 +44,22 @@
                         <!--</div>-->
 
                     <!--</form>-->
-                    <div class="map-container">
-                        {{> googleMap name="locMap" options=locationMap}}
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <div class="map-container">
+                                    {{> googleMap name="locationMap" options=initialOptions}}
+                                </div>
+                                <div id="infowindow-content">
+                                    <span id="place-name" class="h5"></span><br>
+                                    <span id="place-address"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    
                 <div class="modal-footer">
+                    <h5 class="modal-title">Location: </h5>
+                    <input id="locationToSave" class="form-control" type="text" placeholder="" readonly>
                     <button type="button" class="btn btn-secondary btn-saveLoc" data-dismiss="modal">Save</button>
                 </div>
             </div>

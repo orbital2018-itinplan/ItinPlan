@@ -4,11 +4,18 @@ import {HTTP} from 'meteor/http';
 //get db stuff
 import {Country} from '../lib/models/db';
 import {Trips} from '../lib/models/db';
-import {Location} from '../lib/models/db';
+import {Locations} from '../lib/models/db';
 
 
 const initialise = function () {
+    const APIKey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
     console.log("-------INITIALISING STARTED--------");
+    
+    //set expiry for location in db
+    Locations.rawCollection().createIndex(
+        { "expireAt": 1 },
+        { expireAfterSeconds: 0 }
+    );
 
     if (Country.find().count() === 0) {
         //Insert sample data as collection is empty
@@ -81,14 +88,12 @@ const initialise = function () {
 };
 
 Meteor.startup(() => {
-
+    const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
     initialise();
     //Meteor.setInterval(initialise, 300000);
-
+    
     Meteor.methods({
         'getLatLng': function(searchLoc){
-
-            const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
             const url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + searchLoc + "&key=" + APIkey + "";
 
             const result = HTTP.get(url, {});
@@ -97,12 +102,87 @@ Meteor.startup(() => {
         },
 
         'getLocName': function(placeId){
-            const APIkey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
             const url = "https://maps.googleapis.com/maps/api/place/details/json?placeid="+placeId+"&key=" + APIkey + "";
-
 
             const result = HTTP.get(url, {});
             return result;
+        },
+
+        'getPlace': function(placeId) {
+
+            //search for location in server db
+            let locationQuery = Locations.findOne( { _id : placeId } );
+
+            if(locationQuery == undefined)
+            {
+                let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
+
+                //once save location, search and save in server db
+                //server db sync with user db.
+                //upon opening, just search in own db, if cant find, getplace
+                //if dont find in server db, closing will save it.
+
+                var result = HTTP.get(url, {});
+
+                //ensure photo exists
+                let photo;
+                if(result.data.result.photos == undefined)
+                    photo = "";
+                else
+                    photo = result.data.result.photos[0];
+
+                let data = {
+                    name: result.data.result.name,
+                    geometry: result.data.result.geometry,
+                    formatted_address: result.data.result.formatted_address,
+                    photo: photo,
+                }
+                return data;
+            }
+            else
+                return locationQuery;
+        },
+
+        //can use getplace method inside addplace?
+        'addPlace': function(placeId) {
+            //use server to get the place details, then add into the 
+
+            let date = new Date();
+            date.setDate(date.getDate()+7);
+
+            if(placeId == "")
+                return;
+
+            //search for location in server db
+            let locationQuery = Locations.findOne( { _id : placeId } );
+
+            if(locationQuery == undefined)
+            {
+                //if location is not in main DB
+                let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
+                var result = HTTP.get(url, {}).data.result;
+                //ensure photo exists
+                let photo;
+                if(result.photos == undefined)
+                    photo = "";
+                else
+                    photo = result.photos[0];
+
+                Locations.insert({
+                    _id: placeId,
+                    name: result.name,
+                    geometry: result.geometry,
+                    formatted_address: result.formatted_address,
+                    photo: photo,
+                    expireAt: date,
+                });
+            }
+            else
+            {
+                //update locationQuery date
+                locationQuery.expireAt = date;
+                Locations.update( { _id: placeId }, locationQuery );
+            }
         }
     });
 
@@ -118,7 +198,7 @@ Meteor.startup(() => {
         });
     });
 
-    Meteor.publish('location', function() {
-        return Location.find({});
+    Meteor.publish('locations', function() {
+        return Locations.find({});
     });
 });
