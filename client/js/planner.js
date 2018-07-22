@@ -11,6 +11,7 @@ Template.planner.onCreated(function() {
 					Subscriptions
 	====================================================== */
 	var tripSubscription = Meteor.subscribe('trips');
+	var LocationSubscription = Meteor.subscribe('locations');
 
 	/* ======================================================
 					Trip Initialization
@@ -199,36 +200,17 @@ Template.planner.helpers({
 Template.planner.events({
 
 	//save trip in database (only if user is registered)
-	'click .btn-saveTrip' (event) {
-		//if there is existing, update
-		//else add new entry
-		var trip = Template.instance().trip.get();
-		var tripReact = Template.instance().trip;
-		var queryTrip = Trips.findOne( { _id: Template.instance().trip.get()._id } );
-		if(queryTrip == undefined)
+	async 'click .btn-saveTrip' (event) {
+		let trip = Template.instance().trip.get();
+		let tripReact = Template.instance().trip;
+		let result = await Meteor.callPromise('trips.modify', trip);
+		if(result != 1)
 		{
-			//create new
-			Meteor.call('trips.add', trip, function(error, result) {
-				tripReact.get()._id = result;
-				tripReact.set(tripReact.get());
-				//alert("Trip Saved");
-                $('#saveTrip').modal("show");
-			});
-			//set to currently saving UNTIL trip id is gotten from server
-			tripReact.get()._id = "Currently Saving";
+			//meaning its a add, return _id
+			tripReact.get()._id = result;
 			tripReact.set(tripReact.get());
 		}
-		else
-		{
-			//update existing
-			Meteor.call('trips.update', trip, function(error, result) {
-				//set session state to complete.
-				//alert("Trip Saved");
-                $('#saveTrip').modal("show");
-			});
-			//can set session.state to loading if want
-			console.log("WUT");
-		}
+		$('#saveTrip').modal("show");
 		console.log("Saving . . .");
 	},
 
@@ -236,13 +218,9 @@ Template.planner.events({
 	'click .btn-copyTrip' (event) {
 		//set to local storage and go to flowrouter.go(planner)
 		var copyTrip = JSON.parse(JSON.stringify(Template.instance().trip.get()));
-		console.log(Template.instance().trip.get());
-		console.log(copyTrip);
 		copyTrip.owner = Meteor.userId();
 		delete copyTrip._id;
 		copyTrip.public = false;
-		console.log(Template.instance().trip.get());
-		console.log(copyTrip);
 		Template.instance().trip.set(copyTrip);
 		//set url to normal /planner/
 		FlowRouter.withReplaceState(function() {
@@ -255,7 +233,7 @@ Template.planner.events({
 	'click .btn-addDay' (event) {
 		//add a new day to the dayArray.
 		var trip = Template.instance().trip;
-		trip.get().dayArray.push( [] );
+		trip.get().dayArray.push([]);
 		trip.set(trip.get());
 	},
 

@@ -211,7 +211,7 @@ Template.settingsModalTemplate.events({
 		}
 	},
 
-	'click .btn-saveSettings'(event) {
+	async 'click .btn-saveSettings'(event) {
 		//to do validation, remove data-dismiss of the button
 		let invalidTripName = Template.instance().find("#tripName").classList.contains("is-invalid");
 		let invalidDayNumbers = Template.instance().find("#dayNumbers").classList.contains("is-invalid");
@@ -244,34 +244,16 @@ Template.settingsModalTemplate.events({
 
 			//save to db (EXACT COPY FROM btn-saveTrip BUT only for registered users)
 			if(Meteor.user()) {
-				//if there is existing, update
-				//else add new entry
-				var trip = this.trip.get();
-				var tripReact = this.trip;
-				var queryTrip = Trips.findOne( { _id: this.trip.get()._id } );
-				if(queryTrip == undefined)
+				let trip = this.trip.get();
+				let tripReact = this.trip;
+				let result = await Meteor.callPromise('trips.modify', trip);
+				if(result != 1)
 				{
-					//create new
-					Meteor.call('trips.add', trip, function(error, result) {
-						tripReact.get()._id = result;
-						tripReact.set(tripReact.get());
-						//alert("Trip Saved");
-						$('#saveTrip').modal("show");
-					});
-					//set to currently saving UNTIL trip id is gotten from server
-					tripReact.get()._id = "Currently Saving";
+					//meaning its a add, return _id
+					tripReact.get()._id = result;
 					tripReact.set(tripReact.get());
 				}
-				else
-				{
-					//update existing
-					Meteor.call('trips.update', trip, function(error, result) {
-						//set session state to complete.
-						//alert("Trip Saved");
-						$('#saveTrip').modal("show");
-					});
-					//can set session.state to loading if want
-				}
+				$('#saveTrip').modal("show");
 				console.log("Saving . . .");
 			}
 
@@ -280,7 +262,7 @@ Template.settingsModalTemplate.events({
 		}
 	},
 
-	'change #publicSelector'(event) {
+	async 'change #publicSelector'(event) {
 		//to set the trip to public or private
 		if(event.target.id === "radio-Private")
 			this.trip.get().public = false;
@@ -291,37 +273,18 @@ Template.settingsModalTemplate.events({
 		//need to save to database immediately because this is public and private setter.
 		//BUT IT ONLY SAVES THE PUBLIC OR PRIVATE ATTRIBUTE===============================IMPT
 		if(Meteor.user()) {
-			//if there is existing, update
-			//else add new entry
-			var trip = this.trip.get();
-			var tripReact = this.trip;
-			var queryTrip = Trips.findOne( { _id: this.trip.get()._id } );
-			if(queryTrip == undefined)
+			let trip = this.trip.get();
+			let tripReact = this.trip;
+			let result = await Meteor.callPromise('trips.modify', trip);
+			if(result != 1)
 			{
-				//create new
-				Meteor.call('trips.add', trip, function(error, result) {
-					tripReact.get()._id = result;
-					tripReact.set(tripReact.get());
-					//alert("Trip Saved");
-					//$('#saveTrip').modal("show");
-				});
-				//set to currently saving UNTIL trip id is gotten from server
-				tripReact.get()._id = "Currently Saving";
+				//meaning its a add, return _id
+				tripReact.get()._id = result;
 				tripReact.set(tripReact.get());
 			}
-			else
-			{
-				//update existing
-				Meteor.call('trips.update', trip, function(error, result) {
-					//set session state to complete.
-					//alert("Trip Saved");
-					//$('#saveTrip').modal("show");
-				});
-				//can set session.state to loading if want
-			}
+			$('#saveTrip').modal("show");
 			console.log("Saving . . .");
 		}
-
 	},
 
 	'click #btn-copyURL' (event) {

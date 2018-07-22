@@ -2,27 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ff9e25d5-d0bd-4181-a3f0-0661086208f8" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/client/html/layout/location.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/js/location.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scss/pages/_location.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/meteor_packages_auto_import_browser.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/meteor_packages_auto_import_browser.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/packages" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/packages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.meteor/versions" beforeDir="false" afterPath="$PROJECT_DIR$/.meteor/versions" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/image/blank.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/html/components/locationModalTemplate.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/html/components/locationModalTemplate.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/html/components/locationTemplate.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/html/components/locationTemplate.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/html/layout/destination.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/html/layout/destination.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/html/layout/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/html/layout/home.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/html/layout/planner.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/html/layout/planner.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/js/destination.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/destination.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/js/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/js/dayTemplate.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/dayTemplate.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/js/locationModalTemplate.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/locationModalTemplate.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/js/locationTemplate.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/locationTemplate.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/js/planner.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/planner.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/routing/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/routing/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/js/settingsModalTemplate.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/settingsModalTemplate.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/js/trips.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/js/trips.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/db.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/db.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/image/country/Bali.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/image/country/Chile.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/image/country/paris.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/image/country/taiwan.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scss/base/_typography.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/base/_typography.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scss/components/_planner.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/components/_planner.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scss/custom.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/custom.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -41,6 +39,11 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="165">
               <caret line="127" column="81" lean-forward="true" selection-start-line="127" selection-start-column="81" selection-end-line="127" selection-end-column="81" />
+              <folding>
+                <element signature="e#3959#3966#1#HTML" expanded="true" />
+                <element signature="n#style#0;n#h1#0;n#div#0;n#div#0;n#div#3;n#template#0;n#!!top" expanded="true" />
+                <element signature="e#7479#7486#1#HTML" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -73,7 +76,7 @@
         <entry file="file://$PROJECT_DIR$/client/js/planner.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="15">
-              <caret line="301" column="8" selection-start-line="301" selection-start-column="8" selection-end-line="301" selection-end-column="8" />
+              <caret line="279" column="8" selection-start-line="279" selection-start-column="8" selection-end-line="279" selection-end-column="8" />
               <folding>
                 <element signature="e#0#47#0" expanded="true" />
               </folding>
@@ -93,11 +96,8 @@
       <file leaf-file-name="locationTemplate.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/js/locationTemplate.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-92">
-              <caret line="16" column="43" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
+            <state relative-caret-position="418">
+              <caret line="50" column="43" selection-start-line="50" selection-start-column="43" selection-end-line="50" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -374,18 +374,17 @@
       <workItem from="1531495961090" duration="22648000" />
       <workItem from="1531730373392" duration="77000" />
       <workItem from="1531730486490" duration="3720000" />
-      <workItem from="1531903116074" duration="12246000" />
+      <workItem from="1531903116074" duration="12414000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="159206000" />
+    <option name="totallyTimeSpent" value="159374000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="797" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20577872" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20577872" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5017618" side_tool="true" weight="0.20614035" />
@@ -393,7 +392,7 @@
       <window_info anchor="bottom" id="Run" order="2" weight="0.3260234" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4982382" visible="true" weight="0.20614035" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.4982382" visible="true" weight="0.20614035" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -436,7 +435,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/server/main.js</url>
-          <line>93</line>
+          <line>98</line>
         </line-breakpoint>
       </breakpoints>
       <option name="time" value="3" />
@@ -702,11 +701,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/js/locationTemplate.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-92">
-          <caret line="16" column="43" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+        <state relative-caret-position="418">
+          <caret line="50" column="43" selection-start-line="50" selection-start-column="43" selection-end-line="50" selection-end-column="43" />
         </state>
       </provider>
     </entry>
@@ -740,7 +736,7 @@
     <entry file="file://$PROJECT_DIR$/client/js/planner.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
-          <caret line="301" column="8" selection-start-line="301" selection-start-column="8" selection-end-line="301" selection-end-column="8" />
+          <caret line="279" column="8" selection-start-line="279" selection-start-column="8" selection-end-line="279" selection-end-column="8" />
           <folding>
             <element signature="e#0#47#0" expanded="true" />
           </folding>
@@ -751,6 +747,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
           <caret line="127" column="81" lean-forward="true" selection-start-line="127" selection-start-column="81" selection-end-line="127" selection-end-column="81" />
+          <folding>
+            <element signature="e#3959#3966#1#HTML" expanded="true" />
+            <element signature="n#style#0;n#h1#0;n#div#0;n#div#0;n#div#3;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#7479#7486#1#HTML" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
