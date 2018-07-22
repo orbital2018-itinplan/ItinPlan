@@ -11,6 +11,7 @@ Template.planner.onCreated(function() {
 					Subscriptions
 	====================================================== */
 	var tripSubscription = Meteor.subscribe('trips');
+	var LocationSubscription = Meteor.subscribe('locations');
 
 	/* ======================================================
 					Trip Initialization

@@ -5,13 +5,16 @@
     <li class="timeline-item">
         <div class="timeline-badge"><a href="#"></a></div>
         <div class="timeline-panel">
+            <div class="container-fluid p-2">
+                <img class="img-fluid border border-primary rounded" src="{{locationImageURL}}" alt="MapImage">
+            </div>
+            
             <div class="timeline-heading">
-                {{getLocName}}
+                {{locationName}}
             </div>
             <div class="timeline-content">
                 <ul>
-                    <li>INFORMATION IN HERE</li>
-                    <li>PICTURE IN HERE</li> <!--Static url-->
+                    <li>{{locationAddress}}</li>
                 </ul>
             </div>
             {{#if isOwner}}

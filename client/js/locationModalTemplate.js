@@ -13,13 +13,14 @@ Template.locationModalTemplate.onCreated(function() {
 	var infoWindow = this.infoWindow;
 
 	GoogleMaps.ready('locationMap', function (map) {
-		
+
 		//to set the map for the markers
 		let markerVar = markers.get();
 		markerVar.setMap(map.instance);
 
 		//set the infowindow for use by googlemaps.
 		let infoWindowVar = infoWindow.get();
+		infoWindowVar.setContent(template.find("#infowindow-content"));
 
 		//set the autocomplete input for use by googlemaps.
 		let input = template.find('#input-placeAutocomplete');
@@ -85,10 +86,25 @@ Template.locationModalTemplate.onCreated(function() {
 				setPlaceOnMap(detail);
 			}
 		});
+
+
 		
+
 	});
 	
 });
+
+Template.locationModalTemplate.onRendered(
+	function() {
+		//load the google maps only when dom is ready.
+		const APIKey = "AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo";
+		//load GoogleMaps
+		GoogleMaps.load({
+			key: APIKey,
+			libraries: 'geometry,places'
+		});
+	}
+)
 
 Template.locationModalTemplate.helpers({
 	//initial options of map
@@ -99,7 +115,7 @@ Template.locationModalTemplate.helpers({
 				//set the reactive variable for markers and infowindow
 				Template.instance().markers.set(new google.maps.Marker({ clickable: false })); 
 				Template.instance().infoWindow.set(new google.maps.InfoWindow());
-				Template.instance().infoWindow.get().setContent(Template.instance().find("#infowindow-content"));
+				
 				return {
 					//clickableIcons: false,
 					center: new google.maps.LatLng(0, 0),
@@ -203,13 +219,17 @@ Template.locationModalTemplate.events({
 				{
 					//render placeID
 					let placeID = Session.get("currentLocation").placeID;
+
 					//use getPlace method to return a location.
 					var result = await Meteor.callPromise('getPlace', placeID);
 					var center = result.geometry.location;
-					
+
 					//update google map
 					GoogleMaps.maps.locationMap.instance.setCenter(center);
 					GoogleMaps.maps.locationMap.instance.setZoom(17);
+					
+					//apparently this make it not gray, idk
+					new google.maps.event.trigger(GoogleMaps.maps.locationMap, 'resize');
 
 					//set reactive marker in the modal
 					var reactiveMarkers = markers.get();
@@ -220,8 +240,11 @@ Template.locationModalTemplate.events({
 					reactiveMarkers.setVisible(true);
 					markers.set(reactiveMarkers);
 
-					//set the text content of infowindowhtml and open the information window <-- (see function in GoogleMaps above, can reuse maybe)
+					//infowindow may or may not be loaded into googlemaps element.
+					//find it using this
 					let infoWindowHTML = infoWindow.get().getContent();
+					if(infoWindowHTML == undefined)
+						infoWindowHTML = template.find('#infowindow-content');
 					infoWindowHTML.children['place-name'].textContent = result.name;
 					infoWindowHTML.children['place-address'].textContent = result.formatted_address;
 					infoWindow.get().open(GoogleMaps.maps.locationMap.instance, reactiveMarkers);

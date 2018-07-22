@@ -1,3 +1,10 @@
+import { Locations } from "../../lib/models/db";
+
+Template.locationTemplate.onCreated(function() {
+	this.locationObject = new ReactiveVar();
+
+});
+
 /*
 	locationTemplate helper and events
 */
@@ -9,7 +16,34 @@ Template.locationTemplate.helpers({
 	},
 	//get location from db, return location name.
 	locationName: function() {
-		return this;
+		
+		var result = Locations.findOne( { _id: this.location } );
+
+		if(result == undefined)
+			Meteor.call('addPlace', this.location);
+		else
+		{	
+			Template.instance().locationObject.set(result);
+			return result.name;
+		}
+		//return this.location;
+	},
+	locationAddress: function() {
+		if(Template.instance().locationObject.get() == undefined)
+			return "";
+		else
+			return Template.instance().locationObject.get().formatted_address;
+	},
+	locationImageURL() {
+		if(Template.instance().locationObject.get() == undefined)
+		{
+			return "/image/blank.jpg";
+		}
+		else
+		{
+			let coordinates = Template.instance().locationObject.get().geometry.location;
+			return "https://maps.googleapis.com/maps/api/staticmap?center=" + coordinates.lat + "," + coordinates.lng + "&zoom=17&size=500x300&markers=size:mid%7C" + coordinates.lat + "," + coordinates.lng + "&key=AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo"
+		}
 	},
 	getLocName() {
 		try {

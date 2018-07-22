@@ -134,7 +134,7 @@ Meteor.startup(() => {
                 let data = {
                     name: result.data.result.name,
                     geometry: result.data.result.geometry,
-                    formattedAddress: result.data.result.formatted_address,
+                    formatted_address: result.data.result.formatted_address,
                     photo: photo,
                 }
                 return data;
@@ -150,6 +150,9 @@ Meteor.startup(() => {
             let date = new Date();
             date.setDate(date.getDate()+7);
 
+            if(placeId == "")
+                return;
+
             //search for location in server db
             let locationQuery = Locations.findOne( { _id : placeId } );
 
@@ -158,7 +161,6 @@ Meteor.startup(() => {
                 //if location is not in main DB
                 let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
                 var result = HTTP.get(url, {}).data.result;
-
                 //ensure photo exists
                 let photo;
                 if(result.photos == undefined)
@@ -170,7 +172,7 @@ Meteor.startup(() => {
                     _id: placeId,
                     name: result.name,
                     geometry: result.geometry,
-                    formattedAddress: result.formatted_address,
+                    formatted_address: result.formatted_address,
                     photo: photo,
                     expireAt: date,
                 });
