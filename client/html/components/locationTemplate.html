@@ -5,8 +5,8 @@
     <li class="timeline-item">
         <div class="timeline-badge"><a href="#"></a></div>
         <div class="timeline-panel">
-            <div class="container-fluid p-2">
-                <img class="img-fluid border border-primary rounded" src="{{locationImageURL}}" alt="MapImage">
+            <div class="container-fluid text-center p-2 mapImage-container">
+                <img class="img-fluid border border-primary rounded" style="max-width:100%" src="{{locationImageURL}}" alt="MapImage">
             </div>
 
             <div class="timeline-heading">
@@ -18,16 +18,18 @@
                 </ul>
             </div>
             {{#if isOwner}}
-                <div class="timeline-footer">
-                    <button class="close text-danger btn-deleteLoc">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <div class="timeline-footer">
+                <button class="close text-danger btn-deleteLoc">
+                    <span aria-hidden="true">&times;</span>
+                </button>
 
                 <button class="btn btn-success btn-selectLoc" data-toggle="modal"
-                        data-target="#locationModal" data-location={{location}}>Select Location
+                    data-target="#locationModal" data-location={{location}}>Select Location
                 </button>
-                <button class="btn btn-success btn-calculate">Calculate Routes
-                </button>
+                {{#if notLastLocation}}
+                    <button class="btn btn-success btn-calculateRoute" data-toggle="tooltip" data-placement="top" title="Opens a new tab!">Show me the way!
+                    </button>
+                {{/if}}
             </div>
             {{/if}}
         </div>

@@ -5,6 +5,12 @@ Template.locationTemplate.onCreated(function() {
 
 });
 
+Template.locationTemplate.onRendered(function() {
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip();
+	})
+});
+
 /*
 	locationTemplate helper and events
 */
@@ -17,6 +23,9 @@ Template.locationTemplate.helpers({
 	//get location from db, return location name.
 	locationName: function() {
 		
+		if(this.location == "")
+			return "";
+
 		var result = Locations.findOne( { _id: this.location } );
 
 		if(result == undefined)
@@ -37,12 +46,13 @@ Template.locationTemplate.helpers({
 	locationImageURL() {
 		if(Template.instance().locationObject.get() == undefined)
 		{
-			return "/image/blank.jpg";
+			return "/image/locationPlaceholder.jpg";
 		}
 		else
 		{
 			let coordinates = Template.instance().locationObject.get().geometry.location;
-			return "https://maps.googleapis.com/maps/api/staticmap?center=" + coordinates.lat + "," + coordinates.lng + "&zoom=17&size=500x300&markers=size:mid%7C" + coordinates.lat + "," + coordinates.lng + "&key=AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo"
+			let b = "https://maps.googleapis.com/maps/api/staticmap?center=" + coordinates.lat + "," + coordinates.lng + "&zoom=18&size=640x320&markers=size:mid%7C" + coordinates.lat + "," + coordinates.lng + "&key=AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo"
+			return b;
 		}
 	},
 	getLocName() {
@@ -52,7 +62,14 @@ Template.locationTemplate.helpers({
 		} catch (err){
 
 		}
-
+	},
+	notLastLocation() {
+		//check if its the last location of the day
+		let location = this.trip.get().dayArray[this.dayIndex][this.locIndex + 1];
+		if(location == undefined || location ==  "" || this.location == "")
+			return false;
+		else
+			return true;
 	}
 });
 
@@ -88,5 +105,21 @@ Template.locationTemplate.events({
 			//set the session variable "currentLocation" to the placeid and row and col, allow the modal to edit.
 			
 		//})
+	},
+	//calculate route to the next location
+	'click .btn-calculateRoute' (event) {
+		dayIndex = this.dayIndex;
+		locIndex = this.locIndex;
+		placeIDCurr = this.location;
+		placeIDNext = this.trip.get().dayArray[dayIndex][locIndex+1];
+
+		let locationCurr = Locations.findOne( { _id: placeIDCurr } );
+		let locationNext = Locations.findOne( { _id: placeIDNext } );
+
+		let url = "https://www.google.com/maps/dir/?api=1" + 
+					"&origin=" + locationCurr.name + "&origin_place_id=" + placeIDCurr + 
+					"&destination=" + locationNext.name + "&destination_place_id="+ placeIDNext + "";
+		
+		window.open(url,  "_blank");
 	}
 });

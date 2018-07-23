@@ -115,32 +115,42 @@ Meteor.startup(() => {
 
             if(locationQuery == undefined)
             {
-                let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
+                try
+                {
+                    let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
 
-                //once save location, search and save in server db
-                //server db sync with user db.
-                //upon opening, just search in own db, if cant find, getplace
-                //if dont find in server db, closing will save it.
+                    //once save location, search and save in server db
+                    //server db sync with user db.
+                    //upon opening, just search in own db, if cant find, getplace
+                    //if dont find in server db, closing will save it.
 
-                var result = HTTP.get(url, {});
+                    var result = HTTP.get(url, {});
 
-                //ensure photo exists
-                let photo;
-                if(result.data.result.photos == undefined)
-                    photo = "";
-                else
-                    photo = result.data.result.photos[0];
+                    //ensure photo exists
+                    let photo;
+                    if(result.data.result.photos == undefined)
+                        photo = "";
+                    else
+                        photo = result.data.result.photos[0];
 
-                let data = {
-                    name: result.data.result.name,
-                    geometry: result.data.result.geometry,
-                    formatted_address: result.data.result.formatted_address,
-                    photo: photo,
+                    let data = {
+                        name: result.data.result.name,
+                        geometry: result.data.result.geometry,
+                        formatted_address: result.data.result.formatted_address,
+                        photo: photo,
+                    }
+                    return data;
+
                 }
-                return data;
+                catch (ex)
+                {
+                    console.log("invalid request from google api - cannot add location");
+                    return "";
+                }
             }
             else
                 return locationQuery;
+                
         },
 
         //can use getplace method inside addplace?
@@ -158,24 +168,31 @@ Meteor.startup(() => {
 
             if(locationQuery == undefined)
             {
-                //if location is not in main DB
-                let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
-                var result = HTTP.get(url, {}).data.result;
-                //ensure photo exists
-                let photo;
-                if(result.photos == undefined)
-                    photo = "";
-                else
-                    photo = result.photos[0];
+                try
+                {
+                    //if location is not in main DB
+                    let url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=" + "name,formatted_address,geometry,photo" + "&key=" + APIkey + "";
+                    var result = HTTP.get(url, {}).data.result;
+                    //ensure photo exists
+                    let photo;
+                    if(result.photos == undefined)
+                        photo = "";
+                    else
+                        photo = result.photos[0];
 
-                Locations.insert({
-                    _id: placeId,
-                    name: result.name,
-                    geometry: result.geometry,
-                    formatted_address: result.formatted_address,
-                    photo: photo,
-                    expireAt: date,
-                });
+                    Locations.insert({
+                        _id: placeId,
+                        name: result.name,
+                        geometry: result.geometry,
+                        formatted_address: result.formatted_address,
+                        photo: photo,
+                        expireAt: date,
+                    });
+                }
+                catch (ex)
+                {
+                    console.log("invalid request from google api - cannot add location");
+                }
             }
             else
             {
