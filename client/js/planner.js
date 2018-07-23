@@ -1,5 +1,5 @@
 import {ReactiveVar} from 'meteor/reactive-var'
-import {Trips} from '../../lib/models/db';
+import {Locations, Trips} from '../../lib/models/db';
 
 /*
 	oncreated - subscription and populate data
@@ -243,7 +243,39 @@ Template.planner.events({
 		var date = new Date(dateUnformated);
 		var day = date.getDate();
 		var month = date.getMonth() + 1;
-		var year = date.getFullYear()
+		var year = date.getFullYear();
+
+		//build body of table
+        function buildTableBody(){
+        	var tableBody = [[{text: 'Name', style: 'tableHeader'}, {text: 'Address', style: 'tableHeader'}]];
+            var dayArray = Template.instance().trip.get().dayArray;
+            for (var i = 0; i < dayArray.length; i++){
+            	//console.log("How Many trip in today:" + dayArray[i].length);
+            	var dayNumber = i + 1;
+            	tableBody.push([{text: 'Day '+ dayNumber, colSpan: 2, alignment: 'center', style: 'tableSubHeader'}]);
+            	for(var j in dayArray[i]){
+					var placeId = dayArray[i][j];
+                    var result = Locations.findOne( { _id: placeId } );
+                    tableBody.push([{text: result.name}, {text: result.formatted_address}]);
+				}
+			}
+        	return tableBody;
+		}
+
+		//build table format for pdf
+        function table() {
+            return {
+            	style: 'table',
+            	table : {
+            		headerRows: 1,
+					widths: [120, '*'],
+					body: buildTableBody()
+				},
+                layout: 'lightHorizontalLines'
+            }
+        }
+
+
 
         // Define the pdf-document
         var dd = {
@@ -253,10 +285,11 @@ Template.planner.events({
                 {
                     alignment: 'center',
                 	columns: [
-                        { text: 'Event Start Date : ' + day + "/" + month + "/" + year},
+                        { text: 'Start Date : ' + day + "/" + month + "/" + year},
 						{ text: 'Country : ' + Template.instance().trip.get().country }
 					]
-                }
+                },
+				table()
 
             ],
 
@@ -270,11 +303,28 @@ Template.planner.events({
 
 				body: {
                 	alignment: 'center'
+				},
+
+                tableHeader: {
+                    bold: true,
+                    fontSize: 20,
+                    color: 'black'
+                },
+
+				tableSubHeader: {
+                	bold: true,
+					fontSize: 13,
+					color: 'black'
+				},
+
+				table: {
+                	marginTop: 40
 				}
+
             }
 
         };
-        console.log(Template.instance().trip.get().dayArray);
+        //console.log(Template.instance().trip.get().dayArray);
 
         // Start the pdf-generation process
 		pdfMake.createPdf(dd).download('itinerary.pdf');
