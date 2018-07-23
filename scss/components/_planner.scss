@@ -25,7 +25,6 @@
     //padding-right: 500px;
     padding: 30px 65px 20px 65px;
 
-
 }
 
 
@@ -47,7 +46,7 @@
     padding: 5px;
 }
 
-.btn-calculate {
+.btn-calculateRoute {
     padding: 5px;
 }
 
@@ -370,7 +369,8 @@ planner-dayInner {
 .timeline .media:last-child {
     border-bottom: 0;
 }
-@media (max-width:991px) {
+
+@media (max-width: 991.98px) {
     .timeline {
         padding-left: 15px;
     }
@@ -413,7 +413,9 @@ planner-dayInner {
         -webkit-transform: translate(0, 0);
         transform: translate(0, 0);
     }
-}@media (max-width:480px) {
+}
+
+@media (max-width: 575.98px) {
     .timeline {
         padding: 0;
     }
@@ -436,7 +438,9 @@ planner-dayInner {
         left: 50%!important;
         margin-left: -6px;
     }
-}.wrapkit-content-rtl .timeline-avatar {
+}
+
+.wrapkit-content-rtl .timeline-avatar {
      margin-right: 0;
      margin-left: 10px;
  }

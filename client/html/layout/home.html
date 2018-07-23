@@ -15,7 +15,7 @@
         </div>
     </section>
 
-    <section class="about container">
+    <section class="about container-fluid">
         <div class="text-center">
             <h4 class="title text-secondary">Features</h4>
             <p>With ItinPlan, you can easily:</p>
@@ -23,7 +23,6 @@
 
         <div class="row justify-content-center">
             <div class="card-deck about-img text-center">
-
                 <div class="card border-0">
                     <img class="card-img-top home" src="/image/share.png" alt="Share">
                     <div class="card-body">
@@ -52,7 +51,7 @@
         </div>
     </section>
 
-    <section class="hot container">
+    <section class="hot container-fluid">
 
         <div class="text-center">
             <h4 class="title text-secondary">Hot Destination</h4>
@@ -62,15 +61,14 @@
             <a class="text-success" href="/destination">View More</a>
         </div>
 
-        <div class="card-deck hot-deck text-center">
+        <div class="card-deck hot-deck text-center m-0">
             {{#each countries}}
-                <div class="card bg-dark text-white hot-card">
+                <div class="card bg-dark text-white hot-card m-3">
                     <img class="card-img hot-img" src="/image/country/{{country_name}}.jpg" alt="{{country_name}}">
                     <div class="card-img-overlay">
-                        <h5 class="card-title hot-title">{{country_name}}</h5>
+                        <h6 class="card-title hot-title">{{country_name}}</h6>
                     </div>
                 </div>
-
             {{/each}}
         </div>
 
