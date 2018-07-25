@@ -29,7 +29,18 @@
 
 }
 
+.location-header{
+  text-transform: uppercase;
+}
+
 .location-header-text{
   padding-top: 140px;
   padding-bottom: 120px;
+}
+.location-card-header {
+  min-height: 48px;
+}
+
+.location-card-body {
+  min-height: 90px;
 }

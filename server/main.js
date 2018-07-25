@@ -218,4 +218,8 @@ Meteor.startup(() => {
     Meteor.publish('locations', function() {
         return Locations.find({});
     });
+
+    Meteor.publish('getTrips', function(){
+        return Trips.find({});
+    })
 });
