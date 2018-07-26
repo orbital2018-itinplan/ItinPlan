@@ -18,6 +18,7 @@ Template.home.onCreated(function(){
 
     Meteor.subscribe('getCountry');
 
+
 });
 
 Template.home.events({

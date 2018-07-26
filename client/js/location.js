@@ -24,7 +24,7 @@ Template.location.helpers({
         let locationList = [];
         //locationList.push({'name': 'Yuanrong', 'address': 'Singapore'});
         let country = FlowRouter.getQueryParam('country');
-        let placeIdList = Trips.find({country: country}, {fields: {dayArray: 1}}).fetch();
+        let placeIdList = Trips.find({country: country}, {fields: {dayArray: 1}}, {sort : {expireAt: -1}}).fetch();
 
         //for each dayArray loop through to get all location and check if got repeating before sending back
         for( var x in placeIdList){
@@ -32,20 +32,24 @@ Template.location.helpers({
             for (var y in tripDayArray){
                 let singleDay = tripDayArray[y];
                 for (var z in singleDay){
-
                     let placeId = singleDay[z];
                     //check for empty placeID
                     if(placeId == "New Location" || !placeId) {
                         console.log("No placeId");
                     } else {
                         let location = Locations.find({_id: placeId}).fetch();
-                        let name = location[0].name;
-                        let address = location[0].formatted_address;
-
-                        if (locationList.some(e => e.name === name)) {
-                            console.log("Duplicated");
+                        //check for expired location
+                        if(location == undefined){
+                            console.log("Expired");
                         } else {
-                            locationList.push({'name': name, 'address': address});
+                            let name = location[0].name;
+                            let address = location[0].formatted_address;
+                            //check for duplicate records
+                            if (locationList.some(e => e.name === name)) {
+                                console.log("Duplicated");
+                            } else {
+                                locationList.push({'name': name, 'address': address});
+                            }
                         }
                     }
                 }
