@@ -34,12 +34,12 @@ Template.location.helpers({
                 for (var z in singleDay){
                     let placeId = singleDay[z];
                     //check for empty placeID
-                    if(placeId == "New Location" || !placeId) {
+                    if(placeId == "New Location" || !placeId || placeId == "") {
                         console.log("No placeId");
                     } else {
                         let location = Locations.find({_id: placeId}).fetch();
                         //check for expired location
-                        if(location == undefined){
+                        if(location[0] == undefined){
                             console.log("Expired");
                         } else {
                             let name = location[0].name;
