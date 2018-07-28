@@ -23,14 +23,17 @@ Template.dayTemplate.events({
 	//change icon for collapse day
 	'click .btn-collapseDay' (event) {
         const day = this.dayIndex + 1;
+        //collapse
 		if($(".icon-collapse-"+day).hasClass("fa-minus-square-o")){
             $(".icon-collapse-"+day).removeClass("fa-minus-square-o").addClass("fa-plus-square-o");
+            $(".btn-no-"+day).removeClass("btn-primary").addClass("btn-secondary");
             console.log("Found minus");
 		} else {
+			//expand
             $(".icon-collapse-"+day).removeClass("fa-plus-square-o").addClass("fa-minus-square-o");
+            $(".btn-no-"+day).removeClass("btn-secondary").addClass("btn-primary");
             console.log("Found plus");
 
 		}
-
 	}
 });

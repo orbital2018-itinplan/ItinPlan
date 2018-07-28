@@ -11,7 +11,7 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             {{/if}}
-            <a class="btn btn-primary btn-collapseDay" data-toggle="collapse" href="#day{{getDayNum dayIndex}}"><i
+            <a class="btn btn-primary btn-collapseDay btn-no-{{getDayNum dayIndex}}" data-toggle="collapse" href="#day{{getDayNum dayIndex}}"><i
                     class="fa fa-calendar mr-2"></i>Day {{getDayNum dayIndex}}<i  class="fa fa-minus-square-o ml-4 icon-collapse-{{getDayNum dayIndex}}"></i></a>
             {{#if isOwner}}
                 <div class="btn btn-danger btn-dayAddLoc">Add Location</div> <!-- Should change to modal-->
