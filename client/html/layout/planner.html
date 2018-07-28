@@ -45,40 +45,45 @@
                 {{> settingsModalTemplate trip=reactiveTrip}}
 
                 <!--- Modal for saving trip confirmation -->
-                <div class="modal fade" id="saveTrip" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <!-- https://www.w3schools.com/howto/howto_js_snackbar.asp try to change to toast -->
+
+                <div id="snackbar">Trip Saved!</div>
+                  
+                <!--<div class="modal fade" id="saveTrip" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-                        <!--Content-->
+                        Content
                         <div class="modal-content text-center">
-                            <!--Body-->
+                            Body
                             <div class="modal-body">
 
                                 <i class="fa fa-check-circle fa-4x"></i>
                                 <p class="tripSaved">Trip Saved</p>
                             </div>
-                            <!--Footer-->
+                            Footer
                             <div class="modal-footer flex-center">
                                 <button class="btn btn-success" data-dismiss="modal">
                                     Ok
                                 </button>
                             </div>
                         </div>
-                        <!--/.Content-->
+                        /.Content
                     </div>
-                </div>
+                </div>-->
             </div>
 
             <!-- Alert: for newly created trips -->
             {{#if isNewlyCreated}}
                 <div class="container-fluid p-3">
-                    <div class="container-fluid alert alert-success alert-dismissible fade show" role="alert"
+                    <div class="container alert alert-success alert-dismissible fade show" role="alert"
                         id="newTripAlert">
-                        <h4 class="alert-heading">Welcome to your New trip itinerary!</h4>
-                        <p>Hi there! Start planning your future vacation.</p>
+                        <h4 class="alert-heading">Welcome to your new trip itinerary!</h4>
+                        <p>Start planning your next vacation!</p>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <hr>
-                        <p class="mb-0">* Non registered users are unable to save their trips on the server! *</p>
+                        <p class="mb-0">- Register an account to save multiple trips and share them with your friends!</p>
+                        <p class="mb-0">- Don't worry, if you are not registered, you can still save your trip! Bookmark this page!</p>
                     </div>
                 </div>
             {{/if}}

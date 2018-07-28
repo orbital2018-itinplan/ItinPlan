@@ -115,7 +115,6 @@ Template.locationModalTemplate.helpers({
 				//set the reactive variable for markers and infowindow
 				Template.instance().markers.set(new google.maps.Marker({ clickable: false })); 
 				Template.instance().infoWindow.set(new google.maps.InfoWindow());
-				
 				return {
 					//clickableIcons: false,
 					center: new google.maps.LatLng(0, 0),

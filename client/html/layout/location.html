@@ -1,6 +1,14 @@
 <template name="location">
     <div class="container-fluid locationHeader">
         <h1 class="text-center text-white location-header-text">{{country}}</h1>
+
+        <div class="row float-right mr-4">
+            <div class="col-4 planner-print">
+                <a class="btn btn-success" href="/planner/?_id=new&country={{country}}">
+                    <i class="fa fa-plus mr-1"></i> Create new trip
+                </a>
+            </div>
+        </div>
     </div>
     <div class="container-fluid locationBody">
         <h3 class="text-center pt-4 pb-3 location-header">Hot Location</h3>

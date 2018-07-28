@@ -20,6 +20,7 @@ Template.locationTemplate.helpers({
 	getLocNum: function(index) {
 		return index+1;
 	},
+	
 	//get location from db, return location name.
 	locationName: function() {
 		
@@ -35,14 +36,15 @@ Template.locationTemplate.helpers({
 			Template.instance().locationObject.set(result);
 			return result.name;
 		}
-		//return this.location;
 	},
+
 	locationAddress: function() {
 		if(Template.instance().locationObject.get() == undefined)
-			return "";
+			return "Choose where you want to visit!";
 		else
 			return Template.instance().locationObject.get().formatted_address;
 	},
+
 	locationImageURL() {
 		if(Template.instance().locationObject.get() == undefined)
 		{
@@ -51,18 +53,11 @@ Template.locationTemplate.helpers({
 		else
 		{
 			let coordinates = Template.instance().locationObject.get().geometry.location;
-			let b = "https://maps.googleapis.com/maps/api/staticmap?center=" + coordinates.lat + "," + coordinates.lng + "&zoom=18&size=640x320&markers=size:mid%7C" + coordinates.lat + "," + coordinates.lng + "&key=AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo"
+			let b = "https://maps.googleapis.com/maps/api/staticmap?center=" + coordinates.lat + "," + coordinates.lng + "&size=640x320&markers=size:mid%7C" + coordinates.lat + "," + coordinates.lng + "&key=AIzaSyDz0qhkNsfhQiY9mXJkPqWsJuUENw4zTxo"
 			return b;
 		}
 	},
-	getLocName() {
-		try {
-            var result = ReactiveMethod.call('getLocName', this.location);
-            return result.data.result.name;
-		} catch (err){
-
-		}
-	},
+	
 	notLastLocation() {
 		//check if its the last location of the day
 		let location = this.trip.get().dayArray[this.dayIndex][this.locIndex + 1];

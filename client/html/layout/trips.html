@@ -1,45 +1,59 @@
 <template name="myTrips">
     <section class="myTrip">
-        <div class="text-center pb-4">
+        <div class="text-center">
             <h4 class="title text-secondary">My Trips</h4>
         </div>
-        <div class="card-group mx-auto">
-            {{#each tripList}}
-                <div class="col-lg-3">
-                    <div class="card text-center myTrip-card ml-auto mr-auto mb-5" id={{_id}}>
-                        <div class="myTrip-card-body">
-                            <img class="card-img myTrip-card-img" src="/image/country/{{country}}.jpg"
-                                 alt="{{country}}">
-                            <div class="card-img-overlay text-secondary font-weight-bold">
-                                <h5>{{dayArray.length}} Days in {{country}}</h5>
-                                <h7>From {{startDate}}</h7>
+        
+        {{#if tripSubscriptionReady}}
+            <div class="card-group mx-auto">
+                {{#each tripList}}
+                    <div class="col-lg-6 col-xl-3 pt-3 pb-3">
+                        <div class="card text-center myTrip-card ml-auto mr-auto" id={{_id}}>
+                            <div class="myTrip-card-body">
+                                <img class="card-img myTrip-card-img" src="/image/country/{{country}}.jpg"
+                                    alt="{{country}}">
+                                <div class="card-img-overlay text-secondary font-weight-bold">
+                                    <h5>{{dayArray.length}} Days in {{country}}</h5>
+                                    <h7>From {{startDate}}</h7>
+                                </div>
+                            </div>
+                            <div class="myTrip-card-button card-img-overlay mt-0">
+                                <button  class="btn btn-primary text-white" id="btn-Planner">Open Planner</button>
+                            </div>
+                            <button type="button" class="close btn-0 text-info btn-removeTrips" id="btn-Delete" data-toggle="modal" data-target="#confirmationModal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <div class="card-footer text-primary">
+                                {{tripName}}
                             </div>
                         </div>
-                        <div class="myTrip-card-button card-img-overlay mt-0">
-                            <button  class="btn btn-primary text-white" id="btn-Planner">Open Planner</button>
-                        </div>
-                        <button type="button" class="close btn-0 text-info btn-removeTrips" id="btn-Delete" data-toggle="modal" data-target="#confirmationModal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <div class="card-footer text-primary">
-                            {{tripName}}
-                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <!--loading spinner thingy-->
+            <div class="container-fluid ">
+                <div class="card text-white text-center justify-content-center bg-transparent planner-controller border-0 ">
+                    <div class="container d-flex justify-content-center pt-5 mt-5">
+                        <div id="html-spinner"></div>
                     </div>
                 </div>
-            {{/each}}
-        </div>
+            </div>
+        {{/if}}
     </section>
 
     <!-- Modal for delete of trip-->
     <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="modal display"
          aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <h3>Are you sure?</h3>
                     <div class="container pt-3">
-                        <button class="btn btn-success m-1" data-dismiss="modal" id="btn-ConfirmDelete">Yes</button>
-                        <button class="btn btn-success m-1" data-dismiss="modal" aria-label="Close">No</button>
+                        <div class="row">
+                            <button class="col btn btn-success m-1" data-dismiss="modal" id="btn-ConfirmDelete">Yes</button>
+                            <button class="col btn btn-success m-1" data-dismiss="modal" aria-label="Close">No</button>
+                        </div>
                     </div>
                 </div>
             </div>
