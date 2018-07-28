@@ -98,7 +98,7 @@ Template.settingsModalTemplate.helpers({
 			return false;
 	},
 	shareURL: function() {
-		return "www.itinplan.com/planner/?_id=" + this.trip.get()._id;
+		return "localhost:3000/planner/?_id=" + this.trip.get()._id;
 	}
 });
 
