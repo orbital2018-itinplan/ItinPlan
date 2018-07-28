@@ -98,7 +98,9 @@ Template.settingsModalTemplate.helpers({
 			return false;
 	},
 	shareURL: function() {
-		return "localhost:3000/planner/?_id=" + this.trip.get()._id;
+		let domainString = "www.itinplan.com/planner/?_id=";
+		let localhostString = "localhost:3000/planner/?_id=";
+		return localhostString + this.trip.get()._id;
 	}
 });
 
@@ -221,7 +223,6 @@ Template.settingsModalTemplate.events({
 		}
 		else
 		{
-			//fuck outta here
 			var newStartDate = new Date(Template.instance().find("#dateYear").value, Template.instance().monthsDropDown.indexOf(Template.instance().find("#dateMonth").value), Template.instance().find("#dateDay").value, 0, 0, 0, 0);
 			this.trip.get().startDate = newStartDate;
 			//set the number of days to the trip.
@@ -253,7 +254,14 @@ Template.settingsModalTemplate.events({
 					tripReact.get()._id = result;
 					tripReact.set(tripReact.get());
 				}
-				$('#saveTrip').modal("show");
+
+				//toast style notification
+				let toastNotification = document.getElementById("snackbar");
+				// Add the "show" class to DIV
+				toastNotification.className = "show";
+				// After 3 seconds, remove the show class from DIV
+				setTimeout(function(){ toastNotification.className = toastNotification.className.replace("show", ""); }, 2000);
+
 				console.log("Saving . . .");
 			}
 
@@ -282,7 +290,14 @@ Template.settingsModalTemplate.events({
 				tripReact.get()._id = result;
 				tripReact.set(tripReact.get());
 			}
-			$('#saveTrip').modal("show");
+
+			//toast style notification
+			let toastNotification = document.getElementById("snackbar");
+			// Add the "show" class to DIV
+			toastNotification.className = "show";
+			// After 3 seconds, remove the show class from DIV
+			setTimeout(function(){ toastNotification.className = toastNotification.className.replace("show", ""); }, 2000);
+
 			console.log("Saving . . .");
 		}
 	},
@@ -306,6 +321,12 @@ Template.settingsModalTemplate.events({
 			Template.instance().find("#tripName").classList.remove("is-invalid");
 		if(Template.instance().find("#dayNumbers").classList.contains("is-invalid"))
 			Template.instance().find("#dayNumbers").classList.remove("is-invalid");
+
+		//set url to normal /planner/
+		FlowRouter.withReplaceState(function() {
+			FlowRouter.setQueryParams({_id: null});
+			FlowRouter.setQueryParams({country: null});
+		});
 	},
 
 });

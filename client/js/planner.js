@@ -210,7 +210,14 @@ Template.planner.events({
 			tripReact.get()._id = result;
 			tripReact.set(tripReact.get());
 		}
-		$('#saveTrip').modal("show");
+
+		//toast style notification
+		let toastNotification = document.getElementById("snackbar");
+		// Add the "show" class to DIV
+		toastNotification.className = "show";
+		// After 3 seconds, remove the show class from DIV
+		setTimeout(function(){ toastNotification.className = toastNotification.className.replace("show", ""); }, 2000);
+
 		console.log("Saving . . .");
 	},
 
@@ -222,6 +229,7 @@ Template.planner.events({
 		delete copyTrip._id;
 		copyTrip.public = false;
 		Template.instance().trip.set(copyTrip);
+		
 		//set url to normal /planner/
 		FlowRouter.withReplaceState(function() {
 			FlowRouter.setQueryParams({_id: null});

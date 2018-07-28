@@ -1,11 +1,23 @@
 import {Trips} from '../../lib/models/db';
 
 Template.myTrips.onCreated(function() {
-    Meteor.subscribe('trips');
+    var tripSubscription = this.subscribe('trips');
+    this.tripSubscription = tripSubscription;
+
+    this.sortModifier = new ReactiveVar();
+    this.filterModifier = new ReactiveVar();
 });
 
 Template.myTrips.helpers({
+    tripSubscriptionReady: function() {
+        return Template.instance().subscriptionsReady();
+    },
     tripList: function() {
+        //sort -1 = decending | 1 = ascending
+        //{tripName: 1}
+        //{startDate: 1}
+        //{lastModified: 1}
+
         return Trips.find({ owner: Meteor.userId() }, { sort: {tripName: 1} });
     },
     startDate: function() {
