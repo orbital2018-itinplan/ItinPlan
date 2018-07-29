@@ -27,7 +27,7 @@ Template.planner.onCreated(function() {
 	//eg "/?_id=new&country=mexico" -> _id = new, country = mexico
 	//for loading of trip etc.
 	//if new => create new trip with all undefined. owner = undefined
-	if(FlowRouter.getQueryParam('_id') == "new" || localStorage.getItem('trip') == null)
+	if(FlowRouter.getQueryParam('_id') == "new" || (localStorage.getItem('trip') == null && FlowRouter.getQueryParam('_id') == null))
 	{
 		newlyCreated.set(true);
 		let countryEntered = FlowRouter.getQueryParam('country');
