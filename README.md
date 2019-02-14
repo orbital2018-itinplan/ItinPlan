@@ -1,6 +1,6 @@
 # ItinPlan
 
-![ItinPlan](https://itinplan.herokuapp.com/)
+![ItinPlan](https://github.com/orbital2018-itinplan/ItinPlan/blob/master/website-image.jpeg)
 
 
 This project is hosted on [heroku](https://itinplan.herokuapp.com/)!
