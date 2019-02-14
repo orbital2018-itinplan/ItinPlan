@@ -1,14 +1,15 @@
 # ItinPlan
 
+![demo_image](https://github.com/orbital2018-itinplan/ItinPlan/blob/master/website-image.jpeg)
 
-use 'meteor' to start the project.
 
-Itinerary Planner ItinPlan
+This project is hosted on [heroku](https://itinplan.herokuapp.com/)!
+
+Itinerary Planner - ItinPlan!
 
 Features:
 - Login/Sign up
-- Creating a vacation itinerary
-- Logged in users can store itinerary on the database
+- Creating a vacation itinerary for your dream vacation
+- Logged in users can store their itineraries on our database
 - Non logged in users can also create a single vacation itinerary
-- Google Maps integration for routes and places
-
+- With Google Maps integration for routes and places to go!
