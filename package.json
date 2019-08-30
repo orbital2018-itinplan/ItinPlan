@@ -5,12 +5,12 @@
     "start": "meteor run"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.49",
+    "@babel/runtime": "^7.5.5",
     "bcrypt": "^2.0.1",
-    "bootstrap": "^4.1.1",
-    "jquery": "^3.3.1",
-    "mdbootstrap": "^4.5.6",
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "mdbootstrap": "^4.8.8",
     "meteor-node-stubs": "^0.3.2",
-    "popper.js": "^1.14.3"
+    "popper.js": "^1.15.0"
   }
 }
